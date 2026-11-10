@@ -32,11 +32,11 @@ app=app.replace('</style>',re.search(r'<style>(.*?)</style>',dp,re.S).group(1)+'
 for sid in ('view-prod','view-doc'):
     app=app.replace('  <section id="view-ref" hidden>',re.search(r'(<section id="%s".*?</section>)'%sid,dp,re.S).group(1)+'\n  <section id="view-ref" hidden>',1)
 app=app.rstrip()+'\n<script>'+re.search(r'<script>(.*)</script>',dp,re.S).group(1)+'</script>\n'
-# mapa de localização (map_part.html + geo.js, gerado por geo-src/*.py); usa pv, LOCS e GEO dos separadores anteriores
+# mapa de localização (map_part.html + geo.js e pvgis.js, gerados por geo-src/*.py); usa pv, LOCS e GEO dos separadores anteriores
 mp=rd('map_part.html')
 app=app.replace('</style>',re.search(r'<style>(.*?)</style>',mp,re.S).group(1)+'</style>',1)
 app=app.replace('  <section id="view-ref" hidden>',re.search(r'(<dialog id="mp-dlg".*?</dialog>)',mp,re.S).group(1)+'\n  <section id="view-ref" hidden>',1)
-app=app.rstrip()+'\n<script>'+re.search(r'<script>(.*)</script>',mp,re.S).group(1).replace('/*GEODATA*/',rd('geo.js'))+'</script>\n'
+app=app.rstrip()+'\n<script>'+re.search(r'<script>(.*)</script>',mp,re.S).group(1).replace('/*GEODATA*/',rd('geo.js')+(rd('pvgis.js') if os.path.exists(S+'pvgis.js') else ''))+'</script>\n'
 # adaptação ao telemóvel (mobile_part.html): estilos ≤ 640 px e script; vem no fim porque usa os separadores todos
 mo=rd('mobile_part.html')
 app=app.replace('</style>',re.search(r'<style>(.*?)</style>',mo,re.S).group(1)+'</style>',1)

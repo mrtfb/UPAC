@@ -1,0 +1,303 @@
+<style>
+.mp-dlg{width:min(1120px,calc(100vw - 16px));max-width:none;height:min(780px,calc(100dvh - 16px));max-height:none;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);overflow:hidden}
+.mp-dlg[open]{display:flex;flex-direction:column}
+.mp-dlg::backdrop{background:rgba(10,16,20,.55)}
+.mp-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.mp-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
+.mp-tools input{min-width:0;flex:1 1 200px}
+.mp-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 290px}
+.mp-map{position:relative;min-height:0;background:#b9d6ea;touch-action:none;overflow:hidden}
+.mp-map canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
+.mp-map.drag canvas{cursor:grabbing}
+.mp-zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:4px}
+.mp-zoom button{width:34px;height:34px;border-radius:7px;border:1px solid #9aa7af;background:#fff;color:#18232b;font:600 18px/1 var(--f-body);cursor:pointer}
+.mp-lay{position:absolute;left:10px;top:10px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.mp-lay button{padding:6px 10px}
+.mp-hint{position:absolute;left:10px;bottom:10px;right:56px;font-size:12px;color:#18232b;background:rgba(255,255,255,.85);padding:4px 8px;border-radius:6px;width:fit-content;max-width:calc(100% - 66px)}
+.mp-info{border-left:1px solid var(--line);padding:14px;overflow:auto;display:flex;flex-direction:column;gap:10px;font-size:13px}
+.mp-info .big{font-family:var(--f-display);font-size:19px;font-weight:600;line-height:1.2}
+.mp-info table td{padding:5px 6px;white-space:normal}
+.mp-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
+@media (max-width:760px){.mp-body{grid-template-columns:1fr;grid-template-rows:minmax(260px,1fr) auto}.mp-info{border-left:0;border-top:1px solid var(--line);max-height:38dvh}}
+@media (max-width:640px){.mp-tools{gap:6px;padding:8px 10px}.mp-tools input{flex:1 1 140px}#mp-q{flex-basis:100%}.mp-foot .src{display:none}.mp-foot{padding:8px 10px}.mp-foot .btn{flex:1}
+  .mp-hint{font-size:11px;bottom:6px;left:6px}.mp-lay{left:6px;top:6px}.mp-lay button{padding:5px 8px}.mp-info{padding:10px 12px;gap:6px}.mp-info .note:last-child{display:none}}
+</style>
+
+<dialog id="mp-dlg" class="mp-dlg" aria-labelledby="mp-h">
+  <div class="mp-head"><h2 id="mp-h">Localização da instalação</h2><button type="button" class="btn ghost" id="mp-x" aria-label="Fechar">✕</button></div>
+  <div class="mp-tools">
+    <div class="seg" id="mp-reg"><button type="button" data-v="c">Continente</button><button type="button" data-v="m">Madeira</button><button type="button" data-v="a">Açores</button></div>
+    <input id="mp-q" list="mp-q-list" placeholder="Procurar concelho, localidade ou morada" autocomplete="off"><datalist id="mp-q-list"></datalist>
+    <input id="mp-co" placeholder="Coordenadas ou link do Google Maps" autocomplete="off"><button type="button" class="btn" id="mp-go">Ir</button><button type="button" class="btn ghost" id="mp-me" title="Usar a localização deste aparelho (GPS)">◎ Onde estou</button>
+  </div>
+  <div class="mp-body">
+    <div class="mp-map" id="mp-map"><canvas id="mp-cv"></canvas>
+      <div class="seg mp-lay" id="mp-lay"><button type="button" data-v="sat">Satélite</button><button type="button" data-v="rua">Ruas</button><button type="button" data-v="rel">Relevo</button></div>
+      <div class="mp-zoom"><button type="button" id="mp-zi" aria-label="Aproximar">+</button><button type="button" id="mp-zo" aria-label="Afastar">−</button></div>
+      <div class="mp-hint" id="mp-hint">Clique no local da instalação. Arraste para mover; roda do rato, dois dedos ou + / − para aproximar.</div></div>
+    <aside class="mp-info" id="mp-info"></aside>
+  </div>
+  <div class="mp-foot"><span class="src" style="flex:1 1 300px" id="mp-src"></span>
+    <button type="button" class="btn" id="mp-cancel">Cancelar</button><button type="button" class="btn pri" id="mp-use" disabled>Usar este local</button></div>
+</dialog>
+
+<script>
+/* ======================= Mapa de localização ======================= */
+/*GEODATA*/
+// altitude aproximada (m) das estações de referência de LOCS (capitais de distrito)
+const LOC_ALT={"Aveiro":5,"Beja":246,"Braga":190,"Bragança":690,"Castelo Branco":386,"Coimbra":141,"Évora":309,"Faro":8,"Guarda":1019,"Leiria":50,"Lisboa":77,"Portalegre":597,"Porto":93,"Santarém":54,"Setúbal":35,"Viana do Castelo":16,"Vila Real":481,"Viseu":443,"Madeira (Funchal)":58,"Açores (Ponta Delgada)":36};
+// gradiente térmico com a altitude (°C por 100 m): mínimas ~0,5; máximas ~0,7 (Guarda vs. Castelo Branco/Viseu)
+const LAPSE={tmin:0.5,tmax:0.7};
+const MREG={c:{n:"Continente"},m:{n:"Madeira"},a:{n:"Açores"}};
+// escala horizontal: cos da latitude do centro da vista (com zoom alto as casas não ficam esticadas)
+const mpK=()=>Math.cos(MP.clat*Math.PI/180);
+const MP={ready:null,g:{},conc:[],reg:"c",clon:0,clat:0,s:1,sel:null,info:null,lay:"sat",net:null};
+try{ const l=localStorage.getItem("mp-lay"); if(/^(sat|rua|rel)$/.test(l)) MP.lay=l; }catch(e){}
+const nrm=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+async function gunzip(b64){ const bin=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
+  const st=new Blob([bin]).stream().pipeThrough(new DecompressionStream("gzip")); return new Uint8Array(await new Response(st).arrayBuffer()); }
+function mpLoad(){ if(MP.ready) return MP.ready; return MP.ready=(async()=>{
+  for(const [k,v] of Object.entries(GEO_DEM)){ const a=await gunzip(v.b64); MP.g[k]={...v,a,img:demImg(v,a)}; }
+  const cj=JSON.parse(new TextDecoder().decode(await gunzip(GEO_CONC)));
+  MP.conc=cj.map(([n,d,rings])=>{ let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+    const R=rings.map(f=>{ const p=[]; let x=0,y=0; for(let i=0;i<f.length;i+=2){ x+=f[i]; y+=f[i+1]; const lo=x/1e4, la=y/1e4; p.push([lo,la]);
+      if(lo<x0)x0=lo; if(lo>x1)x1=lo; if(la<y0)y0=la; if(la>y1)y1=la; } return p; });
+    return {n,d,R,bb:[x0,y0,x1,y1]}; });
+  $("#mp-q-list").innerHTML=MP.conc.map(c=>`<option value="${esc(c.n)} (concelho)"></option>`).join("")+GEO_PLACES.map(p=>`<option value="${esc(p[0])}"></option>`).join("");
+})(); }
+// relevo sombreado com cores hipsométricas, uma imagem por região (1 píxel = 1 célula da grelha)
+const HYP=[[0,[160,196,134]],[150,[196,214,148]],[400,[228,222,166]],[700,[220,196,146]],[1000,[200,166,124]],[1400,[176,150,130]],[1900,[214,208,204]],[2400,[245,245,245]]];
+function hyp(z){ for(let i=1;i<HYP.length;i++) if(z<=HYP[i][0]){ const [z0,c0]=HYP[i-1],[z1,c1]=HYP[i], t=(z-z0)/(z1-z0); return c0.map((c,k)=>c+(c1[k]-c)*t); } return HYP[HYP.length-1][1]; }
+function demImg(v,a){ const cv=document.createElement("canvas"); cv.width=v.w; cv.height=v.h; const x=cv.getContext("2d"), im=x.createImageData(v.w,v.h), D=im.data;
+  const cy=v.d*111320, el=(i,j)=>{ i=Math.max(0,Math.min(v.h-1,i)); j=Math.max(0,Math.min(v.w-1,j)); const c=a[i*v.w+j]; return c>=2?(c-2)*v.step:0; };
+  for(let i=0;i<v.h;i++){ const cx=cy*Math.cos((v.la1-i*v.d)*Math.PI/180);
+    for(let j=0;j<v.w;j++){ const c=a[i*v.w+j], o=(i*v.w+j)*4; let col;
+      if(c===0) col=[185,214,234]; else if(c===1) col=[226,226,220];
+      else { const dzx=(el(i,j+1)-el(i,j-1))/(2*cx), dzy=(el(i+1,j)-el(i-1,j))/(2*cy);
+        // luz de noroeste, 45° de altura
+        const nx=-dzx*3, ny=dzy*3, l=(nx*-0.5+ny*0.5+0.707)/Math.sqrt(nx*nx+ny*ny+1);
+        const sh=0.62+0.5*Math.max(0,l); col=hyp((c-2)*v.step).map(q=>Math.min(255,q*sh)); }
+      D[o]=col[0]; D[o+1]=col[1]; D[o+2]=col[2]; D[o+3]=255; } }
+  x.putImageData(im,0,0); return cv; }
+function regOf(lat,lon){ for(const [k,g] of Object.entries(GEO_DEM)){ if(lat<=g.la1+g.d/2&&lat>=g.la1-(g.h-0.5)*g.d&&lon>=g.lo0-g.d/2&&lon<=g.lo0+(g.w-0.5)*g.d) return k; } return null; }
+function mpFit(reg){ const g=GEO_DEM[reg], cv=$("#mp-cv"), W=cv.clientWidth||600, H=cv.clientHeight||500;
+  const la0=g.la1-(g.h-1)*g.d, lo1=g.lo0+(g.w-1)*g.d; MP.reg=reg; MP.clat=(g.la1+la0)/2; MP.clon=(g.lo0+lo1)/2; const k=mpK();
+  MP.s=Math.min(H/(g.la1-la0),W/((lo1-g.lo0)*k))*0.96; mpRegUI(); }
+const mpX=lon=>(lon-MP.clon)*MP.s*mpK()+$("#mp-cv").clientWidth/2;
+const mpY=lat=>(MP.clat-lat)*MP.s+$("#mp-cv").clientHeight/2;
+const mpLon=x=>MP.clon+(x-$("#mp-cv").clientWidth/2)/(MP.s*mpK());
+const mpLat=y=>MP.clat-(y-$("#mp-cv").clientHeight/2)/MP.s;
+function mpRegUI(){ $("#mp-reg").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===MP.reg))); }
+/* ---------- camadas com internet (satélite, ruas); o relevo sem internet fica sempre por baixo ---------- */
+const ESRI="https://server.arcgisonline.com/ArcGIS/rest/services/";
+const TILES={
+  sat:{max:19,url:(z,x,y)=>`${ESRI}World_Imagery/MapServer/tile/${z}/${y}/${x}`,
+    over:[(z,x,y)=>`${ESRI}Reference/World_Transportation/MapServer/tile/${z}/${y}/${x}`,(z,x,y)=>`${ESRI}Reference/World_Boundaries_and_Places/MapServer/tile/${z}/${y}/${x}`],
+    src:"Satélite e nomes: Esri, Maxar, Earthstar Geographics e comunidade de utilizadores GIS."},
+  rua:{max:19,url:(z,x,y)=>`https://tile.openstreetmap.org/${z}/${x}/${y}.png`,src:"Ruas: © colaboradores do OpenStreetMap."}};
+const MP_MAXS={off:6000,on:900000}; // píxeis por grau: sem internet ~18 m/píxel; com satélite ~0,1 m/píxel
+const TC=new Map(); let tcOk=0, tcErr=0, tcRaf=0;
+function mpTile(url){ let t=TC.get(url); if(t){ TC.delete(url); TC.set(url,t); return t; }
+  const im=new Image(); t={im,ok:false,err:false}; TC.set(url,t);
+  im.onload=()=>{ t.ok=true; tcOk++; if(MP.net!==true){ MP.net=true; mpNetUI(); } if(!tcRaf) tcRaf=requestAnimationFrame(()=>{ tcRaf=0; if($("#mp-dlg").open) mpDraw(); }); };
+  im.onerror=()=>{ t.err=true; tcErr++; if(!tcOk&&tcErr>=4&&MP.net!==false){ MP.net=false; mpNetUI(); mpDraw(); } };
+  im.src=url; if(TC.size>700) TC.delete(TC.keys().next().value); return t; }
+const mpOnline=()=>MP.lay!=="rel"&&MP.net!==false;
+function mpNetUI(){ const L=TILES[MP.lay], on=mpOnline();
+  $("#mp-lay").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===MP.lay)));
+  $("#mp-hint").textContent=MP.lay!=="rel"&&MP.net===false?"O satélite não carregou (sem internet, ou dentro do claude.ai, que bloqueia mapas externos). Mostro o relevo; clique no local da instalação.":
+    on?"Aproxime até ver o telhado e clique no local da instalação. Arraste para mover; roda do rato, dois dedos ou + / −.":
+    "Clique no local da instalação. Arraste para mover; roda do rato, dois dedos ou + / − para aproximar.";
+  $("#mp-src").textContent=(on?L.src+" ":"")+"Relevo: Terrarium (Mapzen/AWS, SRTM), grelha de ~1 km. Limites de concelho: CAOP. Localidades: GeoNames. Produção: PVGIS (Comissão Europeia, JRC)."+(on?"":" O relevo funciona sem internet.");
+  if(!on&&MP.s>MP_MAXS.off) MP.s=MP_MAXS.off; }
+// desenha as quadrículas (Web Mercator) que cobrem a vista; enquanto uma não chega, usa a de nível acima ampliada
+function mpTiles(x,W,H,dpr){ const L=TILES[MP.lay]; if(!L||MP.net===false) return false;
+  let z=Math.ceil(Math.log2(MP.s*mpK()*dpr*360/256)); z=Math.max(5,Math.min(L.max,z)); const n=2**z;
+  const tX=lon=>(lon+180)/360*n, tY=lat=>(1-Math.asinh(Math.tan(lat*Math.PI/180))/Math.PI)/2*n;
+  const lonT=v=>v/n*360-180, latT=v=>Math.atan(Math.sinh(Math.PI*(1-2*v/n)))*180/Math.PI;
+  const x0=Math.floor(tX(mpLon(0))), x1=Math.floor(tX(mpLon(W))), y0=Math.max(0,Math.floor(tY(mpLat(0)))), y1=Math.min(n-1,Math.floor(tY(mpLat(H))));
+  if((x1-x0+1)*(y1-y0+1)>150) return false;
+  let drawn=false; const over=[];
+  for(let ty=y0;ty<=y1;ty++) for(let tx=x0;tx<=x1;tx++){
+    const X0=Math.floor(mpX(lonT(tx))), X1=Math.ceil(mpX(lonT(tx+1))), Y0=Math.floor(mpY(latT(ty))), Y1=Math.ceil(mpY(latT(ty+1)));
+    const t=mpTile(L.url(z,tx,ty));
+    if(t.ok){ x.drawImage(t.im,X0,Y0,X1-X0,Y1-Y0); drawn=true; }
+    else for(let d=1;d<=5&&z-d>=0;d++){ const f=2**d, p=TC.get(L.url(z-d,tx>>d,ty>>d)); if(p&&p.ok){ const w=256/f;
+        x.drawImage(p.im,(tx-(tx>>d)*f)*w,(ty-(ty>>d)*f)*w,w,w,X0,Y0,X1-X0,Y1-Y0); drawn=true; break; } }
+    for(const o of L.over||[]) over.push([mpTile(o(z,tx,ty)),X0,Y0,X1-X0,Y1-Y0]); }
+  for(const [t,a,b,c,d] of over) if(t.ok) x.drawImage(t.im,a,b,c,d);
+  return drawn; }
+function mpDraw(){ const cv=$("#mp-cv"), W=cv.clientWidth, H=cv.clientHeight, dpr=window.devicePixelRatio||1; if(!W||!H) return;
+  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
+  const x=cv.getContext("2d"); x.setTransform(dpr,0,0,dpr,0,0); x.fillStyle="#b9d6ea"; x.fillRect(0,0,W,H);
+  x.imageSmoothingEnabled=true; x.imageSmoothingQuality="high";
+  for(const g of Object.values(MP.g)){ const X0=mpX(g.lo0-g.d/2), Y0=mpY(g.la1+g.d/2), X1=mpX(g.lo0+(g.w-0.5)*g.d), Y1=mpY(g.la1-(g.h-0.5)*g.d);
+    if(X1<0||Y1<0||X0>W||Y0>H) continue; x.drawImage(g.img,X0,Y0,X1-X0,Y1-Y0); }
+  const tiles=mpTiles(x,W,H,dpr); // com satélite/ruas, os nomes e limites vêm das próprias quadrículas
+  // limites de concelho (continente)
+  if(MP.reg==="c"&&!tiles){ const lo0=mpLon(0), lo1=mpLon(W), la1=mpLat(0), la0=mpLat(H);
+    x.lineWidth=MP.s>250?1:0.6; x.strokeStyle="rgba(50,45,40,.45)"; x.beginPath();
+    for(const c of MP.conc){ if(c.bb[2]<lo0||c.bb[0]>lo1||c.bb[3]<la0||c.bb[1]>la1) continue;
+      for(const r of c.R){ r.forEach((p,i)=>{ const X=mpX(p[0]), Y=mpY(p[1]); i?x.lineTo(X,Y):x.moveTo(X,Y); }); } }
+    x.stroke(); }
+  // nomes: capitais de distrito sempre; outras localidades quando há espaço
+  const boxes=[], lab=(t,lo,la,bold)=>{ const X=mpX(lo), Y=mpY(la); if(X<-50||Y<-20||X>W+50||Y>H+20) return;
+    x.font=`${bold?600:500} ${bold?12.5:11.5}px ${getComputedStyle(document.body).fontFamily}`; const w=x.measureText(t).width, b=[X+5,Y-8,X+9+w,Y+6];
+    if(boxes.some(q=>b[0]<q[2]&&b[2]>q[0]&&b[1]<q[3]&&b[3]>q[1])) return; boxes.push(b);
+    x.fillStyle=bold?"#18232b":"#3a4750"; x.beginPath(); x.arc(X,Y,bold?3:2,0,7); x.fill();
+    x.lineWidth=3; x.strokeStyle="rgba(255,255,255,.8)"; x.strokeText(t,X+7,Y+4); x.fillText(t,X+7,Y+4); };
+  if(!tiles) for(const [k,g] of Object.entries(GEO)) lab(k.replace(/ \(.*\)/,"").replace("Madeira","Funchal").replace("Açores","Ponta Delgada"),g[1],g[0],true);
+  if(MP.s>=110&&!tiles) for(const p of GEO_PLACES) lab(p[0],p[2],p[1],false);
+  if(MP.sel){ const X=mpX(MP.sel.lon), Y=mpY(MP.sel.lat); x.fillStyle="#b5612a"; x.strokeStyle="#fff"; x.lineWidth=2;
+    x.beginPath(); x.moveTo(X,Y); x.bezierCurveTo(X-9,Y-13,X-9,Y-25,X,Y-25); x.bezierCurveTo(X+9,Y-25,X+9,Y-13,X,Y); x.fill(); x.stroke();
+    x.fillStyle="#fff"; x.beginPath(); x.arc(X,Y-17,3.2,0,7); x.fill(); }
+  // escala
+  const kmpx=111.32/MP.s, nice=[0.005,0.01,0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200].find(v=>v/kmpx>=70)||200, L=nice/kmpx;
+  x.fillStyle="rgba(255,255,255,.85)"; x.fillRect(W-L-26,H-30,L+16,22); x.strokeStyle="#18232b"; x.lineWidth=1.5; x.beginPath(); x.moveTo(W-L-18,H-14); x.lineTo(W-18,H-14); x.moveTo(W-L-18,H-18); x.lineTo(W-L-18,H-10); x.moveTo(W-18,H-18); x.lineTo(W-18,H-10); x.stroke();
+  x.fillStyle="#18232b"; x.font=`500 11px ${getComputedStyle(document.body).fontFamily}`; x.fillText(nice<1?`${Math.round(nice*1000)} m`:`${String(nice).replace(".",",")} km`,W-L-14,H-17); }
+/* ---------- o que há num ponto ---------- */
+function inRing(r,lo,la){ let c=false; for(let i=0,j=r.length-1;i<r.length;j=i++){ const [xi,yi]=r[i],[xj,yj]=r[j]; if((yi>la)!==(yj>la)&&lo<(xj-xi)*(la-yi)/(yj-yi)+xi) c=!c; } return c; }
+const concAt=(lat,lon)=>MP.conc.find(c=>lon>=c.bb[0]&&lon<=c.bb[2]&&lat>=c.bb[1]&&lat<=c.bb[3]&&c.R.reduce((n,r)=>n^inRing(r,lon,lat),false));
+function demAt(lat,lon){ const reg=regOf(lat,lon); if(!reg) return null; const g=MP.g[reg], fx=(lon-g.lo0)/g.d, fy=(g.la1-lat)/g.d;
+  const j=Math.round(fx), i=Math.round(fy), code=g.a[i*g.w+j], j0=Math.floor(fx), i0=Math.floor(fy), tx=fx-j0, ty=fy-i0; let sw=0,sv=0,land=0;
+  for(const [ii,jj,w] of [[i0,j0,(1-tx)*(1-ty)],[i0,j0+1,tx*(1-ty)],[i0+1,j0,(1-tx)*ty],[i0+1,j0+1,tx*ty]]){
+    if(ii<0||jj<0||ii>=g.h||jj>=g.w) continue; const c=g.a[ii*g.w+jj]; if(c>=2){ sw+=w; sv+=w*(c-2)*g.step; land++; } }
+  return {reg,code,alt:sw?sv/sw:null,land}; }
+const kmTo=(la1,lo1,la2,lo2)=>Math.hypot((la1-la2)*111.2,(lo1-lo2)*111.2*Math.cos(la1*Math.PI/180));
+function nearPlace(lat,lon,max){ let b=null,bd=max; for(const p of GEO_PLACES){ const d=kmTo(lat,lon,p[1],p[2]); if(d<bd){bd=d;b=p;} } return b?{n:b[0],d:bd}:null; }
+// temperaturas e produção num ponto: valores das capitais de distrito levados ao nível do mar,
+// interpolados pelo inverso do quadrado da distância e devolvidos à altitude do ponto
+function mpClimate(lat,lon,alt,reg){
+  const keys=reg==="m"?["Madeira (Funchal)"]:reg==="a"?["Açores (Ponta Delgada)"]:Object.keys(LOCS).filter(k=>!/Madeira|Açores/.test(k));
+  let w=0,a=0,b=0,y=0;
+  for(const k of keys){ const [la,lo]=GEO[k], z=LOC_ALT[k]||0, wi=1/Math.pow(kmTo(lat,lon,la,lo)+2,2);
+    w+=wi; a+=wi*(LOCS[k][0]+LAPSE.tmin*z/100); b+=wi*(LOCS[k][1]+LAPSE.tmax*z/100); y+=wi*LOCS[k][2]; }
+  const z=Math.max(0,alt||0), pg=pvgisAt(lat,lon,reg);
+  return {tmin:Math.round(a/w-LAPSE.tmin*z/100),tmax:Math.round(b/w-LAPSE.tmax*z/100),yld:pg?Math.round(pg):Math.round(y/w/10)*10,ysrc:pg?"grid":"idw"}; }
+// produção específica do PVGIS (inclinação óptima, 14 % de perdas) interpolada na grelha de pvgis.js (geo-src/4_pvgis.py)
+function pvgisAt(lat,lon,reg){ const G=typeof GEO_PVGIS!=="undefined"&&GEO_PVGIS[reg]; if(!G) return null;
+  const fy=(G.la1-lat)/G.d, fx=(lon-G.lo0)/G.d, i0=Math.floor(fy), j0=Math.floor(fx), ty=fy-i0, tx=fx-j0;
+  const at=(i,j)=>i<0||j<0||i>=G.h||j>=G.w?0:G.v[i*G.w+j]; let sw=0,sv=0;
+  for(const [i,j,w] of [[i0,j0,(1-ty)*(1-tx)],[i0,j0+1,(1-ty)*tx],[i0+1,j0,ty*(1-tx)],[i0+1,j0+1,ty*tx]]){ const v=at(i,j); if(v&&w>0){ sw+=w; sv+=w*v; } }
+  if(sw>0) return sv/sw;
+  let b=null,bd=3; for(let i=i0-2;i<=i0+3;i++) for(let j=j0-2;j<=j0+3;j++){ const v=at(i,j), d=Math.hypot(i-fy,j-fx); if(v&&d<bd){ bd=d; b=v; } } return b; }
+/* ---------- PVGIS em linha, através de pvgis.php no mesmo servidor (o PVGIS não aceita pedidos directos do navegador) ---------- */
+const PVG={st:null,ready:null}; // st: true = há ponte; false = não há
+function pvgisProbe(){ if(PVG.ready) return PVG.ready;
+  const host=/^https?:$/.test(location.protocol)&&!/(^|\.)(claude\.ai|claude\.site|claudeusercontent\.com|anthropic\.com)$/.test(location.hostname);
+  return PVG.ready=(host?fetch("pvgis.php?ping=1",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>!!(j&&j.ok)).catch(()=>false):Promise.resolve(false))
+    .then(ok=>{ PVG.st=ok; const b=$("#pr-pvgis-net"); if(b) b.hidden=!ok; return ok; }); }
+async function pvgisLive(q){ if(!(await pvgisProbe())) throw new Error("sem ponte");
+  const r=await fetch("pvgis.php?"+new URLSearchParams(q)); const t=await r.text(); const o=JSON.parse(t);
+  if(!o.outputs) throw new Error(o.message||"PVGIS"); return {o,t}; }
+function mpInspect(lat,lon){ const d=demAt(lat,lon); if(!d) return {ok:false,why:"Fora das zonas do mapa (continente, Madeira e Açores)."};
+  let conc=null, dist=null;
+  if(d.reg==="c"){ conc=concAt(lat,lon); if(!conc) return {ok:false,why:d.code===1?"Este ponto fica fora de Portugal.":"Este ponto fica no mar."}; dist=conc.d; }
+  else if(!d.land) return {ok:false,why:"Este ponto fica no mar."};
+  const locKey=d.reg==="m"?"Madeira (Funchal)":d.reg==="a"?"Açores (Ponta Delgada)":(Object.keys(LOCS).find(k=>nrm(k)===nrm(dist))||Object.keys(GEO).filter(k=>!/Madeira|Açores/.test(k)).sort((p,q)=>kmTo(lat,lon,GEO[p][0],GEO[p][1])-kmTo(lat,lon,GEO[q][0],GEO[q][1]))[0]);
+  const np=nearPlace(lat,lon,d.reg==="c"?6:8);
+  let place=conc?(np&&nrm(np.n)!==nrm(conc.n)?`${np.n} (${conc.n})`:conc.n):(np?`${np.n} (${MREG[d.reg].n})`:MREG[d.reg].n);
+  return {ok:true,lat,lon,alt:d.alt??0,reg:d.reg,conc:conc?.n||"",dist:dist||MREG[d.reg].n,locKey,place,...mpClimate(lat,lon,d.alt,d.reg)}; }
+function mpInfo(){ const I=MP.info, el=$("#mp-info"); $("#mp-use").disabled=!(I&&I.ok);
+  if(!MP.sel){ el.innerHTML=`<div class="big">Escolha o ponto</div><p class="note">Clique no mapa onde fica a instalação. Também pode procurar um concelho ou localidade, ou colar as coordenadas (ou o link) do Google Maps.</p>
+    <p class="note">Ao usar o ponto, a app calcula a altitude, as temperaturas mínima e máxima de projecto e a produção específica para esse local.</p>`; return; }
+  if(!I.ok){ el.innerHTML=`<div class="big">${fco(MP.sel.lat)}, ${fco(MP.sel.lon)}</div><div class="msg">${I.why}</div>`; return; }
+  const row=(k,v,old)=>`<tr><td>${k}</td><td class="num"><strong>${v}</strong>${old!=null?`<br><span class="note">agora ${old}</span>`:""}</td></tr>`;
+  el.innerHTML=`<div><div class="big">${esc(I.place)}</div><div class="note">${I.reg==="c"?"Distrito de "+esc(I.dist):esc(I.dist)} · ${fco(I.lat)}, ${fco(I.lon)}</div></div>
+    <table><tbody>${row("Altitude",`≈ ${Math.round(I.alt)} m`)}${row("T. mínima de projecto",`${I.tmin} °C`,pv.tmin+" °C")}${row("T. máxima do ar",`${I.tmax} °C`,pv.tmax+" °C")}${row("Produção específica",`${fmt(I.yld,0)} kWh/kWp·ano`,fmt(pv.yld,0))}</tbody></table>
+    <p class="note">${I.ysrc==="live"?"Produção do PVGIS para este ponto exacto":I.ysrc==="grid"?"Produção do PVGIS (grelha de ~5 km, interpolada)":"Produção interpolada entre capitais de distrito"}, com inclinação óptima e 14 % de perdas.</p>
+    <p class="note">As temperaturas partem dos valores das capitais de distrito, interpoladas pela distância e corrigidas pela altitude do ponto (−${String(LAPSE.tmin).replace(".",",")} °C por 100 m nas mínimas, −${String(LAPSE.tmax).replace(".",",")} °C nas máximas). Vales com inversão térmica podem ficar mais frios. Pode sempre corrigir os valores à mão.</p>`; }
+function mpPick(lat,lon){ MP.sel={lat,lon}; MP.info=mpInspect(lat,lon); mpInfo(); mpDraw();
+  // com a ponte pvgis.php, troca o valor da grelha pelo do ponto exacto
+  const I=MP.info; if(I.ok&&PVG.st!==false) pvgisLive({lat:lat.toFixed(4),lon:lon.toFixed(4),peakpower:1,loss:14,optimalangles:1})
+    .then(({o})=>{ if(MP.info!==I) return; const v=+o.outputs?.totals?.fixed?.E_y; if(v>0){ I.yld=Math.round(v); I.ysrc="live"; mpInfo(); } }).catch(()=>{}); }
+function mpGoTo(lat,lon,s,pick=true){ const reg=regOf(lat,lon); if(!reg){ toast("Esse ponto fica fora do continente, da Madeira e dos Açores."); return; }
+  MP.reg=reg; mpRegUI(); MP.clat=lat; MP.clon=lon; MP.s=Math.min(Math.max(MP.s,s||0),mpOnline()?MP_MAXS.on:MP_MAXS.off); if(pick) mpPick(lat,lon); else mpDraw(); }
+// aceita "38.72, -9.14", links do Google Maps (@38.72,-9.14 ou q=…) e graus/minutos/segundos (38°43'20.3"N 9°08'21.5"W)
+function parseCoords(t){ t=String(t).trim(); let m=t.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)||t.match(/[?&](?:q|query|ll|destination)=(-?\d+\.\d+)(?:,|%2C)\s*(-?\d+\.\d+)/i)||t.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+  if(m) return [+m[1],+m[2]];
+  const dms=[...t.matchAll(/(\d+(?:[.,]\d+)?)\s*°\s*(?:(\d+(?:[.,]\d+)?)\s*['’′]\s*)?(?:(\d+(?:[.,]\d+)?)\s*(?:["”″]|''))?\s*([NSEWOL])/gi)];
+  if(dms.length===2){ const v=dms.map(q=>{ let d=+q[1].replace(",",".")+(+(q[2]||0).toString().replace(",",".")/60)+(+(q[3]||0).toString().replace(",",".")/3600); return /[SWO]/i.test(q[4])?-d:d; });
+    return /[NS]/i.test(dms[0][4])?v:[v[1],v[0]]; }
+  m=t.match(/(-?\d+(?:[.,]\d+)?)\s*[,;\s]\s*(-?\d+(?:[.,]\d+)?)/); if(m){ const a=+m[1].replace(",","."), b=+m[2].replace(",","."); if(Math.abs(a)<=90&&Math.abs(b)<=180) return [a,b]; }
+  return null; }
+function mpSearch(q){ q=q.replace(/ \(concelho\)$/,""); const k=nrm(q); if(!k) return;
+  const c=MP.conc.find(c=>nrm(c.n)===k); if(c){ const [x0,y0,x1,y1]=c.bb; MP.reg="c"; mpRegUI(); MP.clat=(y0+y1)/2; MP.clon=(x0+x1)/2;
+    const cv=$("#mp-cv"); MP.s=Math.min(cv.clientHeight/(y1-y0),cv.clientWidth/((x1-x0)*Math.cos((y0+y1)/2*Math.PI/180)))*0.8;
+    // ponto inicial: a sede (localidade com o mesmo nome) ou o centro do concelho
+    const p=GEO_PLACES.find(p=>nrm(p[0])===k&&inRing(c.R[0],p[2],p[1])); const la=p?p[1]:(y0+y1)/2, lo=p?p[2]:(x0+x1)/2;
+    mpPick(concAt(la,lo)?la:MP.clat,concAt(la,lo)?lo:MP.clon); return; }
+  const p=GEO_PLACES.find(p=>nrm(p[0])===k)||GEO_PLACES.find(p=>nrm(p[0]).startsWith(k)); if(p){ MP.s=0; mpGoTo(p[1],p[2],400); return; }
+  mpAddr(q); }
+// moradas (rua, número, código postal…): pesquisa no OpenStreetMap (Nominatim), só com internet.
+// O Nominatim falha muitas vezes com "rua, localidade"; nesse caso procura só a rua à volta da localidade.
+async function mpAddr(q){ const no=()=>toast("Não encontrei esse local. Tente o concelho ou cole as coordenadas do Google Maps.");
+  if(navigator.onLine===false){ no(); return; }
+  const tries=[{q}], parts=q.split(",").map(x=>x.trim()).filter(Boolean);
+  if(parts.length>1){ const street=parts[0].replace(/\b(n\.?º|nº|n\.)?\s*\d+[a-z]?\b/gi,"").trim(), town=nrm(parts.slice(1).filter(x=>!/^(n\.?º\s*)?\d+[a-z]?$/i.test(x)).join(" ").replace(/\d{4}-\d{3}/,"").trim());
+    const c=MP.conc.find(c=>nrm(c.n)===town), pl=GEO_PLACES.find(p=>nrm(p[0])===town);
+    const bb=c?c.bb:pl?[pl[2]-0.12,pl[1]-0.1,pl[2]+0.12,pl[1]+0.1]:null;
+    if(street&&bb) tries.push({q:street,viewbox:bb.join(","),bounded:1}); }
+  try{ for(const [n,t] of tries.entries()){ if(n) await new Promise(r=>setTimeout(r,1100)); // 1 pedido por segundo (regras do Nominatim)
+      const r=await fetch("https://nominatim.openstreetmap.org/search?"+new URLSearchParams({...t,format:"jsonv2",limit:1,countrycodes:"pt","accept-language":"pt"}));
+      const j=await r.json(); if(!j.length) continue; const h=j[0], lat=+h.lat, lon=+h.lon;
+      const fine=h.category==="building"||/house|building/.test(h.type)||h.place_rank>=30;
+      MP.s=0; mpGoTo(lat,lon,fine?150000:h.place_rank>=26?60000:h.place_rank>=16?8000:3000);
+      toast(h.display_name.split(",").slice(0,3).join(",")+(n?" (procurei só a rua; afine o ponto no telhado)":"")); return; }
+    no(); }catch(e){ no(); } }
+async function mpOpen(){ const dlg=$("#mp-dlg");
+  if(typeof DecompressionStream==="undefined"){ toast("Este navegador não consegue abrir o mapa. Actualize-o."); return; }
+  dlg.showModal(); $("#mp-info").innerHTML=`<p class="note">A preparar o mapa…</p>`;
+  try{ await mpLoad(); }catch(err){ $("#mp-info").innerHTML=`<div class="msg">Não consegui preparar o mapa neste navegador.</div>`; return; }
+  $("#mp-co").value=""; $("#mp-q").value="";
+  mpNetUI();
+  if(pv.lat!=null){ MP.reg=regOf(pv.lat,pv.lon)||"c"; mpFit(MP.reg); MP.clat=pv.lat; MP.clon=pv.lon; MP.s=mpOnline()?60000:Math.max(MP.s*6,500); MP.sel={lat:pv.lat,lon:pv.lon}; MP.info=mpInspect(pv.lat,pv.lon); }
+  else { mpFit(/Madeira/.test(pv.loc)?"m":/Açores/.test(pv.loc)?"a":"c"); MP.sel=null; MP.info=null;
+    if(MP.reg==="c"&&GEO[pv.loc]){ MP.clat=GEO[pv.loc][0]; MP.clon=GEO[pv.loc][1]; MP.s*=2.5; } }
+  mpInfo(); requestAnimationFrame(mpDraw); }
+function mpUse(){ const I=MP.info; if(!I||!I.ok) return;
+  const oldGps=pv.lat!=null?`${fco(pv.lat)}, ${fco(pv.lon)}`:"";
+  Object.assign(pv,{lat:+I.lat.toFixed(6),lon:+I.lon.toFixed(6),alt:Math.round(I.alt),place:I.place,loc:I.locKey,tmin:I.tmin,tmax:I.tmax,yld:I.yld,ysrc:I.ysrc});
+  $("#pv-loc").value=pv.loc; $("#pv-tmin").value=pv.tmin; $("#pv-tmax").value=pv.tmax; $("#pv-yield").value=pv.yld;
+  if(typeof pr!=="undefined"){ pr.lat=pr.lon=null; prSave(); if(typeof prFill==="function"&&$("#pr-lat")) prFill(); }
+  // dados do processo DGEG: coordenadas (se vazias ou vindas do mapa) e concelho (se vazio)
+  if(typeof docS!=="undefined"){ const gps=`${fco(pv.lat)}, ${fco(pv.lon)}`;
+    if(!docS.i.gps||docS.i.gps===oldGps) docS.i.gps=gps; if(!docS.i.conc&&I.conc) docS.i.conc=I.conc;
+    docSave(false); for(const k of ["gps","conc"]){ const el=$("#doc-i-"+k); if(el) el.value=docS.i[k]; } }
+  locNote(); pvRun(); $("#mp-dlg").close(); toast(`Local: ${I.place} · T mín ${I.tmin} °C · T máx ${I.tmax} °C.`); }
+/* ---------- interacção ---------- */
+{ const cv=$("#mp-cv"), box=$("#mp-map"), P=new Map(); let drag=null, pinch=null;
+  const zoomAt=(f,X,Y)=>{ const lo=mpLon(X), la=mpLat(Y); MP.s=Math.max(20,Math.min(mpOnline()?MP_MAXS.on:MP_MAXS.off,MP.s*f)); MP.clon+=lo-mpLon(X); MP.clat+=la-mpLat(Y); mpDraw(); };
+  const pos=e=>{ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; };
+  cv.addEventListener("pointerdown",e=>{ cv.setPointerCapture(e.pointerId); P.set(e.pointerId,pos(e));
+    if(P.size===1) drag={p:pos(e),c:[MP.clon,MP.clat],moved:false};
+    if(P.size===2){ const [a,b]=[...P.values()]; pinch={d:Math.hypot(a[0]-b[0],a[1]-b[1]),s:MP.s}; drag=null; } });
+  cv.addEventListener("pointermove",e=>{ if(!P.has(e.pointerId)) return; P.set(e.pointerId,pos(e));
+    if(pinch&&P.size===2){ const [a,b]=[...P.values()], d=Math.hypot(a[0]-b[0],a[1]-b[1]); zoomAt(pinch.s*d/pinch.d/MP.s,(a[0]+b[0])/2,(a[1]+b[1])/2); return; }
+    if(drag){ const p=pos(e), dx=p[0]-drag.p[0], dy=p[1]-drag.p[1]; if(Math.hypot(dx,dy)>4){ drag.moved=true; box.classList.add("drag"); }
+      if(drag.moved){ MP.clon=drag.c[0]-dx/(MP.s*mpK()); MP.clat=drag.c[1]+dy/MP.s; mpDraw(); } } });
+  const up=e=>{ if(!P.has(e.pointerId)) return; P.delete(e.pointerId); box.classList.remove("drag");
+    if(drag&&!drag.moved&&!pinch){ const [X,Y]=pos(e); mpPick(mpLat(Y),mpLon(X)); }
+    if(P.size<2) pinch=null; drag=null; };
+  cv.addEventListener("pointerup",up); cv.addEventListener("pointercancel",e=>{ P.delete(e.pointerId); drag=null; pinch=null; box.classList.remove("drag"); });
+  cv.addEventListener("wheel",e=>{ e.preventDefault(); const [X,Y]=pos(e); zoomAt(Math.exp(-e.deltaY*0.0015),X,Y); },{passive:false});
+  $("#mp-zi").addEventListener("click",()=>zoomAt(1.6,cv.clientWidth/2,cv.clientHeight/2));
+  $("#mp-zo").addEventListener("click",()=>zoomAt(1/1.6,cv.clientWidth/2,cv.clientHeight/2));
+  new ResizeObserver(()=>{ if($("#mp-dlg").open) mpDraw(); }).observe(box);
+}
+document.addEventListener("click",e=>{
+  if(e.target.id==="pv-map-open"){ mpOpen(); return }
+  if(e.target.id==="mp-x"||e.target.id==="mp-cancel"){ $("#mp-dlg").close(); return }
+  if(e.target.id==="mp-use"){ mpUse(); return }
+  const ly=e.target.closest("#mp-lay button"); if(ly){ MP.lay=ly.dataset.v; try{ localStorage.setItem("mp-lay",MP.lay); }catch(err){} if(MP.lay!=="rel"&&MP.net===false){ MP.net=null; tcErr=0; TC.clear(); } mpNetUI(); mpDraw(); return }
+  if(e.target.id==="mp-me"){ if(!navigator.geolocation){ toast("Este navegador não dá a localização."); return }
+    toast("A obter a localização…"); navigator.geolocation.getCurrentPosition(p=>{ MP.s=0; mpGoTo(p.coords.latitude,p.coords.longitude,mpOnline()?150000:600); toast(`Localização com precisão de ~${Math.round(p.coords.accuracy)} m. Confirme o ponto no telhado.`); },
+      ()=>toast("Não consegui obter a localização (permissão negada ou sem GPS)."),{enableHighAccuracy:true,timeout:15000}); return }
+  if(e.target.id==="mp-go"){ const c=parseCoords($("#mp-co").value); if(!c){ toast("Não reconheci as coordenadas. Ex.: 38.7223, -9.1393"); return } MP.s=0; mpGoTo(c[0],c[1],mpOnline()?150000:600); return }
+  const r=e.target.closest("#mp-reg button"); if(r){ mpFit(r.dataset.v); mpDraw(); }
+});
+document.addEventListener("change",e=>{ if(e.target.id==="mp-q") mpSearch(e.target.value); });
+// há ponte para o PVGIS ao lado da app (pvgis.php)? mostra o botão no separador Produção
+pvgisProbe();
+document.addEventListener("keydown",e=>{ if(e.target.id==="mp-co"&&e.key==="Enter"){ e.preventDefault(); $("#mp-go").click(); } if(e.target.id==="mp-q"&&e.key==="Enter"){ e.preventDefault(); mpSearch(e.target.value); } });
+</script>

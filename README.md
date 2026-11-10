@@ -8,14 +8,15 @@ App numa só página (`canalizacoes.html`) para projectos UPAC: dimensionamento 
 python3 build.py
 ```
 
-Junta `app.html`, `pv_part.html`, `sys_part.html`, `doc_part.html`, `map_part.html`, `mobile_part.html`, `data.js`, `locs.js`, `geo.js`, `modules.json`, `inverters.json` e `serup-inversores.json` em `canalizacoes.html`.
+Junta `app.html`, `pv_part.html`, `sys_part.html`, `doc_part.html`, `map_part.html`, `mobile_part.html`, `data.js`, `locs.js`, `geo.js`, `pvgis.js`, `modules.json`, `inverters.json` e `serup-inversores.json` em `canalizacoes.html`.
 
 ## Pastas
 
 - `fichas/` — fichas técnicas (PDF) de painéis e inversores usadas nos dados.
-- `geo-src/` — scripts que geram `geo.js` (mapa offline).
+- `geo-src/` — scripts que geram `geo.js` (mapa offline) e `pvgis.js` (`4_pvgis.py`: produção específica do PVGIS numa grelha de ~5 km).
 - `versoes/` — versões guardadas (fontes + html montado), cada uma com `LEIA-ME.md`.
-- `site/fv.zip` — versão offline (`index.html` + `xlsx.full.min.js`) para alojar num domínio próprio.
+- `site/fv.zip` — versão offline (`index.html` + `xlsx.full.min.js` + `pvgis.php`) para alojar num domínio próprio.
+- `pvgis.php` — ponte opcional para o PVGIS em linha (precisa de PHP no alojamento). O PVGIS não aceita pedidos directos do navegador; com este ficheiro ao lado da app, o mapa usa o valor exacto do ponto e o separador Produção ganha o botão «Obter do PVGIS». Sem ele, a app usa a grelha incluída.
 - `Calculo_Canaliz.xls` — folha original das canalizações.
 
 Outros scripts: `fetch_serup.py` (actualiza a lista de inversores certificados da DGEG/SERUP), `iac_fichas.py` e `fichas_pdf.py` (dados das fichas).
