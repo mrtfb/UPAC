@@ -1,0 +1,807 @@
+<style>
+/* Separadores "Produção e poupança" e "Processo DGEG" e barra do projecto */
+:root{--c1:#b5612a;--c2:#2f6f9f;--c3:#8a8f2a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c1:#d27434;--c2:#4a92cf;--c3:#959a2c}}
+:root[data-theme="dark"]{--c1:#d27434;--c2:#4a92cf;--c3:#959a2c}
+.prj-bar{gap:10px 12px}
+.prj-bar .prj-name{flex:1 1 260px;flex-direction:row;align-items:center;gap:10px}
+.prj-bar .prj-name>span{font-family:var(--f-display);font-size:15px;font-weight:600;color:var(--ink)}
+label.btn{display:inline-flex;align-items:center}
+.pr-ch{position:relative;overflow-x:auto}
+.pr-ch svg{display:block;width:100%;min-width:560px;height:auto}
+.pr-ch text{fill:var(--muted);font-family:var(--f-body);font-size:11px}
+.pr-ch .gl{stroke:var(--line);stroke-width:1}
+.pr-ch .ax{stroke:var(--muted);stroke-width:1}
+.pr-ch .hov{fill:transparent;cursor:default}
+.pr-ch .hov:hover+.hl,.pr-ch .hl.on{opacity:1}
+.pr-ch .hl{opacity:0;pointer-events:none}
+.pr-tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.12);white-space:nowrap;z-index:2}
+.pr-tip b{font-weight:600}
+.pr-leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted)}
+.pr-leg i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px}
+.pr-leg i.ln{height:0;border-top:2px solid;border-radius:0;width:18px;vertical-align:middle}
+.mchips{display:flex;flex-wrap:wrap;gap:4px}
+.mchips button{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:6px;padding:3px 8px;font:inherit;font-size:12px;cursor:pointer}
+.mchips button[aria-pressed="true"]{border-color:var(--accent);color:var(--ink);background:var(--accent-soft);font-weight:600}
+.pr-bt tr.rec td{background:var(--accent-soft)}
+.pr-bt tbody tr{cursor:pointer}
+.mon12{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.mon12 input{padding:5px 6px;font-size:12.5px}
+.doc-prev{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:18px 22px;max-height:640px;overflow:auto;font-size:13px;line-height:1.5}
+.doc-prev h1{font-size:20px;margin:0 0 4px}
+.doc-prev h2{font-size:16px;margin:16px 0 6px}
+.doc-prev h3{font-size:13px;margin:12px 0 4px;text-transform:none;letter-spacing:0;color:var(--ink)}
+.doc-prev p{margin:0 0 8px;max-width:80ch}
+.doc-prev ul{margin:0 0 8px;padding-left:20px}
+.doc-prev table{margin:4px 0 10px;font-size:12.5px}
+.doc-prev td,.doc-prev th{white-space:normal;vertical-align:top;border:1px solid var(--line);padding:4px 7px}
+.doc-prev tbody tr{cursor:default}
+.doc-prev tbody tr:hover{background:transparent}
+.doc-prev .sub{color:var(--muted);margin-bottom:14px}
+.doc-list td{white-space:normal;vertical-align:top}
+.doc-list tbody tr{cursor:default}
+.dtabs{display:flex;gap:4px;flex-wrap:wrap}
+.cp{padding:2px 7px;font-size:12px}
+</style>
+<section id="view-prod" hidden>
+  <div class="pv">
+    <div class="panel pv-in">
+      <p class="note" id="pr-cfg"></p>
+      <fieldset><h3>1 · Painéis no telhado</h3>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>Inclinação (°)</span><input id="pr-tilt" type="number" min="0" max="90" step="1"><small>0 = horizontal</small></label>
+          <label class="f"><span>Azimute (°)</span><input id="pr-az" type="number" min="-180" max="180" step="5"><small id="pr-az-n">0 = Sul · −90 = Este · 90 = Oeste</small></label>
+          <label class="f"><span>Perdas do sistema (%)</span><input id="pr-loss" type="number" min="0" max="50" step="1"><small>cabos, inversor, sujidade (PVGIS: 14)</small></label>
+          <label class="f"><span>Sombreamento (%)</span><input id="pr-shade" type="number" min="0" max="80" step="1"></label>
+          <label class="f"><span>Latitude (°)</span><input id="pr-lat" type="number" step="0.01"><small id="pr-lat-n"></small></label>
+          <label class="f"><span>Longitude (°)</span><input id="pr-lon" type="number" step="0.01"></label>
+        </div>
+        <div class="src" id="pr-src"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn" for="pr-pvgis">Importar ficheiro PVGIS…</label><input id="pr-pvgis" type="file" accept=".csv,.json,.txt" hidden><button type="button" class="btn ghost" id="pr-pvgis-clr" hidden>× Usar o modelo da app</button></div>
+        <details class="adv"><summary>Como obter o ficheiro do PVGIS</summary>
+          <p class="note">No <a href="https://re.jrc.ec.europa.eu/pvg_tools/pt/" target="_blank" rel="noopener">PVGIS</a>, marque o local no mapa, escolha “Sistema FV ligado à rede”, ponha a potência de pico, a inclinação e o azimute, e descarregue em CSV ou JSON. Serve o separador mensal ou os “Dados horários” (dá também a forma do dia). A app usa a produção por kWp do ficheiro com a potência deste projecto.</p></details>
+      </fieldset>
+      <fieldset><h3>2 · Consumo</h3>
+        <label class="f"><span>Tipo de consumo</span><select id="pr-prof">
+          <option value="res">Habitação, ocupada sobretudo ao fim do dia</option>
+          <option value="resd">Habitação ocupada de dia (teletrabalho, reformados)</option>
+          <option value="serv">Comércio e serviços, horário diurno</option>
+          <option value="ind">Indústria, laboração contínua</option>
+          <option value="agr">Agrícola, rega e bombagem no verão</option></select></label>
+        <label class="f"><span>Consumo anual (kWh)</span><input id="pr-cons" type="number" min="0" step="100"><small id="pr-cons-n"></small></label>
+        <details class="adv" id="pr-mon-d"><summary>Consumos mensais das facturas (opcional)</summary>
+          <div class="mon12" id="pr-mon"></div><small class="note">Preenchidos, substituem o consumo anual. Deixe todos vazios para usar o anual.</small></details>
+        <div class="src" id="pr-load-st"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn" for="pr-eredes">Importar consumos E-REDES…</label><input id="pr-eredes" type="file" accept=".xlsx,.xls,.csv" hidden><button type="button" class="btn ghost" id="pr-eredes-clr" hidden>× Usar o perfil</button></div>
+        <details class="adv"><summary>Que ficheiro da E-REDES</summary><p class="note">No Balcão Digital da E-REDES, em Consumos, exporte o diagrama de carga (leituras de 15 em 15 minutos) do CPE, de preferência de um ano inteiro. A app calcula o dia médio de cada mês. Os meses sem dados seguem a forma do perfil escolhido.</p></details>
+      </fieldset>
+      <fieldset><h3>3 · Tarifa e injecção</h3>
+        <div class="f"><span>Tarifa</span><div class="seg" id="pr-tar"><button type="button" data-v="s">Simples</button><button type="button" data-v="b">Bi-horária</button></div></div>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span id="pr-p1-l">Energia (€/kWh)</span><input id="pr-p1" type="number" min="0" step="0.005"><small>com IVA e taxas</small></label>
+          <label class="f" id="pr-p2-w"><span>Vazio (€/kWh)</span><input id="pr-p2" type="number" min="0" step="0.005"><small>22h–8h, ciclo diário</small></label>
+          <label class="f"><span>Venda do excedente (€/kWh)</span><input id="pr-sell" type="number" min="0" step="0.005"></label>
+        </div>
+        <div class="f"><span>Injecção na rede (RESP)</span><div class="seg" id="pr-inj"><button type="button" data-v="exc">Vende o excedente</button><button type="button" data-v="zero">Sem injecção</button></div></div>
+      </fieldset>
+      <fieldset><h3>4 · Bateria</h3>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f" style="grid-column:1/-1"><span>Capacidade nominal</span><select id="pr-cap"></select></label>
+          <label class="f" id="pr-capv-w" style="display:none"><span>Valor (kWh)</span><input id="pr-capv" type="number" min="0" max="500" step="0.01" inputmode="decimal"><small>ficha técnica</small></label>
+          <label class="f"><span>Potência (kW)</span><input id="pr-bpow" type="number" min="0" step="0.1" inputmode="decimal"><small id="pr-bpow-n">0 = 0,5 C</small></label>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr 1fr 1fr">
+          <label class="f"><span>DoD (%)</span><input id="pr-dod" type="number" min="10" max="100" step="1"><small>da nominal</small></label>
+          <label class="f"><span>Rendimento (%)</span><input id="pr-eff" type="number" min="70" max="100" step="1"><small>ida e volta</small></label>
+          <label class="f"><span>Vida (anos)</span><input id="pr-blife" type="number" min="5" max="25" step="1"></label>
+        </div>
+      </fieldset>
+      <fieldset><h3>5 · Investimento</h3>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>Sistema FV (€/kWp)</span><input id="pr-cpk" type="number" min="0" step="50"></label>
+          <label class="f"><span>Bateria (€/kWh)</span><input id="pr-cbat" type="number" min="0" step="25"></label>
+          <label class="f" style="grid-column:1/-1"><span>Ou investimento total (€)</span><input id="pr-invTot" type="number" min="0" step="100"><small>0 = calcular pelos preços acima</small></label>
+          <label class="f"><span>Manutenção (€/ano)</span><input id="pr-om" type="number" min="0" step="10"></label>
+          <label class="f"><span>Degradação (%/ano)</span><input id="pr-deg" type="number" min="0" max="2" step="0.1"></label>
+          <label class="f"><span>Subida da energia (%/ano)</span><input id="pr-esc" type="number" min="-5" max="10" step="0.5"></label>
+          <label class="f"><span>Taxa de actualização (%)</span><input id="pr-rate" type="number" min="0" max="15" step="0.5"></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="pv-out">
+      <div class="panel sec"><h2>Resumo</h2><div class="kpis" id="pr-kpi"></div><div id="pr-warn" style="display:flex;flex-direction:column;gap:6px"></div></div>
+      <div class="panel sec"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Produção e consumo por mês</h2><span class="note">kWh por mês</span></div>
+        <div class="pr-leg"><span><i style="background:var(--c1)"></i>Autoconsumo</span><span><i style="background:var(--c3)"></i><span id="pr-leg-exp">Injectado na rede</span></span><span><i style="background:var(--c2)"></i>Consumo</span></div>
+        <div class="pr-ch" id="pr-month"></div>
+        <details><summary>Ver a tabela</summary><div class="tbl" id="pr-mtab"></div></details>
+      </div>
+      <div class="panel sec"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Dia médio</h2><div class="mchips" id="pr-msel"></div></div>
+        <div class="pr-leg"><span><i class="ln" style="border-color:var(--c1)"></i>Produção FV</span><span><i class="ln" style="border-color:var(--c2)"></i>Consumo</span><span id="pr-leg-bat"><i class="ln" style="border-color:var(--c3)"></i>Carga da bateria (kWh)</span></div>
+        <div class="pr-ch" id="pr-day"></div></div>
+      <div class="panel sec"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Dimensionamento da bateria</h2><span class="note">Toque numa linha para a escolher.</span></div>
+        <p class="note" id="pr-bnote"></p>
+        <div class="tbl pr-bt" id="pr-btab"></div></div>
+      <div class="panel sec"><h2>Retorno do investimento</h2><div class="kpis" id="pr-eco"></div>
+        <div class="pr-ch" id="pr-cash"></div>
+        <details><summary>Ver ano a ano</summary><div class="tbl" id="pr-ytab"></div></details></div>
+      <div class="panel sec" id="pr-how"></div>
+    </div>
+  </div>
+</section>
+<section id="view-doc" hidden>
+  <div class="pv">
+    <div class="panel pv-in">
+      <p class="note" id="doc-cfg"></p>
+      <fieldset><h3>1 · Titular da instalação</h3>
+        <label class="f"><span>Nome</span><input id="doc-t-nome"></label>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>NIF</span><input id="doc-t-nif" inputmode="numeric"></label>
+          <label class="f"><span>Telefone</span><input id="doc-t-tel"></label></div>
+        <label class="f"><span>E-mail</span><input id="doc-t-email" type="email"></label>
+        <label class="f"><span>Morada do titular</span><input id="doc-t-morada"><small>vazio = a do local da instalação</small></label>
+      </fieldset>
+      <fieldset><h3>2 · Local da instalação</h3>
+        <label class="f"><span>Morada</span><input id="doc-i-morada"></label>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>Código postal</span><input id="doc-i-cp" placeholder="0000-000"></label>
+          <label class="f"><span>Localidade</span><input id="doc-i-local"></label>
+          <label class="f"><span>Freguesia</span><input id="doc-i-freg"></label>
+          <label class="f"><span>Concelho</span><input id="doc-i-conc"></label>
+          <label class="f" style="grid-column:1/-1"><span>CPE</span><input id="doc-i-cpe" placeholder="PT 0002 0000 0000 0000 XX" style="font-family:var(--f-mono)"></label>
+          <label class="f"><span>Potência contratada (kVA)</span><input id="doc-i-pc" type="number" min="0" step="0.15"></label>
+          <label class="f"><span>Potência de ligação (kW)</span><input id="doc-i-pl" type="number" min="0" step="0.1"><small id="doc-i-pl-n"></small></label>
+          <label class="f"><span>Tipo de utilização</span><select id="doc-i-tipo"><option value="hab">Habitação</option><option value="serv">Comércio / serviços</option><option value="ind">Indústria</option><option value="agr">Agrícola</option></select></label>
+          <label class="f"><span>Coordenadas GPS</span><input id="doc-i-gps" placeholder="38.7223, -9.1393"></label>
+        </div>
+        <label class="f"><span>Estrutura de fixação</span><input id="doc-i-estr" placeholder="ex.: perfis de alumínio sobre ganchos de telha"></label>
+        <label class="f"><span>N.º de série do(s) inversor(es)</span><input id="doc-i-serie"></label>
+      </fieldset>
+      <fieldset><h3>3 · Técnico responsável</h3>
+        <p class="note">Fica guardado neste navegador e preenche os projectos novos.</p>
+        <label class="f"><span>Nome</span><input id="doc-e-nome"></label>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>N.º de inscrição DGEG</span><input id="doc-e-num"></label>
+          <label class="f"><span>Habilitação</span><input id="doc-e-hab" placeholder="ex.: Técnico responsável por instalações eléctricas"></label>
+          <label class="f"><span>Ordem / associação e n.º</span><input id="doc-e-ord" placeholder="opcional"></label>
+          <label class="f"><span>NIF</span><input id="doc-e-nif"></label>
+          <label class="f"><span>Telefone</span><input id="doc-e-tel"></label>
+          <label class="f"><span>E-mail</span><input id="doc-e-email" type="email"></label>
+        </div>
+        <label class="f"><span>Entidade instaladora / empresa</span><input id="doc-e-emp"></label>
+        <label class="f"><span>Alvará / certificado da empresa</span><input id="doc-e-alv" placeholder="opcional"></label>
+      </fieldset>
+      <fieldset><h3>4 · Documento</h3>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>Local de assinatura</span><input id="doc-d-local"></label>
+          <label class="f"><span>Data</span><input id="doc-d-data" type="date"></label></div>
+        <label class="f"><span>Observações a incluir na memória</span><textarea id="doc-d-obs" rows="3" style="font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px"></textarea></label>
+      </fieldset>
+    </div>
+    <div class="pv-out">
+      <div class="panel sec"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Documentos do processo</h2>
+        <span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="doc-w-md" hidden>Memória (Word)</button><button class="btn" id="doc-w-tr" hidden>Termo (Word)</button><button class="btn pri" id="doc-pdf" hidden>Processo completo (PDF)</button></span></div>
+        <p class="note" id="doc-dl-n" hidden>Os ficheiros Word e PDF descarregam-se quando abre a app no claude.ai.</p>
+        <div class="kpis" id="doc-kpi"></div>
+        <div id="doc-warn" style="display:flex;flex-direction:column;gap:6px"></div>
+        <div class="tbl doc-list"><table><thead><tr><th>Documento</th><th>Estado</th><th>Notas</th></tr></thead><tbody id="doc-list"></tbody></table></div>
+      </div>
+      <div class="panel sec"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Pré-visualização</h2>
+        <div class="seg dtabs" id="doc-view"><button type="button" data-v="md">Memória descritiva</button><button type="button" data-v="tr">Termo de responsabilidade</button><button type="button" data-v="fd">Dados para o portal</button></div></div>
+        <div class="doc-prev" id="doc-prev"></div>
+        <p class="src">Os textos seguem as RTIEBT e o Decreto-Lei n.º 15/2022 na redacção em vigor. O regime (comunicação prévia ou registo) é decidido pela potência instalada. Confirme no portal do autoconsumo da DGEG os documentos e os modelos pedidos para cada pedido, que podem mudar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+/* ======================= Projecto: guardar e abrir ======================= */
+const PRJ_APP="fv-dimensionamento";
+let PRDL=null; window.claude?.use?.("downloads").then(d=>{ PRDL=d; prjDlUI(); }).catch(()=>{});
+const slug=s=>(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^\w]+/g,"-").replace(/^-|-$/g,"").toLowerCase();
+const editRef=E=>E?{mod:modName(E.m),inv:invName(E.inv),N:E.N,cfg:E.cfg.map(c=>({s:c.s,ns:c.ns}))}:null;
+function editRestore(ref){ if(!ref) return false; const m=MODULES.find(x=>modName(x)===ref.mod), inv=findInv(ref.inv);
+  if(!m||!inv||!Array.isArray(ref.cfg)||ref.cfg.length!==inv.strings_per_mppt.length) return false;
+  pv.edit={m,inv,N:+ref.N||1,cfg:ref.cfg.map(c=>({s:+c.s||0,ns:+c.ns||1}))};
+  const same=r=>r.m===m&&r.inv===inv&&r.N===pv.edit.N&&r.cfg.every((c,j)=>c.s===pv.edit.cfg[j].s&&(c.s?c.ns===pv.edit.cfg[j].ns:true));
+  pv.sel=PVRES.findIndex(same); renderOpts(); renderPvDetail(); return true; }
+// a configuração escolhida (incluindo ajustes manuais das strings) passa a ficar guardada no navegador
+{ const base=renderPvDetail; renderPvDetail=function(){ base(); try{localStorage.setItem("pv-edit",JSON.stringify(editRef(pv.edit)))}catch(e){} if(typeof prRender==="function"){prRender();docRender();} }; }
+function prjData(){ return {app:PRJ_APP,v:1,saved:new Date().toISOString(),name:sy.proj||"",
+  pv:{...pv,edit:null},edit:editRef(pv.edit),sy:{...sy,on:null},pr:{...pr},doc:JSON.parse(JSON.stringify(docS)),canaliz:state,
+  custom:CUSTOM.filter(c=>pv.edit&&invName(c)===invName(pv.edit.inv)||invName(c)===pv.inv),
+  customMod:MCUSTOM.filter(c=>pv.edit&&modName(c)===modName(pv.edit.m)||modName(c)===pv.mod)}; }
+function prjApply(d){
+  (d.custom||[]).forEach(c=>{ const k=invName(c); if(!INVERTERS.some(i=>invName(i)===k)){ INVERTERS.push(c); CUSTOM.push(c); } });
+  try{localStorage.setItem(CUST_KEY,JSON.stringify(CUSTOM))}catch(_){}
+  (d.customMod||[]).forEach(c=>{ const k=modName(c); if(!MODULES.some(m=>modName(m)===k)){ MODULES.push(c); MCUSTOM.push(c); } });
+  try{localStorage.setItem(MCUST_KEY,JSON.stringify(MCUSTOM))}catch(_){}
+  DGM.clear();
+  pv={...PV0,...(d.pv||{}),edit:null}; if(!LOCS[pv.loc]) pv.loc=PV0.loc;
+  sy={...SY0,iac:{},...(d.sy||{}),on:null}; sySave();
+  pr={...PR0,...(d.pr||{})}; prSave();
+  docS=docNew(d.doc); docSave(false);
+  if(d.canaliz&&Array.isArray(d.canaliz.circuits)) state=d.canaliz; else state={qd:"Q.G.E.",du:3,mode:"excel",sel:1,circuits:EXAMPLES.map(c=>({...c}))};
+  $("#g-qd").value=state.qd; $("#g-du").value=state.du; $("#g-mode").value=state.mode; render();
+  syInit(); pvInit(); editRestore(d.edit); pvSave(); prInit(); docInit(); prjUI();
+}
+function prjUI(){ $("#prj-name").value=sy.proj||""; $("#sy-proj").value=sy.proj||""; }
+function prjDlUI(){ $("#doc-w-md").hidden=$("#doc-w-tr").hidden=$("#doc-pdf").hidden=!PRDL; $("#doc-dl-n").hidden=!!PRDL; }
+async function prjSave(){
+  const d=prjData(), txt=JSON.stringify(d,null,1);
+  if(!PRDL){ try{ await navigator.clipboard.writeText(txt); toast("Guardar ficheiros só funciona no claude.ai. Copiei o projecto: cole num ficheiro .json."); }catch(e){ toast("Guardar ficheiros só funciona quando abre a app no claude.ai."); } return; }
+  try{ await PRDL.save({filename:`${slug(sy.proj)||"projecto-fv"}.json`,data:txt}); $("#prj-st").textContent=`Guardado às ${new Date().toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}`; toast("Projecto guardado."); }
+  catch(err){ if(err?.code!=="declined") toast("Não consegui guardar o ficheiro."); }
+}
+document.addEventListener("change",e=>{
+  if(e.target.id==="prj-open"){ const f=e.target.files[0]; e.target.value=""; if(!f) return; const rd=new FileReader();
+    rd.onload=()=>{ try{ const d=JSON.parse(rd.result); if(d.app!==PRJ_APP) throw 0; prjApply(d); $("#prj-st").textContent=`Aberto: ${f.name}`; toast(`Projecto “${d.name||f.name}” aberto.`); }
+      catch(err){ toast("Este ficheiro não é um projecto desta app."); } }; rd.readAsText(f); }
+});
+document.addEventListener("input",e=>{ if(e.target.id==="prj-name"||e.target.id==="sy-proj"){ sy.proj=e.target.value; (e.target.id==="prj-name"?$("#sy-proj"):$("#prj-name")).value=sy.proj; sySave(); } });
+document.addEventListener("click",e=>{
+  if(e.target.id==="prj-save"){ prjSave(); return }
+  if(e.target.id==="prj-new"){ const b=e.target;
+    if(!b.dataset.confirm){ b.dataset.confirm=1; b.textContent="Confirmar: limpar tudo"; setTimeout(()=>{ if(b.isConnected){ delete b.dataset.confirm; b.textContent="Novo"; } },3500); return }
+    delete b.dataset.confirm; b.textContent="Novo"; try{localStorage.removeItem("pv-edit")}catch(_){}
+    prjApply({app:PRJ_APP}); $("#prj-st").textContent="Projecto novo"; toast("Projecto novo. Os dados do técnico mantêm-se."); }
+});
+
+/* ======================= Produção (modelo solar) ======================= */
+// latitude, longitude e fuso de cada local da lista (capital de distrito)
+const GEO={"Aveiro":[40.64,-8.65],"Beja":[38.02,-7.86],"Braga":[41.55,-8.42],"Bragança":[41.81,-6.76],"Castelo Branco":[39.82,-7.49],"Coimbra":[40.21,-8.43],"Évora":[38.57,-7.91],"Faro":[37.02,-7.93],"Guarda":[40.54,-7.27],"Leiria":[39.74,-8.81],"Lisboa":[38.72,-9.14],"Portalegre":[39.29,-7.43],"Porto":[41.15,-8.61],"Santarém":[39.24,-8.69],"Setúbal":[38.52,-8.89],"Viana do Castelo":[41.69,-8.83],"Vila Real":[41.30,-7.74],"Viseu":[40.66,-7.91],"Madeira (Funchal)":[32.65,-16.91],"Açores (Ponta Delgada)":[37.74,-25.67,-1]};
+// índice de claridade mensal Kt (forma sazonal; o total anual é acertado pela produção específica do local)
+const KT={n:[0.46,0.49,0.53,0.54,0.57,0.62,0.66,0.65,0.60,0.52,0.47,0.45],c:[0.55,0.57,0.59,0.60,0.62,0.66,0.70,0.69,0.65,0.59,0.55,0.53],s:[0.58,0.59,0.61,0.63,0.66,0.70,0.73,0.71,0.66,0.61,0.58,0.56],
+  mad:[0.50,0.51,0.53,0.53,0.53,0.52,0.58,0.58,0.55,0.51,0.49,0.48],az:[0.38,0.42,0.45,0.48,0.51,0.52,0.56,0.56,0.52,0.45,0.40,0.37]};
+const KTZ=l=>l.startsWith("Madeira")?"mad":l.startsWith("Açores")?"az":["Faro","Beja","Évora","Setúbal","Portalegre"].includes(l)?"s":["Braga","Viana do Castelo","Porto","Vila Real","Bragança","Aveiro","Viseu","Guarda"].includes(l)?"n":"c";
+const TAMB={c:[11,12,15,16,19,23,26,26,23,19,14,12],mad:[17,17,17,18,19,21,23,24,24,22,19,18],az:[15,14,15,15,17,19,21,23,22,20,17,16]};
+const MDAYS=[31,28,31,30,31,30,31,31,30,31,30,31], MNAME=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"], NDAY=[17,47,75,105,135,162,198,228,258,288,318,344];
+const DST=m=>m>=3&&m<=9?1:0; // hora de verão de Abril a Outubro
+const rad=d=>d*Math.PI/180, deg=r=>r*180/Math.PI;
+// energia no plano dos painéis, por hora de relógio, num dia médio do mês (kWh/m²) e a correcção de temperatura
+// Duffie & Beckman: H0 extraterrestre, Kt, fracção difusa de Erbs (mensal), repartição horária de Collares-Pereira e Rabl, céu isotrópico
+function solarDay(m,o){
+  const phi=rad(o.lat), n=NDAY[m], dl=rad(23.45*Math.sin(2*Math.PI*(284+n)/365));
+  const ws=Math.acos(Math.max(-1,Math.min(1,-Math.tan(phi)*Math.tan(dl))));
+  const H0=24/Math.PI*1.367*(1+0.033*Math.cos(2*Math.PI*n/365))*(Math.cos(phi)*Math.cos(dl)*Math.sin(ws)+ws*Math.sin(phi)*Math.sin(dl));
+  const kt=o.kt[m], H=kt*H0, wsd=deg(ws);
+  const fd=wsd<=81.4?1.391-3.560*kt+4.189*kt*kt-2.137*kt**3:1.311-3.022*kt+3.427*kt*kt-1.821*kt**3, Hd=fd*H;
+  const a=0.409+0.5016*Math.sin(ws-rad(60)), b=0.6609-0.4767*Math.sin(ws-rad(60)), den=Math.sin(ws)-ws*Math.cos(ws);
+  const be=rad(o.tilt), ga=rad(o.az), shift=(o.tz||0)+DST(m)-o.lon/15, SUB=6, out=new Array(24).fill(0), pvh=new Array(24).fill(0);
+  for(let h=0;h<24;h++) for(let k=0;k<SUB;k++){
+    const ts=h+(k+0.5)/SUB-shift, w=rad(15*(ts-12)); if(Math.abs(w)>=ws) continue;
+    const rt=Math.PI/24*(a+b*Math.cos(w))*(Math.cos(w)-Math.cos(ws))/den, rd=Math.PI/24*(Math.cos(w)-Math.cos(ws))/den;
+    const I=rt*H/SUB, Id=Math.min(rd*Hd/SUB,I), Ib=I-Id;
+    const cz=Math.cos(phi)*Math.cos(dl)*Math.cos(w)+Math.sin(phi)*Math.sin(dl);
+    const ct=Math.sin(dl)*Math.sin(phi)*Math.cos(be)-Math.sin(dl)*Math.cos(phi)*Math.sin(be)*Math.cos(ga)+Math.cos(dl)*Math.cos(phi)*Math.cos(be)*Math.cos(w)
+      +Math.cos(dl)*Math.sin(phi)*Math.sin(be)*Math.cos(ga)*Math.cos(w)+Math.cos(dl)*Math.sin(be)*Math.sin(ga)*Math.sin(w);
+    const Rb=cz>0.03?Math.max(0,ct)/cz:0, It=Ib*Rb+Id*(1+Math.cos(be))/2+I*0.2*(1-Math.cos(be))/2;
+    const G=It*SUB*1000, Tc=o.ta[m]+(o.noct-20)/800*G; // W/m² e temperatura da célula
+    out[h]+=It; pvh[h]+=It*(1+o.gam/100*(Tc-25));
+  }
+  return {poa:out,pv:pvh,H,Hd,kt};
+}
+const PR0={tilt:30,az:0,loss:14,shade:0,lat:null,lon:null,cons:4500,prof:"res",mon:[],load:null,tar:"s",p1:0.18,p2:0.11,sell:0.05,inj:"exc",cap:"auto",capC:false,bpow:0,dod:90,eff:90,blife:12,
+  cbat:450,cpk:900,invTot:0,om:0,deg:0.5,esc:2,rate:4,life:25,pvgis:null,mSel:6};
+let pr={...PR0}; try{const s=JSON.parse(localStorage.getItem("prod-v1")); if(s) pr={...PR0,...s}}catch(e){}
+const prSave=()=>{try{localStorage.setItem("prod-v1",JSON.stringify(pr))}catch(e){}};
+function prGeo(){ const g=GEO[pv.loc]||GEO.Lisboa; return {lat:pr.lat??pv.lat??g[0],lon:pr.lon??pv.lon??g[1],tz:g[2]||0,zone:KTZ(pv.loc)}; }
+// produção por kWp, por mês e hora (kWh), no dia médio de cada mês
+const PRC=new Map();
+function prModel(tilt,az){
+  const g=prGeo(), m=pv.edit?.m, o={...g,kt:KT[g.zone],ta:TAMB[g.zone]||TAMB.c,noct:m?.noct||45,gam:m?.gamma_pmax??-0.35};
+  const key=JSON.stringify([o,tilt,az,pv.yld]); if(PRC.has(key)) return PRC.get(key);
+  const raw=(t,a)=>Array.from({length:12},(_,mm)=>solarDay(mm,{...o,tilt:t,az:a}));
+  const ann=d=>d.reduce((s,x,mm)=>s+x.pv.reduce((p,q)=>p+q,0)*MDAYS[mm],0);
+  // inclinação óptima (orientação a sul) do modelo: a produção específica do local refere-se a ela, com 14 % de perdas
+  let best=0,bt=0; for(let t=0;t<=60;t+=2){ const v=ann(raw(t,0)); if(v>best){best=v;bt=t} }
+  const d=raw(tilt,az), k=pv.yld/(best*0.86);
+  const r={h:d.map(x=>x.pv.map(v=>v*k*0.86)),poa:d.map(x=>x.poa),H:d.map(x=>x.H),kt:o.kt,k,opt:bt,optY:pv.yld,ratio:ann(d)/best};
+  PRC.set(key,r); return r;
+}
+// produção do sistema (kWh por hora do dia médio), com a fonte usada
+function prPV(kWp){
+  const P=pr.pvgis, sh=1-(+pr.shade||0)/100;
+  if(P){ const md=prModel(P.tilt??pr.tilt,P.az??pr.az);
+    const h=P.h?P.h:P.m.map((em,mm)=>{ const s=md.h[mm].reduce((a,b)=>a+b,0)||1; return md.h[mm].map(v=>v/s*em/MDAYS[mm]); });
+    return {h:h.map(r=>r.map(v=>v*kWp*sh)),src:"pvgis",md}; }
+  const md=prModel(pr.tilt,pr.az), f=(1-(+pr.loss||0)/100)/0.86;
+  return {h:md.h.map(r=>r.map(v=>v*kWp*f*sh)),src:"model",md};
+}
+/* ---------- consumo ---------- */
+const PROF={res:{h:[0.55,0.45,0.4,0.38,0.38,0.42,0.6,0.85,0.8,0.65,0.6,0.62,0.7,0.68,0.6,0.6,0.68,0.9,1.25,1.55,1.6,1.4,1.1,0.8],m:[1.22,1.12,1.02,0.92,0.86,0.86,0.92,0.92,0.86,0.94,1.08,1.28]},
+  resd:{h:[0.55,0.45,0.4,0.38,0.38,0.42,0.6,0.9,1.0,1.0,1.0,1.1,1.25,1.15,1.0,0.95,1.0,1.1,1.3,1.45,1.45,1.3,1.0,0.75],m:[1.22,1.12,1.02,0.92,0.86,0.86,0.92,0.92,0.86,0.94,1.08,1.28]},
+  serv:{h:[0.3,0.3,0.3,0.3,0.3,0.32,0.45,0.9,1.5,1.75,1.8,1.8,1.7,1.7,1.8,1.8,1.75,1.6,1.2,0.7,0.45,0.35,0.3,0.3],m:[1.05,1.0,0.95,0.92,0.95,1.05,1.12,1.0,1.02,0.95,0.97,1.02]},
+  ind:{h:[0.85,0.85,0.85,0.85,0.85,0.9,1.0,1.1,1.15,1.15,1.15,1.1,1.05,1.1,1.15,1.15,1.1,1.0,0.95,0.95,0.9,0.9,0.88,0.87],m:[1,1,1,1,1,1,1,0.85,1,1,1,1]},
+  agr:{h:[0.4,0.4,0.4,0.4,0.4,0.5,0.8,1.2,1.5,1.6,1.6,1.6,1.5,1.5,1.6,1.6,1.5,1.3,1.0,0.8,0.6,0.5,0.45,0.4],m:[0.3,0.3,0.5,0.8,1.2,1.6,1.9,1.9,1.4,0.8,0.4,0.3]}};
+function prLoad(){
+  const P=PROF[pr.prof]||PROF.res, hs=P.h.reduce((a,b)=>a+b,0);
+  const mon=(pr.mon||[]).map(Number), useMon=mon.length===12&&mon.some(v=>v>0);
+  const md=P.m.reduce((s,f,mm)=>s+f*MDAYS[mm],0);
+  const month=useMon?mon:P.m.map((f,mm)=>pr.cons*f*MDAYS[mm]/md);
+  const prof=month.map((E,mm)=>P.h.map(v=>E/MDAYS[mm]*v/hs));
+  if(pr.load){ const L=pr.load, have=L.d.map((r,mm)=>L.n[mm]>0);
+    const avgPerDay=L.d.reduce((s,r,mm)=>s+(have[mm]?r.reduce((a,b)=>a+b,0)*MDAYS[mm]:0),0)/have.reduce((s,x,mm)=>s+(x?MDAYS[mm]:0),0);
+    const fill=mm=>P.h.map(v=>avgPerDay*P.m[mm]/(md/365)*v/hs);
+    return {h:L.d.map((r,mm)=>have[mm]?r:fill(mm)),src:"eredes",have}; }
+  return {h:prof,src:useMon?"mon":"ann"};
+}
+/* ---------- simulação hora a hora, dia médio de cada mês ---------- */
+// cada mês tem dias encobertos, médios e limpos (mais variação no Inverno); a média ponderada dá a produção do mês
+function dayTypes(mm){ const a=(1-Math.cos(2*Math.PI*mm/12))/2, W={f:[0.30,0.85,1.30],w:[0.25,0.30,0.45]}, S={f:[0.65,1.0,1.08],w:[0.08,0.22,0.70]};
+  const f=W.f.map((x,i)=>x*(1-a)+S.f[i]*a), w=W.w.map((x,i)=>x*(1-a)+S.w[i]*a), mean=f.reduce((s,x,i)=>s+x*w[i],0);
+  return f.map((x,i)=>({f:x/mean,w:w[i],mid:i===1})); }
+function prSim(kWp,cap,PVh,LD){
+  const ec=Math.sqrt((+pr.eff||90)/100), U=cap*(+pr.dod||90)/100, Pb=cap?(+pr.bpow>0?+pr.bpow:Math.max(cap*0.5,1)):0, zero=pr.inj==="zero";
+  const price=h=>pr.tar==="b"&&(h<8||h>=22)?+pr.p2:+pr.p1;
+  const M=[]; let T={pv:0,load:0,dir:0,dis:0,exp:0,imp:0,cut:0,costB:0,costA:0,sell:0,night:0,surp:0};
+  for(let mm=0;mm<12;mm++){ const L=LD[mm], D=MDAYS[mm], acc={pv:0,load:0,dir:0,dis:0,exp:0,imp:0,costB:0,costA:0,surp:0,night:0}; let socMid=null;
+   for(const dt of dayTypes(mm)){ const P=PVh[mm].map(v=>v*dt.f); let soc=0, day=null;
+    for(let it=0;it<3;it++){ day={pv:0,load:0,dir:0,dis:0,exp:0,imp:0,ch:0,costB:0,costA:0,soc:[],surp:0,night:0};
+      for(let h=0;h<24;h++){ const p=P[h], l=L[h], dir=Math.min(p,l); let net=p-l, ch=0, dis=0, exp=0, imp=0;
+        if(net>0){ ch=Math.min(net,Pb,(U-soc)/ec); soc+=ch*ec; exp=net-ch; day.surp+=net; }
+        else { dis=Math.min(-net,Pb,soc*ec); soc-=dis/ec; imp=-net-dis; }
+        if(p<l*0.5) day.night+=l-p>0?l-p:0;
+        day.pv+=p; day.load+=l; day.dir+=dir; day.dis+=dis; day.exp+=exp; day.imp+=imp; day.ch+=ch; day.costB+=l*price(h); day.costA+=imp*price(h); day.soc.push(soc); } }
+    for(const k in acc) acc[k]+=day[k]*dt.w; if(dt.mid) socMid=day.soc; }
+    const day=acc, cut=zero?day.exp:0, exp=zero?0:day.exp;
+    const r={pv:day.pv*D,load:day.load*D,dir:day.dir*D,dis:day.dis*D,exp:exp*D,imp:day.imp*D,cut:cut*D,costB:day.costB*D,costA:day.costA*D,sell:exp*D*(+pr.sell||0),soc:socMid,surp:day.surp,night:day.night};
+    M.push(r); for(const k in T) if(k!=="night"&&k!=="surp") T[k]+=r[k]; T.night+=day.night*D; T.surp+=day.surp*D; }
+  T.self=T.dir+T.dis; T.save=T.costB-T.costA+T.sell; T.scr=T.pv?(T.self/T.pv):0; T.ssr=T.load?T.self/T.load:0;
+  return {M,T,cap,U};
+}
+const CAPS=[0,2.5,5,7.5,10,12.5,15,20];
+function prEco(kWp,cap,S){
+  const inv=+pr.invTot>0?+pr.invTot:kWp*(+pr.cpk||0)+cap*(+pr.cbat||0), r=(+pr.rate||0)/100, Y=[]; let cum=-inv, npv=-inv, pay=null;
+  for(let y=1;y<=(+pr.life||25);y++){ const f=(1-(+pr.deg||0)/100)**(y-1)*(1+(+pr.esc||0)/100)**(y-1), s=S.T.save*f-(+pr.om||0), e=S.T.pv*(1-(+pr.deg||0)/100)**(y-1);
+    const prev=cum; cum+=s; npv+=s/(1+r)**y; if(pay==null&&cum>=0) pay=y-1+(-prev)/(s||1); Y.push({y,s,cum,e}); }
+  const irr=(()=>{ const f=x=>-inv+Y.reduce((a,o)=>a+o.s/(1+x)**o.y,0); let lo=-0.9,hi=1; if(f(lo)*f(hi)>0) return null; for(let i=0;i<80;i++){const mi=(lo+hi)/2; if(f(lo)*f(mi)<=0) hi=mi; else lo=mi;} return (lo+hi)/2; })();
+  const lcoe=(inv+Y.reduce((a,o)=>a+(+pr.om||0)/(1+r)**o.y,0))/Y.reduce((a,o)=>a+o.e/(1+r)**o.y,0);
+  return {inv,Y,npv,pay,irr,lcoe};
+}
+// resultado completo do separador (também usado na memória descritiva)
+function prCalc(){
+  const E=pv.edit; if(!E) return null; const e=evaluate(E.m,E.inv,E.N,E.cfg), kWp=e.kWp;
+  const PV=prPV(kWp), LD=prLoad();
+  const sims=CAPS.map(c=>prSim(kWp,c,PV.h,LD.h)), base=sims[0], life=+pr.blife||12;
+  const nb=sims.map(s=>(s.T.save-base.T.save)*life-s.cap*(+pr.cbat||0));
+  let rec=0; nb.forEach((v,i)=>{ if(v>nb[rec]+1e-6) rec=i; });
+  const cap=pr.cap==="auto"?(E.inv.hybrid?CAPS[rec]:0):Math.max(0,+pr.cap||0); let S;
+  if(CAPS.includes(cap)) S=sims[CAPS.indexOf(cap)];
+  else { S=prSim(kWp,cap,PV.h,LD.h); const i=sims.findIndex(s=>s.cap>cap), j=i<0?sims.length:i; sims.splice(j,0,S); nb.splice(j,0,(S.T.save-base.T.save)*life-cap*(+pr.cbat||0)); }
+  return {E,e,kWp,PV,LD,sims,nb,rec:CAPS[rec],cap,S,eco:prEco(kWp,cap,S),hyb:E.inv.hybrid};
+}
+/* ---------- importação PVGIS ---------- */
+function parsePVGIS(txt){
+  let o=null; try{o=JSON.parse(txt)}catch(e){}
+  if(o&&o.outputs){ const kwp=+o.inputs?.pv_module?.peak_power||1, mt=o.inputs?.mounting_system?.fixed||{};
+    const tilt=mt.slope?.value, az=mt.azimuth?.value, mo=o.outputs.monthly?.fixed||o.outputs.monthly;
+    if(Array.isArray(o.outputs.hourly)) return hourlyPV(o.outputs.hourly.map(r=>[r.time,r.P]),kwp,tilt,az);
+    if(Array.isArray(mo)&&mo.length>=12) return {kind:"mensal",kwp,tilt,az,m:Array.from({length:12},(_,i)=>(+(mo.find(r=>+r.month===i+1)||{}).E_m||0)/kwp)};
+    throw new Error("sem dados"); }
+  const lines=txt.split(/\r?\n/), num=re=>{ const l=lines.find(x=>re.test(x)); const v=l&&l.match(/:\s*(-?\d+(?:\.\d+)?)/); return v?+v[1]:null; };
+  const kwp=num(/(nominal|peak) power/i)||1, tilt=num(/slope angle/i), az=num(/azimuth angle/i);
+  const hi=lines.findIndex(l=>/(^|[\t,;])E_m([\t,;]|$)/.test(l));
+  if(hi>=0){ const hd=lines[hi].split(/[\t,;]/).map(x=>x.trim()), ci=hd.indexOf("E_m"), m=new Array(12).fill(0);
+    for(let i=hi+1;i<lines.length;i++){ const c=lines[i].split(/[\t,;]/); const mm=+c[0]; if(mm>=1&&mm<=12) m[mm-1]=+c[ci]/kwp; }
+    if(m.every(v=>v>0)) return {kind:"mensal",kwp,tilt,az,m}; }
+  const th=lines.findIndex(l=>/^time,/i.test(l.trim()));
+  if(th>=0){ const hd=lines[th].split(",").map(x=>x.trim()), pi=hd.indexOf("P"); if(pi<0) throw new Error("sem P");
+    const rows=[]; for(let i=th+1;i<lines.length;i++){ const c=lines[i].split(","); if(/^\d{8}:\d{4}$/.test(c[0])) rows.push([c[0],+c[pi]]); }
+    return hourlyPV(rows,kwp,tilt,az); }
+  throw new Error("formato");
+}
+function hourlyPV(rows,kwp,tilt,az){ // série horária do PVGIS (hora UTC, P em W) → dia médio de cada mês
+  const S=Array.from({length:12},()=>new Array(24).fill(0)), days=Array.from({length:12},()=>new Set()), tz=GEO[pv.loc]?.[2]||0;
+  for(const [t,P] of rows){ const y=+t.slice(0,4), mo=+t.slice(4,6)-1, d=+t.slice(6,8), hh=+t.slice(9,11); if(!(mo>=0)) continue;
+    const h=(hh+tz+DST(mo)+24)%24; S[mo][h]+=(+P||0)/1000; days[mo].add(y*400+d); }
+  if(rows.length<2000) throw new Error("poucos dados");
+  const h=S.map((r,mo)=>r.map(v=>v/Math.max(1,days[mo].size)/kwp));
+  return {kind:"horário",kwp,tilt,az,h,m:h.map((r,mo)=>r.reduce((a,b)=>a+b,0)*MDAYS[mo])};
+}
+/* ---------- importação E-REDES (diagrama de carga) ---------- */
+function parseEredes(rows){
+  const XD=v=>{ const d=new Date(Date.UTC(1899,11,30)+Math.floor(v)*864e5); return [d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()]; };
+  const pD=v=>{ if(typeof v==="number"&&v>20000&&v<80000) return {d:XD(v),t:(v%1)*24};
+    const s=String(v??""); let m=s.match(/(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/), d=null;
+    if(m) d=[+m[1],+m[2]-1,+m[3]]; else if((m=s.match(/(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/))) d=[+m[3],+m[2]-1,+m[1]];
+    const t=s.match(/(\d{1,2}):(\d{2})/); return d?{d,t:t?+t[1]+t[2]/60:null}:null; };
+  const pT=v=>{ if(typeof v==="number"&&v>=0&&v<=1) return v*24; const t=String(v??"").match(/^\s*(\d{1,2}):(\d{2})/); return t?+t[1]+t[2]/60:null; };
+  let unit=null, pts=[];
+  for(const r of rows){ if(!r||!r.length) continue;
+    if(!pts.length&&r.some(c=>typeof c==="string"&&/kw/i.test(c))){ const c=r.find(c=>typeof c==="string"&&/consumo|kw/i.test(c)&&/kw/i.test(c)); if(c) unit=/kwh/i.test(c)?"kWh":"kW"; }
+    let di=-1,dd=null; for(let i=0;i<r.length;i++){ const x=pD(r[i]); if(x){di=i;dd=x;break} } if(di<0) continue;
+    let t=dd.t, vi=di+1; if(t==null){ for(;vi<r.length;vi++){ const x=pT(r[vi]); if(x!=null){t=x;vi++;break} } } if(t==null) continue;
+    let v=null; for(let i=vi;i<r.length;i++){ const x=typeof r[i]==="number"?r[i]:String(r[i]??"").trim().match(/^-?\d+([.,]\d+)?$/)?+String(r[i]).replace(",","."):null; if(x!=null){v=x;break} }
+    if(v==null) continue; pts.push({d:dd.d,t,v}); }
+  if(pts.length<96*7) throw new Error("poucos dados");
+  const ts=pts.map(p=>Date.UTC(p.d[0],p.d[1],p.d[2])/36e5+p.t), df=[]; for(let i=1;i<ts.length&&df.length<500;i++){ const x=Math.abs(ts[i]-ts[i-1]); if(x>0&&x<=1.01) df.push(x); }
+  df.sort((a,b)=>a-b); const dt=df.length?df[Math.floor(df.length/2)]:0.25;
+  const S=Array.from({length:12},()=>new Array(24).fill(0)), days=Array.from({length:12},()=>new Set());
+  for(const p of pts){ // a hora indicada é o fim do intervalo de 15 min
+    let t=p.t-dt/2, d=p.d; if(t<0){ const x=new Date(Date.UTC(d[0],d[1],d[2])-864e5); d=[x.getUTCFullYear(),x.getUTCMonth(),x.getUTCDate()]; t+=24; }
+    const e=unit==="kWh"?p.v:p.v*dt; S[d[1]][Math.min(23,Math.floor(t))]+=e; days[d[1]].add(d[0]*400+d[2]); }
+  const n=days.map(s=>s.size);
+  return {d:S.map((r,mm)=>r.map(v=>n[mm]?v/n[mm]:0)),n,dt,unit:unit||"kW",pts:pts.length};
+}
+/* ---------- interface ---------- */
+const prNum=["tilt","az","loss","shade","lat","lon","cons","p1","p2","sell","bpow","dod","eff","blife","cbat","cpk","invTot","om","deg","esc","rate"];
+function prInit(){
+  $("#pr-cap").innerHTML=`<option value="auto">Recomendada pela app (só com inversor híbrido)</option>`+CAPS.map(c=>`<option value="${c}">${c?fmt(c,1)+" kWh":"Sem bateria"}</option>`).join("")+`<option value="custom">Outro valor (escrever)…</option>`;
+  $("#pr-mon").innerHTML=MNAME.map((n,i)=>`<label class="f"><span>${n}</span><input type="number" min="0" step="10" data-mon="${i}"></label>`).join("");
+  $("#pr-msel").innerHTML=MNAME.map((n,i)=>`<button type="button" data-m="${i}">${n}</button>`).join("");
+  prFill(); prRender(true); }
+function prFill(){ const g=prGeo();
+  for(const k of prNum) $("#pr-"+k).value=pr[k]??"";
+  $("#pr-lat").value=fmt(g.lat,2).replace(",","."); $("#pr-lon").value=fmt(g.lon,2).replace(",",".");
+  $("#pr-lat-n").textContent=pr.lat==null?(pv.lat!=null?"do ponto no mapa":`de ${pv.loc}`):"valor seu";
+  $("#pr-prof").value=pr.prof; prCapFill();
+  document.querySelectorAll("#pr-mon input").forEach(i=>i.value=(pr.mon||[])[+i.dataset.mon]||"");
+  for(const [id,k] of [["#pr-tar","tar"],["#pr-inj","inj"]]) $(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(pr[k])===b.dataset.v));
+}
+function prCapFill(){ const n=typeof pr.cap==="number", c=pr.capC||(n&&!CAPS.includes(pr.cap));
+  $("#pr-cap").value=c?"custom":String(pr.cap); $("#pr-capv-w").style.display=c?"":"none"; if(document.activeElement!==$("#pr-capv")) $("#pr-capv").value=n?pr.cap:"";
+  const cap=n?pr.cap:(prCapFill.last||0); $("#pr-bpow-n").textContent=`0 = 0,5 C${cap?" ("+fmt(Math.max(cap*0.5,1),1)+" kW)":""}`; }
+const orient=az=>{ const a=((+az%360)+540)%360-180; const N=[[-180,"Norte"],[-135,"Nordeste"],[-90,"Este"],[-45,"Sudeste"],[0,"Sul"],[45,"Sudoeste"],[90,"Oeste"],[135,"Noroeste"],[180,"Norte"]]; return N.reduce((b,x)=>Math.abs(x[0]-a)<Math.abs(b[0]-a)?x:b)[1]; };
+const fe=v=>fmt(v,0)+" €", fk=v=>fmt(v,0);
+function prRender(force){ if(typeof pvHint==="function") pvHint();
+  if(!force&&$("#view-prod").hidden&&$("#view-doc").hidden) return;
+  const R=prCalc();
+  if(!R){ $("#pr-kpi").innerHTML=`<div class="msg">Escolha primeiro uma combinação no separador Fotovoltaico.</div>`; ["#pr-month","#pr-day","#pr-btab","#pr-eco","#pr-cash","#pr-how","#pr-mtab","#pr-ytab"].forEach(s=>$(s).innerHTML=""); return; }
+  const {E,e,kWp,PV,LD,sims,S,eco,cap,rec}=R, T=S.T, g=prGeo();
+  prCapFill.last=cap; prCapFill();
+  if(pr.lat==null){ $("#pr-lat").value=g.lat; $("#pr-lat-n").textContent=pv.lat!=null?"do ponto no mapa":`de ${pv.loc}`; } if(pr.lon==null) $("#pr-lon").value=g.lon;
+  $("#pr-cfg").innerHTML=`<strong>${fmt(kWp,2)} kWp</strong> · ${E.N>1?E.N+" × ":""}${esc(invName(E.inv))} · ${esc(pvLocShort())}. Produção específica de referência ${fmt(pv.yld,0)} kWh/kWp·ano (separador <a href="#" id="pr-go">Fotovoltaico</a>).`;
+  $("#pr-az-n").textContent=`${orient(pr.az)} · 0 = Sul, −90 = Este, 90 = Oeste`;
+  $("#pr-src").innerHTML=pr.pvgis?`<span class="pill ok">PVGIS</span> Ficheiro ${esc(pr.pvgis.name)} (${pr.pvgis.kind}, ${fmt(pr.pvgis.m.reduce((a,b)=>a+b,0),0)} kWh/kWp·ano${pr.pvgis.tilt!=null?`, ${fmt(pr.pvgis.tilt,0)}° / ${fmt(pr.pvgis.az,0)}°`:""}). As perdas do sistema são as do ficheiro.`
+    :`<span class="pill na">Modelo da app</span> ${fmt(PV.md.ratio*100,0)} % da produção na inclinação óptima (${PV.md.opt}° a sul) → ${fmt(T.pv/kWp,0)} kWh/kWp·ano.`;
+  $("#pr-pvgis-clr").hidden=!pr.pvgis; $("#pr-eredes-clr").hidden=!pr.load;
+  $("#pr-loss").disabled=!!pr.pvgis; $("#pr-tilt").disabled=$("#pr-az").disabled=!!pr.pvgis;
+  $("#pr-load-st").innerHTML=pr.load?`<span class="pill ok">E-REDES</span> ${esc(pr.load.name)}: ${pr.load.n.reduce((a,b)=>a+b,0)} dias, ${pr.load.n.filter(x=>x).length} meses com dados, ${fmt(T.load,0)} kWh/ano.`:"";
+  $("#pr-cons").disabled=!!pr.load||LD.src==="mon"; $("#pr-prof").disabled=false;
+  $("#pr-cons-n").textContent=LD.src==="mon"?`soma das facturas: ${fmt(T.load,0)} kWh`:LD.src==="eredes"?"vem do ficheiro E-REDES":"";
+  $("#pr-p1-l").textContent=pr.tar==="b"?"Fora de vazio (€/kWh)":"Energia (€/kWh)"; $("#pr-p2-w").hidden=pr.tar!=="b";
+  $("#pr-leg-exp").textContent=pr.inj==="zero"?"Excedente perdido (sem injecção)":"Injectado na rede";
+  $("#pr-leg-bat").hidden=!cap;
+  const kv=(k,v,u,s)=>`<div class="kv"><div class="k">${k}</div><div class="v">${v}<small>${u}</small></div><div class="s">${s}</div></div>`;
+  $("#pr-kpi").innerHTML=kv("Produção",fk(T.pv),"kWh/ano",`${fmt(T.pv/kWp,0)} kWh/kWp`)+kv("Consumo",fk(T.load),"kWh/ano",LD.src==="eredes"?"E-REDES":LD.src==="mon"?"facturas":"perfil "+$("#pr-prof").selectedOptions[0].text.split(",")[0].toLowerCase())+
+    kv("Autoconsumo",fmt(T.scr*100,0),"%",`da produção · ${fk(T.self)} kWh`)+kv("Auto-suficiência",fmt(T.ssr*100,0),"%","do consumo vem do FV")+
+    kv(pr.inj==="zero"?"Excedente perdido":"Injectado",fk(pr.inj==="zero"?T.cut:T.exp),"kWh/ano",pr.inj==="zero"?"limitado pelo inversor":`${fe(T.sell)} de venda`)+kv("Poupança",fe(T.save),"/ano",`ano 1 · bateria ${cap?fmt(cap,1)+" kWh":"não"}`);
+  const w=[]; if(cap&&!R.hyb) w.push(`O inversor escolhido (${esc(invName(E.inv))}) não é híbrido: para usar bateria escolha um inversor híbrido no separador Fotovoltaico, ou um inversor de bateria em AC.`);
+  if(T.pv>T.load*1.3) w.push(`A produção é ${fmt(T.pv/T.load,1)} vezes o consumo anual: boa parte vai para a rede${pr.inj==="zero"?" (ou perde-se, sem injecção)":""}. Uma potência menor pode dar melhor retorno.`);
+  $("#pr-warn").innerHTML=w.map(x=>`<div class="msg">${x}</div>`).join("");
+  prMonthChart(S); prDayChart(S,PV,LD); prBatTable(R); prEcoRender(R);
+  $("#pr-mtab").innerHTML=`<table><thead><tr><th>Mês</th><th class="n">Produção</th><th class="n">Consumo</th><th class="n">Autoconsumo</th><th class="n">${pr.inj==="zero"?"Perdido":"Injectado"}</th><th class="n">Da rede</th></tr></thead><tbody>${S.M.map((r,i)=>`<tr style="cursor:default"><td>${MNAME[i]}</td><td class="n">${fk(r.pv)}</td><td class="n">${fk(r.load)}</td><td class="n">${fk(r.dir+r.dis)}</td><td class="n">${fk(pr.inj==="zero"?r.cut:r.exp)}</td><td class="n">${fk(r.imp)}</td></tr>`).join("")}<tr style="cursor:default"><td><strong>Ano</strong></td><td class="n"><strong>${fk(T.pv)}</strong></td><td class="n"><strong>${fk(T.load)}</strong></td><td class="n"><strong>${fk(T.self)}</strong></td><td class="n"><strong>${fk(pr.inj==="zero"?T.cut:T.exp)}</strong></td><td class="n"><strong>${fk(T.imp)}</strong></td></tr></tbody></table>`;
+  $("#pr-how").innerHTML=`<h2>Como cheguei aqui</h2><ol class="steps">
+    <li><div><h4>Radiação no plano dos painéis</h4><p class="note">${pr.pvgis?`A produção mensal por kWp vem do ficheiro do PVGIS (${esc(pr.pvgis.name)}). ${pr.pvgis.h?"A forma de cada dia médio também.":"A forma de cada dia médio vem do modelo da app para a mesma orientação."}`:`Para cada mês, a radiação extraterrestre do dia médio (latitude ${fmt(g.lat,2)}°) é multiplicada por um índice de claridade típico da região (Kt ${fmt(PV.md.kt[0],2)} em Janeiro a ${fmt(PV.md.kt[6],2)} em Julho). A parte difusa vem da correlação de Erbs, a repartição pelas horas da de Collares-Pereira e Rabl, e a passagem para o plano inclinado usa o modelo de céu isotrópico com albedo 0,2. As horas são de relógio, com a hora de Verão.`}</p>
+      <div class="eq">Inclinação ${fmt(pr.pvgis?.tilt??pr.tilt,0)}° · azimute ${fmt(pr.pvgis?.az??pr.az,0)}° (${orient(pr.pvgis?.az??pr.az)})${pr.pvgis?"":` · ${fmt(PV.md.ratio*100,1)} % da inclinação óptima (${PV.md.opt}°)`}</div></div></li>
+    ${pr.pvgis?"":`<li><div><h4>Acerto ao local</h4><p class="note">O modelo dá a forma ao longo do ano e do dia. O total é acertado para que a inclinação óptima produza a produção específica de ${esc(pvLocShort())} (${fmt(pv.yld,0)} kWh/kWp·ano com 14 % de perdas), e depois corrigido pela orientação, pelas perdas e pelo sombreamento indicados. A temperatura da célula baixa a produção no Verão (γ ${fmt(E.m.gamma_pmax??-0.35,2)} %/°C).</p>
+      <div class="eq">E = ${fmt(kWp,2)} kWp × ${fmt(pv.yld,0)} × ${fmt(PV.md.ratio,3)} × (1 − ${fmt(+pr.loss,0)} %)/(1 − 14 %) × (1 − ${fmt(+pr.shade,0)} %) = <span class="r">${fk(T.pv)} kWh/ano</span></div></div></li>`}
+    <li><div><h4>Consumo hora a hora</h4><p class="note">${LD.src==="eredes"?"Dia médio de cada mês calculado a partir do diagrama de carga da E-REDES.":`${LD.src==="mon"?"Consumo de cada mês das facturas":"Consumo anual repartido pelos meses"}, distribuído pelas horas segundo o perfil escolhido.`}</p></div></li>
+    <li><div><h4>Autoconsumo e bateria</h4><p class="note">Em cada hora do dia médio, a produção abastece primeiro o consumo. O excedente carrega a bateria (até ${fmt(+pr.dod,0)} % da capacidade nominal, potência ${+pr.bpow>0?fmt(+pr.bpow,1)+" kW":"0,5 C"}) e o resto ${pr.inj==="zero"?"perde-se, porque o inversor limita a injecção":"vai para a rede"}. À noite a bateria descarrega com rendimento de ida e volta de ${fmt(+pr.eff,0)} %. Cada mês é simulado com três tipos de dia (encoberto, médio e limpo, com mais variação no Inverno), para não sobrestimar o autoconsumo. O gráfico do dia médio mostra o dia médio.</p>
+      <div class="eq">Autoconsumo = (directo ${fk(T.dir)} + bateria ${fk(T.dis)}) / produção ${fk(T.pv)} = <span class="r">${fmt(T.scr*100,1)} %</span></div></div></li>
+    <li><div><h4>Poupança</h4><p class="note">Energia que deixa de ser comprada${pr.tar==="b"?" (preço de vazio entre as 22h e as 8h)":""} mais a venda do excedente${pr.inj==="zero"?" (zero, sem injecção)":""}. A potência contratada e as taxas fixas não mudam.</p>
+      <div class="eq">${fe(T.costB)} − ${fe(T.costA)} + ${fe(T.sell)} = <span class="r">${fe(T.save)} no 1.º ano</span></div></div></li></ol>`;
+}
+// gráfico de barras mensal: produção (autoconsumo + injectado) e consumo lado a lado
+function prMonthChart(S){
+  const W=720,H=250,l=46,r=10,t=12,b=26, max=Math.max(...S.M.map(m=>Math.max(m.pv,m.load)))*1.08||1, gw=(W-l-r)/12, bw=Math.min(18,gw/2-5);
+  const y=v=>t+(H-t-b)*(1-v/max), step=niceStep(max/4); let s="";
+  for(let v=0;v<=max;v+=step) s+=`<line class="gl" x1="${l}" x2="${W-r}" y1="${y(v)}" y2="${y(v)}"/><text x="${l-6}" y="${y(v)+4}" text-anchor="end">${fk(v)}</text>`;
+  S.M.forEach((m,i)=>{ const x=l+gw*i+gw/2, sc=m.dir+m.dis, ex=pr.inj==="zero"?m.cut:m.exp;
+    s+=bar(x-bw-1,y(sc),bw,y(0)-y(sc),"var(--c1)",true)+(ex>0?bar(x-bw-1,y(sc+ex),bw,y(sc)-y(sc+ex)-2,"var(--c3)",false):"")+bar(x+1,y(m.load),bw,y(0)-y(m.load),"var(--c2)",true);
+    s+=`<text x="${x}" y="${H-8}" text-anchor="middle">${MNAME[i]}</text>`;
+    s+=`<rect class="hov" x="${l+gw*i}" y="${t}" width="${gw}" height="${H-t-b}" data-tip="<b>${MNAME[i]}</b><br>Produção ${fk(m.pv)} kWh<br>Autoconsumo ${fk(sc)} kWh<br>${pr.inj==="zero"?"Perdido":"Injectado"} ${fk(ex)} kWh<br>Consumo ${fk(m.load)} kWh<br>Da rede ${fk(m.imp)} kWh"/>`; });
+  s+=`<line class="ax" x1="${l}" x2="${W-r}" y1="${y(0)}" y2="${y(0)}"/>`;
+  $("#pr-month").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Produção e consumo mensais">${s}</svg><div class="pr-tip" hidden></div>`;
+}
+function niceStep(v){ const p=10**Math.floor(Math.log10(v||1)), n=v/p; return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p; }
+// barra com o topo arredondado (4 px) e a base recta assente no eixo
+function bar(x,y,w,h,c,base){ if(h<=0) return ""; const rr=Math.min(4,h,w/2);
+  return base?`<path d="M${x} ${y+h}V${y+rr}Q${x} ${y} ${x+rr} ${y}H${x+w-rr}Q${x+w} ${y} ${x+w} ${y+rr}V${y+h}Z" fill="${c}"/>`:`<path d="M${x} ${y+h}V${y+rr}Q${x} ${y} ${x+rr} ${y}H${x+w-rr}Q${x+w} ${y} ${x+w} ${y+rr}V${y+h}Z" fill="${c}"/>`; }
+function prDayChart(S,PV,LD){
+  const mm=+pr.mSel||0; document.querySelectorAll("#pr-msel button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.m===mm));
+  const p=PV.h[mm], L=LD.h[mm], soc=S.cap?S.M[mm].soc:null, W=720,H=230,l=46,r=10,t=12,b=26;
+  const max=Math.max(...p,...L,...(soc||[0]))*1.1||1, x=h=>l+(W-l-r)*(h+0.5)/24, y=v=>t+(H-t-b)*(1-v/max), step=niceStep(max/4); let s="";
+  for(let v=0;v<=max;v+=step) s+=`<line class="gl" x1="${l}" x2="${W-r}" y1="${y(v)}" y2="${y(v)}"/><text x="${l-6}" y="${y(v)+4}" text-anchor="end">${fmt(v,step<1?1:0)}</text>`;
+  for(let h=0;h<24;h+=3) s+=`<text x="${x(h)}" y="${H-8}" text-anchor="middle">${h}h</text>`;
+  const path=(a,c)=>`<path d="${a.map((v,h)=>(h?"L":"M")+x(h).toFixed(1)+" "+y(v).toFixed(1)).join("")}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round"/>`;
+  s+=`<line class="ax" x1="${l}" x2="${W-r}" y1="${y(0)}" y2="${y(0)}"/>`+path(p,"var(--c1)")+path(L,"var(--c2)")+(soc?path(soc,"var(--c3)"):"");
+  for(let h=0;h<24;h++) s+=`<rect class="hov" x="${x(h)-(W-l-r)/48}" y="${t}" width="${(W-l-r)/24}" height="${H-t-b}" data-tip="<b>${MNAME[mm]}, ${h}h–${h+1}h</b><br>Produção ${fmt(p[h],2)} kWh<br>Consumo ${fmt(L[h],2)} kWh${soc?`<br>Bateria ${fmt(soc[h],1)} kWh`:""}"/><line class="hl ax" x1="${x(h)}" x2="${x(h)}" y1="${t}" y2="${y(0)}"/>`;
+  $("#pr-day").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Dia médio de ${MNAME[mm]}">${s}</svg><div class="pr-tip" hidden></div>`;
+}
+function prBatTable(R){
+  const {sims,nb,rec,cap,S}=R, base=sims[0], life=+pr.blife||12, cb=+pr.cbat||0;
+  const night=S.M.reduce((a,m)=>a+m.night,0)/12, surp=S.M.reduce((a,m)=>a+m.surp,0)/12;
+  $("#pr-bnote").innerHTML=`Em média, o consumo nocturno (horas com pouca produção) é de ${fmt(night,1)} kWh/dia e o excedente da produção de ${fmt(surp,1)} kWh/dia. Uma bateria útil acima do menor destes valores enche ou esvazia pouco. A capacidade recomendada é a que dá mais poupança acumulada em ${life} anos de vida, descontado o custo a ${fe(cb)}/kWh: <strong>${rec?fmt(rec,1)+" kWh":"sem bateria"}</strong>.${R.hyb?"":" O inversor escolhido não é híbrido."}`;
+  $("#pr-btab").innerHTML=`<table><thead><tr><th>Bateria</th><th class="n">Autoconsumo</th><th class="n">Auto-suficiência</th><th class="n">Poupança/ano</th><th class="n">Ganho/ano</th><th class="n">Custo</th><th class="n">Retorno da bateria</th><th class="n">Saldo em ${life} anos</th></tr></thead><tbody>${
+    sims.map((s,i)=>{ const g=s.T.save-base.T.save, c=s.cap*cb; return `<tr data-cap="${s.cap}" class="${s.cap===rec?"rec":""}${s.cap===cap?" sel":""}"><td>${s.cap?fmt(s.cap,1)+" kWh":"Sem bateria"}${s.cap===rec?` <span class="pill ok">Recomendada</span>`:""}${s.cap&&!CAPS.includes(s.cap)?` <span class="pill">Valor seu</span>`:""}</td><td class="n">${fmt(s.T.scr*100,0)} %</td><td class="n">${fmt(s.T.ssr*100,0)} %</td><td class="n">${fe(s.T.save)}</td><td class="n">${s.cap?fe(g):"—"}</td><td class="n">${s.cap?fe(c):"—"}</td><td class="n">${s.cap?(g>0?fmt(c/g,1)+" anos":"não paga"):"—"}</td><td class="n">${s.cap?fe(nb[i]):"—"}</td></tr>`; }).join("")}</tbody></table>`;
+}
+function prEcoRender(R){
+  const {eco,S,kWp,cap}=R, kv=(k,v,u,s)=>`<div class="kv"><div class="k">${k}</div><div class="v">${v}<small>${u}</small></div><div class="s">${s}</div></div>`;
+  $("#pr-eco").innerHTML=kv("Investimento",fk(eco.inv),"€",+pr.invTot>0?"valor indicado":`${fmt(kWp,2)} kWp × ${fe(+pr.cpk)}${cap?` + ${fmt(cap,1)} kWh × ${fe(+pr.cbat)}`:""}`)+
+    kv("Retorno simples",eco.pay==null?"> "+pr.life:fmt(eco.pay,1),"anos",`poupança ${fe(S.T.save)} no 1.º ano`)+kv("VAL",fk(eco.npv),"€",`${pr.life} anos a ${fmt(+pr.rate,1)} %`)+
+    kv("TIR",eco.irr==null?"–":fmt(eco.irr*100,1),"%","rentabilidade anual")+kv("Custo da energia FV",fmt(eco.lcoe*100,1),"cênt./kWh",`compra a ${fmt(+pr.p1*100,1)} cênt.`);
+  const Y=eco.Y, W=720,H=210,l=56,r=10,t=12,b=26, mn=Math.min(-eco.inv,...Y.map(o=>o.cum)), mx=Math.max(0,...Y.map(o=>o.cum)), sp=(mx-mn)||1;
+  const x=i=>l+(W-l-r)*(i/(Y.length)), y=v=>t+(H-t-b)*(1-(v-mn)/sp), step=niceStep(sp/4); let s="";
+  for(let v=Math.ceil(mn/step)*step;v<=mx;v+=step) s+=`<line class="gl" x1="${l}" x2="${W-r}" y1="${y(v)}" y2="${y(v)}"/><text x="${l-6}" y="${y(v)+4}" text-anchor="end">${fk(Math.abs(v)<1e-6?0:v)}</text>`;
+  const pts=[[0,-eco.inv],...Y.map((o,i)=>[i+1,o.cum])];
+  s+=`<line class="ax" x1="${l}" x2="${W-r}" y1="${y(0)}" y2="${y(0)}"/><path d="${pts.map((p,i)=>(i?"L":"M")+x(p[0]).toFixed(1)+" "+y(p[1]).toFixed(1)).join("")}" fill="none" stroke="var(--c1)" stroke-width="2"/>`;
+  for(let i=0;i<=Y.length;i+=5) s+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle">${i}</text>`;
+  if(eco.pay!=null) s+=`<circle cx="${x(eco.pay)}" cy="${y(0)}" r="5" fill="var(--c1)" stroke="var(--panel)" stroke-width="2"/><text x="${x(eco.pay)+8}" y="${y(0)-8}" style="fill:var(--ink)">retorno ao fim de ${fmt(eco.pay,1)} anos</text>`;
+  Y.forEach((o,i)=>s+=`<rect class="hov" x="${x(i+0.5)}" y="${t}" width="${(W-l-r)/Y.length}" height="${H-t-b}" data-tip="<b>Ano ${o.y}</b><br>Poupança ${fe(o.s)}<br>Acumulado ${fe(o.cum)}"/>`);
+  $("#pr-cash").innerHTML=`<p class="note" style="margin:0 0 4px">Saldo acumulado (€) ao longo dos anos</p><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Saldo acumulado do investimento">${s}</svg><div class="pr-tip" hidden></div>`;
+  $("#pr-ytab").innerHTML=`<table><thead><tr><th>Ano</th><th class="n">Produção (kWh)</th><th class="n">Poupança</th><th class="n">Acumulado</th></tr></thead><tbody>${Y.map(o=>`<tr style="cursor:default"><td>${o.y}</td><td class="n">${fk(o.e)}</td><td class="n">${fe(o.s)}</td><td class="n">${fe(o.cum)}</td></tr>`).join("")}</tbody></table><p class="note">Não inclui a substituição do inversor (tipicamente aos 12–15 anos) nem da bateria.</p>`;
+}
+// tooltips dos gráficos
+document.addEventListener("pointermove",e=>{ const h=e.target.closest?.(".pr-ch .hov"); document.querySelectorAll(".pr-ch .pr-tip").forEach(tp=>{ if(!h||!tp.parentElement.contains(h)){ tp.hidden=true; return }
+  const box=tp.parentElement.getBoundingClientRect(); tp.innerHTML=h.dataset.tip; tp.hidden=false;
+  const x=e.clientX-box.left+tp.parentElement.scrollLeft, w=tp.offsetWidth; tp.style.left=Math.max(4,Math.min(x+12,tp.parentElement.scrollWidth-w-4))+"px"; tp.style.top=Math.max(4,e.clientY-box.top-tp.offsetHeight-10)+"px"; }); });
+document.addEventListener("pointerleave",()=>document.querySelectorAll(".pr-tip").forEach(t=>t.hidden=true));
+document.addEventListener("change",e=>{ const id=e.target.id||"";
+  if(id==="pr-pvgis"){ const f=e.target.files[0]; e.target.value=""; if(!f) return; f.text().then(t=>{ try{ const P=parsePVGIS(t); pr.pvgis={...P,name:f.name}; if(P.tilt!=null) pr.tilt=P.tilt; if(P.az!=null) pr.az=P.az; prSave(); prFill(); prRender(true); docRender(); toast(`PVGIS importado: ${fmt(P.m.reduce((a,b)=>a+b,0),0)} kWh/kWp·ano.`); }
+    catch(err){ toast("Não reconheci o ficheiro. Use o CSV ou JSON do PVGIS (sistema ligado à rede)."); } }); return }
+  if(id==="pr-eredes"){ const f=e.target.files[0]; e.target.value=""; if(!f) return; const rd=new FileReader(); rd.onload=()=>{ try{
+      const wb=XLSX.read(new Uint8Array(rd.result),{type:"array",raw:false}); let best=null;
+      for(const n of wb.SheetNames){ try{ const L=parseEredes(XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:true})); if(!best||L.pts>best.pts) best=L; }catch(_){} }
+      if(!best) throw 0; pr.load={d:best.d,n:best.n,name:f.name}; prSave(); prRender(true); docRender(); toast(`Consumos importados: ${best.n.reduce((a,b)=>a+b,0)} dias, intervalo ${fmt(best.dt*60,0)} min, valores em ${best.unit}.`);
+    }catch(err){ toast("Não consegui ler o ficheiro. Use a exportação do diagrama de carga do Balcão Digital E-REDES."); } }; rd.readAsArrayBuffer(f); return }
+  if(e.target.dataset?.mon!=null){ const a=Array.from({length:12},(_,i)=>+(document.querySelector(`#pr-mon [data-mon="${i}"]`).value)||0); pr.mon=a.some(v=>v>0)?a:[]; prSave(); prRender(); docRender(); return }
+  if(!id.startsWith("pr-")) return; const k=id.slice(3);
+  if(k==="lat"||k==="lon"){ const v=e.target.value.trim(); pr[k]=v===""?null:+v; }
+  else if(k==="cap"){ const v=e.target.value;
+    if(v==="custom"){ pr.capC=true; if(typeof pr.cap!=="number"||!pr.cap) pr.cap=prCapFill.last||5; }
+    else { pr.capC=false; pr.cap=v==="auto"?"auto":+v; }
+    prCapFill(); if(v==="custom") setTimeout(()=>{ $("#pr-capv").focus(); $("#pr-capv").select(); }); }
+  else if(k==="capv"){ pr.cap=Math.max(0,+String(e.target.value).replace(",",".")||0); pr.capC=true; }
+  else if(prNum.includes(k)) pr[k]=+e.target.value||0; else if(k in pr) pr[k]=e.target.value; else return;
+  prSave(); if(k==="lat"||k==="lon") prFill(); prRender(); docRender(); });
+document.addEventListener("click",e=>{
+  const sb=e.target.closest("#view-prod .seg button"); if(sb){ const k=sb.parentElement.id.slice(3); pr[k]=sb.dataset.v; sb.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===sb)); prSave(); prRender(); docRender(); return }
+  const mb=e.target.closest("#pr-msel button"); if(mb){ pr.mSel=+mb.dataset.m; prSave(); prRender(); return }
+  const br=e.target.closest("#pr-btab tr[data-cap]"); if(br){ pr.cap=+br.dataset.cap; pr.capC=!CAPS.includes(pr.cap); prCapFill(); prSave(); prRender(); docRender(); return }
+  if(e.target.id==="pr-pvgis-clr"){ pr.pvgis=null; prSave(); prRender(); docRender(); return }
+  if(e.target.id==="pr-eredes-clr"){ pr.load=null; prSave(); prRender(); docRender(); return }
+  if(e.target.id==="pr-go"){ e.preventDefault(); showTab("pv"); }
+});
+
+/* ======================= Processo DGEG ======================= */
+const TEC_KEY="fv-tecnico";
+function docNew(d){ let tec={}; try{tec=JSON.parse(localStorage.getItem(TEC_KEY))||{}}catch(e){}
+  const z={t:{nome:"",nif:"",tel:"",email:"",morada:""},i:{morada:"",cp:"",local:"",freg:"",conc:"",cpe:"",pc:"",pl:"",tipo:"hab",gps:"",estr:"",serie:""},e:{nome:"",num:"",hab:"",ord:"",nif:"",tel:"",email:"",emp:"",alv:""},d:{local:"",data:"",obs:""},view:"md"};
+  d=d||{}; const r={...z,view:d.view||"md"}; for(const k of ["t","i","e","d"]) r[k]={...z[k],...(d[k]||{})};
+  if(!Object.values(r.e).some(Boolean)) r.e={...r.e,...tec}; return r; }
+let docS=docNew(); try{const s=JSON.parse(localStorage.getItem("doc-v1")); if(s) docS=docNew(s)}catch(e){}
+function docSave(tec=true){ try{localStorage.setItem("doc-v1",JSON.stringify(docS)); if(tec&&Object.values(docS.e).some(Boolean)) localStorage.setItem(TEC_KEY,JSON.stringify(docS.e))}catch(e){} }
+function docInit(){ for(const g of ["t","i","e","d"]) for(const k in docS[g]){ const el=$(`#doc-${g}-${k}`); if(el) el.value=docS[g][k]??""; } docRender(true); }
+const nn=(v,d)=>v==null||v===""?d:v;
+const fx=(v,d=1)=>fmt(v,d);
+// dados reunidos para os documentos
+function docData(){
+  const E=pv.edit; if(!E) return null;
+  const R=sysCalc(), P=prCalc(), e=R.e, inv=E.inv, m=E.m, N=E.N, Pinst=N*inv.pac_kw;
+  const regime=Pinst<=30?{k:"mcp",t:"mera comunicação prévia (MCP)",d:"Potência instalada até 30 kW: mera comunicação prévia no portal do autoconsumo da DGEG."}
+    :Pinst<=1000?{k:"reg",t:"registo prévio e certificado de exploração",d:"Potência instalada acima de 30 kW e até 1 MW: registo prévio, inspecção e certificado de exploração."}
+    :{k:"lic",t:"licença de produção e licença de exploração",d:"Potência instalada acima de 1 MW: licença de produção e licença de exploração."};
+  const dm=dgegMatch(inv), dr=dgRow(dm.ix), tit=docS.t, ins=docS.i, tec=docS.e;
+  const morada=[ins.morada,[ins.cp,ins.local].filter(Boolean).join(" ")].filter(Boolean).join(", ");
+  const Pl=+ins.pl>0?+ins.pl:Pinst;
+  const date=docS.d.data?new Date(docS.d.data+"T12:00:00"):new Date();
+  return {E,R,P,e,inv,m,N,Pinst,Pl,regime,dm,dr,tit,ins,tec,morada,date,ph:inv.phases,bat:pv.bat&&inv.hybrid&&P&&P.cap>0};
+}
+const TIPO={hab:"habitação",serv:"comércio e serviços",ind:"indústria",agr:"agrícola"};
+const pp=(n,a,b)=>n===1?a:b;
+const dPT=d=>d.toLocaleDateString("pt-PT",{day:"numeric",month:"long",year:"numeric"});
+// blocos do documento: {t:"title"|"sub"|"h1"|"h2"|"p"|"ul"|"table"|"sign", ...}
+function mdBlocks(D){
+  const {e,R,P,inv,m,N,Pinst,Pl,regime,tit,ins,tec,morada,ph}=D, t=e.t, S=P?.S, inj=pr.inj!=="zero", B=[], dc=R.dc, ac=R.ac, rcd=R.rcd, spd=R.spd;
+  const H1=s=>B.push({t:"h1",s}), H2=s=>B.push({t:"h2",s}), Pp=s=>B.push({t:"p",s}), UL=a=>B.push({t:"ul",a:a.filter(Boolean)}), TB=(h,r,w)=>B.push({t:"table",h,r,w});
+  const ttl=nn(sy.proj,"Instalação fotovoltaica"), tilt=pr.pvgis?.tilt??pr.tilt, az=pr.pvgis?.az??pr.az;
+  B.push({t:"title",s:"Memória descritiva e justificativa"});
+  B.push({t:"sub",s:`Unidade de produção para autoconsumo (UPAC) · sistema solar fotovoltaico de ${fx(e.kWp,2)} kWp / ${fx(Pinst,2)} kW\n${ttl}${morada?" · "+morada:""}`});
+  H1("1. Objeto");
+  Pp(`A presente memória descritiva e justificativa refere-se ao projeto e à instalação de uma unidade de produção para autoconsumo (UPAC), com tecnologia solar fotovoltaica, com a potência instalada de ${fx(Pinst,2)} kW (potência ativa nominal ${pp(N,"do inversor","dos inversores")}) e a potência de pico de ${fx(e.kWp,2)} kWp, a instalar ${morada?"em "+morada+(ins.conc?", concelho de "+ins.conc:""):"no local identificado no ponto 2"}, associada à instalação de utilização ${ins.cpe?"com o CPE "+ins.cpe:"identificada pelo respetivo CPE"}.`);
+  Pp(`A energia produzida destina-se prioritariamente ao consumo da instalação de utilização. ${inj?"O excedente é injetado na Rede Elétrica de Serviço Público (RESP).":"A UPAC funciona sem injeção de energia na RESP: o inversor limita a produção ao consumo instantâneo da instalação."} Nos termos do Decreto-Lei n.º 15/2022, de 14 de janeiro, a UPAC está sujeita a ${regime.t}.`);
+  H1("2. Identificação");
+  TB(["Elemento","Dados"],[["Titular",nn(tit.nome,"—")],["NIF do titular",nn(tit.nif,"—")],["Morada do titular",nn(tit.morada,morada||"—")],["Contactos",[tit.tel,tit.email].filter(Boolean).join(" · ")||"—"],
+    ["Local da instalação",morada||"—"],["Freguesia / concelho",[ins.freg,ins.conc].filter(Boolean).join(" / ")||"—"],["Coordenadas",nn(ins.gps,"—")],["CPE",nn(ins.cpe,"—")],
+    ["Utilização",TIPO[ins.tipo]||"—"],["Potência contratada",+ins.pc>0?fx(+ins.pc,2)+" kVA":"—"],["Técnico responsável",[tec.nome,tec.hab].filter(Boolean).join(", ")||"—"],
+    ["N.º de inscrição DGEG",nn(tec.num,"—")],...(tec.ord?[["Ordem / associação",tec.ord]]:[]),["Entidade instaladora",[tec.emp,tec.alv].filter(Boolean).join(" · ")||"—"]],[34,66]);
+  H1("3. Enquadramento legal e normativo");
+  UL(["Decreto-Lei n.º 15/2022, de 14 de janeiro, na redação em vigor (organização e funcionamento do Sistema Elétrico Nacional, incluindo o autoconsumo).",
+    "Regras Técnicas das Instalações Elétricas de Baixa Tensão (RTIEBT), Portaria n.º 949-A/2006, de 11 de setembro, em particular a secção 712 (sistemas solares fotovoltaicos) e as partes 4 e 5.",
+    "IEC 60364-7-712 (instalações fotovoltaicas) e IEC 62548 (requisitos de projeto de geradores fotovoltaicos).",
+    "EN 50549-1 (requisitos para a ligação de geradores às redes de distribuição de baixa tensão) e IEC 62109-1/-2 (segurança dos conversores).",
+    "IEC 61215 e IEC 61730 (módulos fotovoltaicos); EN 50618 (cabos para sistemas fotovoltaicos, H1Z2Z2-K).",
+    "IEC 60947-3 (seccionadores), IEC 60269-6 (fusíveis gPV), EN 61643-11 e EN 61643-31 (descarregadores de sobretensões)."]);
+  H1("4. Descrição geral da instalação");
+  Pp(`O gerador fotovoltaico é constituído por ${e.n} módulos ${modName(m)} de ${m.pmax} W, montados ${({roof:"sobre a cobertura inclinada, de forma complanar",flat:"em cobertura plana, sobre estrutura inclinada",ground:"no solo, sobre estrutura aberta"})[pv.mount]}${ins.estr?" ("+ins.estr+")":""}, com inclinação de ${fx(tilt,0)}° e azimute de ${fx(az,0)}° (orientação ${orient(az)}), ocupando cerca de ${fx(e.area,0)} m². Os módulos ligam-se em ${dc.reduce((a,d)=>a+d.c.s,0)*N} ${pp(dc.reduce((a,d)=>a+d.c.s,0)*N,"fileira (string)","fileiras (strings)")} a ${N>1?N+" inversores":"um inversor"} ${invName(inv)}, ${ph==1?"monofásico, 230 V":"trifásico, 400 V"}, de ${fx(inv.pac_kw,2)} kW.`);
+  const SD=syDoc(R);
+  Pp(`${SD.desc}${D.bat?` O sistema inclui armazenamento em bateria com ${fx(P.cap,1)} kWh de capacidade nominal (${fx(P.S.U,1)} kWh úteis), ligado ao inversor híbrido.`:""}`);
+  TB(["Característica","Valor"],[["Potência de pico do gerador",`${fx(e.kWp,2)} kWp`],["Potência instalada (inversores)",`${fx(Pinst,2)} kW`],["Potência de ligação",`${fx(Pl,2)} kW${inj?"":" (sem injeção na RESP)"}`],
+    ["Módulos",`${e.n} × ${m.pmax} W`],["Inversores",`${N} × ${invName(inv)}`],["Rácio DC/AC",fx(e.ratio,2)],["Ligação",ph==1?"Monofásica, 230 V":"Trifásica, 3 × 400 V + N"],["Tipo de ligação",TOPO[R.topo]],
+    ...(D.bat?[["Armazenamento",`${fx(P.cap,1)} kWh nominais, ${fx(P.S.U,1)} kWh úteis${+pr.bpow>0?", "+fx(+pr.bpow,1)+" kW":""}${inv.battery?" · "+inv.battery:""}`]]:[]),...(S?[["Produção anual estimada",`${fk(S.T.pv)} kWh`]]:[]),["Regime",regime.t]],[45,55]);
+  H1("5. Gerador fotovoltaico");
+  TB(["Módulo","Valor"],[["Fabricante e modelo",modName(m)],["Tecnologia",nn(m.cell,"—")],["Potência máxima (STC)",`${m.pmax} W`],["Voc / Isc",`${fx(m.voc,2)} V / ${fx(m.isc,2)} A`],["Vmpp / Impp",`${fx(m.vmpp,2)} V / ${fx(m.impp,2)} A`],
+    ["Coeficientes de temperatura",`Voc ${fx(m.beta_voc,2)} %/°C · Isc ${fx(m.alpha_isc,3)} %/°C${m.gamma_pmax!=null?" · Pmáx "+fx(m.gamma_pmax,2)+" %/°C":""}`],["Tensão máxima do sistema",`${m.vsys_max||"—"} V`],
+    ["Corrente máxima do fusível",`${m.fuse_max||"—"} A`],["Dimensões / massa",`${m.length_mm} × ${m.width_mm} mm${m.weight_kg?" / "+fx(m.weight_kg,1)+" kg":""}`]],[45,55]);
+  Pp(`Temperaturas de cálculo: mínima ${fx(pv.tmin,0)} °C (local: ${pvLocTxt()}) e máxima da célula ${fx(t.tcMax,1)} °C (ar a ${fx(pv.tmax,0)} °C, NOCT ${m.noct||45} °C${MOUNT[pv.mount].dt?", +"+MOUNT[pv.mount].dt+" °C por montagem complanar":""}).`);
+  TB(["Entrada","Strings × módulos","Voc a "+fx(pv.tmin,0)+" °C","Vmpp (quente – frio)","Isc a "+fx(t.tcMax,0)+" °C"],dc.map(d=>[`MPPT ${d.j+1}`,`${d.c.s} × ${d.c.ns}`,`${fx(d.voc,0)} V`,`${fx(d.c.ns*t.vmppHot,0)} – ${fx(d.c.ns*t.vmppCold,0)} V`,`${fx(d.c.s*t.iscHot,1)} A`]),[16,22,20,24,18]);
+  H1("6. Inversor");
+  TB(["Inversor","Valor"],[["Fabricante e modelo",invName(inv)],["Quantidade",String(N)],["Potência AC nominal",`${fx(inv.pac_kw,2)} kW`],...(inv.pdc_max_kw?[["Potência DC máxima",`${fx(inv.pdc_max_kw,2)} kWp`]]:[]),
+    ["Tensão DC máxima",`${inv.vdc_max} V`],["Gama MPPT",`${inv.mppt_min} – ${inv.mppt_max} V`],["N.º de MPPT / entradas",`${inv.mppt} / ${inv.strings_per_mppt.join(" + ")}`],["Corrente máx. por MPPT",inv.imax_mppt.map(x=>x+" A").join(" / ")],
+    ["Corrente AC máxima (cálculo)",`${fx(R.iac,1)} A`],["Ligação",ph==1?"Monofásica":"Trifásica"],["Híbrido (bateria)",inv.hybrid?"Sim":"Não"],...(R.bk?[["Corrente máx. da saída de socorro",`${fx(R.ibk,1)} A`]]:[]),["N.º de série",nn(ins.serie,"(a indicar)")],
+    ["Lista de equipamentos da DGEG (SERUP)",D.dm.lvl===2?`Consta${D.dr?": "+D.dr[0]+" "+D.dr[1]+", "+fkw(D.dr[2])+" kW":""}`:D.dm.lvl===1?"Consta a série anterior; juntar declaração de conformidade do fabricante":"Não consta; juntar certificado e declaração de conformidade"]],[45,55]);
+  Pp(`A proteção de interface com a rede (subtensão e sobretensão, subfrequência e sobrefrequência, deteção de funcionamento em ilha) está integrada no inversor, conforme a EN 50549-1, com os ajustes exigidos pelo operador da rede de distribuição. O inversor dispõe de monitorização de isolamento DC e de corrente residual (IEC 62109-2).`);
+  if(D.bat){ H1("7. Sistema de armazenamento"); Pp(`Bateria com ${fx(P.cap,1)} kWh de capacidade nominal e ${fx(P.S.U,1)} kWh de capacidade útil (profundidade de descarga ${fx(+pr.dod,0)} %)${+pr.bpow>0?`, com potência de carga e descarga de ${fx(+pr.bpow,1)} kW`:""}, ligada ao barramento DC do inversor híbrido${inv.battery?" ("+inv.battery+")":""}. A bateria carrega apenas a partir da produção fotovoltaica. O cabo, a proteção e o seccionamento DC da bateria são os indicados pelo fabricante. Local de instalação ventilado, protegido do sol e de acordo com as instruções do fabricante.`); }
+  let k=D.bat?8:7;
+  H1(`${k++}. Compatibilidade entre o gerador e o inversor`);
+  TB(["Verificação","Cálculo","Resultado"],e.checks.map(c=>[c.t,c.d,c.ok?"Cumpre":c.soft?"Aviso":"Não cumpre"]),[40,44,16]);
+  H1(`${k++}. Canalizações e proteções do lado DC`);
+  Pp(`Cabos solares H1Z2Z2-K (EN 50618), unipolares, com dupla isolação, de ${fx(sy.Ldc,0)} m de percurso entre o gerador e o inversor, instalados ${DCINST[sy.dcInst]} a ${fx(sy.tdc,0)} °C. A corrente de cálculo é 1,25 × Isc (IEC 60364-7-712); a queda de tensão máxima admitida é ${fx(sy.dcDu,1)} %.`);
+  TB(["Entrada","Cabo","I de cálculo","Iz corrigida","ΔU"],dc.map(d=>[`MPPT ${d.j+1}`,`${d.c.s} × 2 × 1 × ${fS(d.S)} mm²`,`${fx(d.Ireq,1)} A`,`${fx(d.Iz,1)} A`,`${fx(d.dUp,2)} %`]),[16,30,18,18,18]);
+  UL([...SD.dcUl,
+    "Afixação junto ao quadro DC e ao inversor do aviso: «Atenção: partes ativas DC podem continuar sob tensão depois de seccionadas»."]);
+  H1(`${k++}. Canalizações e proteções do lado AC`);
+  const acRow=(n,C,Ib,L)=>[n,`${C.c.des} ${C.r.form}`,`${fx(L,0)} m`,`${fx(Ib,1)} A`,`${C.c.In} A`,`${fx(C.r.Izc,1)} A`,`${fx(C.r.dUp,2)} %`];
+  TB(["Circuito","Cabo","L","Ib","In","I'z","ΔU"],[acRow(SD.acName?SD.acName+(N>1?" (cada)":""):N>1?"Inversor → quadro FV (cada)":"Inversor → Q.G.E.",ac,R.Ig,sy.Lac),...(R.fd?[acRow("Quadro FV → Q.G.E.",R.fd,N*R.Ig,sy.Lf)]:[]),...SD.acRows.map(r=>acRow(r.n,r.C,r.Ib,r.L))],[24,22,9,11,9,12,13]);
+  Pp(`Dimensionamento segundo as RTIEBT: Ib ≤ In ≤ I'z e I2 ≤ 1,45 × I'z, com o método de referência ${methLabel(sy.met)} e fator de correção ${fx(+sy.fc,2)}. A queda de tensão fica abaixo de ${fx(sy.acDu,1)} %, para evitar que o inversor desligue por sobretensão.`);
+  UL(SD.acUl);
+  H1(`${k++}. Terras e ligações equipotenciais`);
+  Pp(`Regime de neutro TT. A proteção contra contactos indiretos é garantida pelo diferencial, com Re × IΔn ≤ UL: com UL = ${rcd.UL} V e IΔn = ${rcd.idn} mA, a resistência de terra deve ser no máximo ${fx(rcd.RAmax,0)} Ω (valor medido ou previsto: ${fx(+sy.RA,0)} Ω). As estruturas e molduras dos módulos ligam-se à terra de proteção com condutor de cobre de ${R.pe} mm² (IEC 60364-7-712, 712.54). Os condutores DC e o condutor de proteção seguem juntos para reduzir a área dos laços.`);
+  H1(`${k++}. Ligação à instalação de utilização e à rede`);
+  Pp(`${SD.lig}${ins.cpe?" CPE "+ins.cpe+".":""} ${inj?"A energia injetada na RESP é medida pelo equipamento de contagem do operador da rede de distribuição.":"O inversor é configurado para injeção zero, com medição no ponto de ligação."} A potência de ligação é de ${fx(Pl,2)} kW${+ins.pc>0?", para uma potência contratada de "+fx(+ins.pc,2)+" kVA":""}. Junto ao Q.G.E. e ao contador é afixado o aviso de dupla alimentação (instalação com produção própria).`);
+  if(S){ H1(`${k++}. Produção estimada e autoconsumo`);
+    Pp(`${P.PV.src==="pvgis"?`Produção calculada a partir dos dados do PVGIS (Comissão Europeia) para o local, inclinação e azimute dos módulos (ficheiro ${pr.pvgis.name}).`:`Produção estimada para ${pvLocShort()} (${fx(pv.yld,0)} kWh/kWp·ano na inclinação ótima), corrigida para a inclinação de ${fx(tilt,0)}° e o azimute de ${fx(az,0)}°, com ${fx(+pr.loss,0)} % de perdas do sistema${+pr.shade?" e "+fx(+pr.shade,0)+" % de sombreamento":""}.`} O consumo da instalação ${P.LD.src==="eredes"?"vem do diagrama de carga da E-REDES":P.LD.src==="mon"?"vem das faturas mensais":"foi estimado em "+fk(S.T.load)+" kWh/ano, com um perfil horário típico"}.`);
+    TB(["Mês","Produção (kWh)","Consumo (kWh)","Autoconsumo (kWh)",inj?"Injeção (kWh)":"Não aproveitada (kWh)"],[...S.M.map((r,i)=>[MNAME[i],fk(r.pv),fk(r.load),fk(r.dir+r.dis),fk(inj?r.exp:r.cut)]),["Total",fk(S.T.pv),fk(S.T.load),fk(S.T.self),fk(inj?S.T.exp:S.T.cut)]],[16,21,21,21,21]);
+    Pp(`Autoconsumo de ${fx(S.T.scr*100,0)} % da produção e auto-suficiência de ${fx(S.T.ssr*100,0)} % do consumo${D.bat?`, com bateria de ${fx(P.cap,1)} kWh`:""}.`); }
+  H1(`${k++}. Exploração e manutenção`);
+  UL(["Inspeção visual anual dos módulos, estruturas, cabos e ligações; limpeza dos módulos quando necessário.","Verificação periódica do aperto dos bornes, dos descarregadores de sobretensões e do funcionamento do diferencial (botão de teste).",
+    "Medição da resistência de terra e da resistência de isolamento do gerador nas verificações periódicas.","Antes de qualquer intervenção, abrir o disjuntor AC e o seccionador DC, e cobrir os módulos se for necessário trabalhar em partes ativas DC."]);
+  if(docS.d.obs) { H1(`${k++}. Observações`); Pp(docS.d.obs); }
+  H1(`${k++}. Peças desenhadas e anexos`);
+  UL([...SD.sheets.map(x=>x==="Esquema unifilar"?"Esquema unifilar da instalação":x),`Ficha técnica do módulo ${modName(m)}`,`Ficha técnica e declaração de conformidade do inversor ${invName(inv)} (EN 50549-1)`,"Termo de responsabilidade do técnico responsável"]);
+  B.push({t:"p",s:`A instalação foi projetada de acordo com as RTIEBT e as normas referidas, e os valores apresentados resultam dos cálculos de dimensionamento juntos.`});
+  B.push({t:"sign",place:nn(docS.d.local,ins.local||ins.conc||""),date:dPT(D.date),who:tec.nome,role:"O técnico responsável",num:tec.num});
+  return B;
+}
+function trBlocks(D){
+  const {e,inv,N,Pinst,Pl,regime,tit,ins,tec,morada}=D, B=[];
+  B.push({t:"title",s:"Termo de responsabilidade"});
+  B.push({t:"sub",s:"Unidade de produção para autoconsumo (UPAC) · minuta a conferir com o modelo do portal da DGEG"});
+  B.push({t:"p",s:`${nn(tec.nome,"[nome do técnico]")}, ${nn(tec.hab,"[habilitação]")}, ${tec.nif?"NIF "+tec.nif+", ":""}inscrito na Direção-Geral de Energia e Geologia (DGEG) com o n.º ${nn(tec.num,"[n.º de inscrição]")}${tec.ord?", "+tec.ord:""}${tec.emp?", ao serviço de "+tec.emp:""}, declara, sob compromisso de honra, para os efeitos do Decreto-Lei n.º 15/2022, de 14 de janeiro, na redação em vigor, que é o técnico responsável pelo projeto e pela execução da unidade de produção para autoconsumo (UPAC) abaixo identificada, sujeita a ${regime.t}.`});
+  B.push({t:"table",h:["Elemento","Dados"],r:[["Titular",nn(tit.nome,"—")+(tit.nif?" · NIF "+tit.nif:"")],["Local da instalação",morada||"—"],["CPE",nn(ins.cpe,"—")],["Tecnologia","Solar fotovoltaica"],
+    ["Potência instalada",`${fx(Pinst,2)} kW`],["Potência de pico",`${fx(e.kWp,2)} kWp`],["Potência de ligação",`${fx(Pl,2)} kW`],["Injeção na RESP",pr.inj==="zero"?"Não (injeção zero)":"Sim, venda do excedente"],
+    ["Inversor(es)",`${N} × ${invName(inv)}${ins.serie?" · n.º de série "+ins.serie:""}`],["Módulos",`${e.n} × ${modName(e.m||D.m)}`]],w:[34,66]});
+  B.push({t:"p",s:"Declara ainda que:"});
+  B.push({t:"ul",a:["a instalação foi projetada e executada de acordo com as Regras Técnicas das Instalações Elétricas de Baixa Tensão (Portaria n.º 949-A/2006, de 11 de setembro), em particular a secção 712, e com as normas aplicáveis;",
+    "os equipamentos utilizados cumprem os requisitos legais e normativos aplicáveis, nomeadamente a EN 50549-1 no que se refere ao inversor, e as respetivas declarações de conformidade estão disponíveis;",
+    "a instalação dispõe das proteções contra contactos indiretos, sobreintensidades e sobretensões descritas na memória descritiva, e foi ensaiada antes da entrada em serviço;",
+    "os elementos constantes da comunicação e da documentação que a acompanha correspondem à instalação executada."]});
+  B.push({t:"sign",place:nn(docS.d.local,ins.local||ins.conc||""),date:dPT(D.date),who:tec.nome,role:"O técnico responsável",num:tec.num});
+  return B;
+}
+function fdRows(D){ const {e,inv,N,m,Pinst,Pl,regime,tit,ins,tec}=D;
+  return [["Regime",regime.t],["CPE",ins.cpe],["Titular",tit.nome],["NIF do titular",tit.nif],["Morada da instalação",D.morada],["Concelho",ins.conc],["Freguesia",ins.freg],["Coordenadas",ins.gps],
+    ["Tecnologia","Solar fotovoltaica"],["Potência instalada (kW)",fx(Pinst,2)],["Potência de pico (kWp)",fx(e.kWp,2)],["Potência de ligação (kW)",fx(Pl,2)],["Injeção na RESP",pr.inj==="zero"?"Não":"Sim"],
+    ["Marca do inversor",inv.brand],["Modelo do inversor",D.dr?D.dr[1]:inv.model],["N.º de inversores",String(N)],["N.º de série do inversor",ins.serie],["Marca dos módulos",m.brand],["Modelo dos módulos",m.model],["N.º de módulos",String(e.n)],["Potência do módulo (W)",String(m.pmax)],
+    ...(D.bat?[["Armazenamento (kWh)",fx(D.P.cap,1)]]:[]),["Produção anual estimada (kWh)",D.P?fk(D.P.S.T.pv):""],["Técnico responsável",tec.nome],["N.º de inscrição DGEG",tec.num],["Entidade instaladora",tec.emp]]; }
+function blocksHtml(B){ return B.map(b=>b.t==="title"?`<h1>${esc(b.s)}</h1>`:b.t==="sub"?`<p class="sub">${esc(b.s).replace(/\n/g,"<br>")}</p>`:b.t==="h1"?`<h2>${esc(b.s)}</h2>`:b.t==="h2"?`<h3>${esc(b.s)}</h3>`:b.t==="p"?`<p>${esc(b.s)}</p>`:
+  b.t==="ul"?`<ul>${b.a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:b.t==="table"?`<table><thead><tr>${b.h.map(x=>`<th>${esc(x)}</th>`).join("")}</tr></thead><tbody>${b.r.map(r=>`<tr>${r.map(x=>`<td>${esc(x)}</td>`).join("")}</tr>`).join("")}</tbody></table>`:
+  b.t==="sign"?`<p style="margin-top:18px">${esc(b.place?b.place+", ":"")}${esc(b.date)}</p><p style="margin-top:28px">${esc(b.role)}</p><p style="margin-top:30px;border-top:1px solid var(--muted);width:260px;padding-top:4px">${esc(b.who||"")}${b.num?" · DGEG n.º "+esc(b.num):""}</p>`:"").join(""); }
+function docRender(force){
+  if(!force&&$("#view-doc").hidden) return;
+  const D=docData();
+  if(!D){ $("#doc-prev").innerHTML=`<div class="msg">Escolha primeiro uma combinação no separador Fotovoltaico.</div>`; $("#doc-list").innerHTML=""; $("#doc-kpi").innerHTML=""; return; }
+  $("#doc-cfg").innerHTML=`<strong>${fx(D.e.kWp,2)} kWp · ${fx(D.Pinst,2)} kW</strong> · ${D.N>1?D.N+" × ":""}${esc(invName(D.inv))}. Os cálculos vêm dos separadores 1 a 3.`;
+  $("#doc-i-pl").placeholder=fx(D.Pinst,2).replace(",","."); $("#doc-i-pl-n").textContent=+D.ins.pl>0?"valor seu":"vazio = potência instalada";
+  const kv=(k,v,s)=>`<div class="kv"><div class="k">${k}</div><div class="v" style="font-size:16px;font-family:var(--f-body);font-weight:600">${v}</div><div class="s">${s}</div></div>`;
+  $("#doc-kpi").innerHTML=kv("Regime",D.regime.k==="mcp"?"Comunicação prévia":D.regime.k==="reg"?"Registo prévio":"Licença",D.regime.d)+kv("Potência instalada",fx(D.Pinst,2)+" kW",`${fx(D.e.kWp,2)} kWp · ligação ${fx(D.Pl,2)} kW`)+kv("Inversor na lista DGEG",D.dm.lvl===2?"Sim":D.dm.lvl===1?"Só a série":"Não",D.dm.lvl===2?"bolsa de equipamentos do SERUP":"juntar declaração de conformidade");
+  const miss=[!D.ins.cpe&&"CPE",!D.tit.nome&&"nome do titular",!D.tit.nif&&"NIF do titular",!D.ins.morada&&"morada da instalação",!D.tec.nome&&"nome do técnico",!D.tec.num&&"n.º de inscrição DGEG",!D.ins.serie&&"n.º de série do inversor"].filter(Boolean);
+  const w=[]; if(miss.length) w.push(`Falta preencher: ${miss.join(", ")}. Os documentos saem com o campo em branco.`);
+  if(+D.ins.pc>0&&D.Pl>+D.ins.pc) w.push(`A potência de ligação (${fx(D.Pl,2)} kW) é maior que a potência contratada (${fx(+D.ins.pc,2)} kVA). Confirme o limite aplicável à instalação de utilização.`);
+  if(D.e.hard) w.push(`A configuração tem ${D.e.hard} verificação${D.e.hard>1?"ões":""} que não cumpre${D.e.hard>1?"m":""} (separador Fotovoltaico). Corrija antes de submeter.`);
+  if(D.R.iacSrc==="est") w.push(`A corrente AC máxima do inversor é estimada (${fx(D.R.est,1)} A). Confirme-a na ficha (separador Unifilar e protecções) antes de submeter: decide o disjuntor e o cabo.`);
+  if(D.R.duT>sy.acDu+1e-9) w.push(`A queda de tensão AC acumulada (${fx(D.R.duT,2)} %) excede o limite.`);
+  if(D.R.dc.some(d=>!d.ok)||!D.R.ac.ok) w.push("Há cabos que não cumprem no separador Unifilar e protecções.");
+  $("#doc-warn").innerHTML=w.map(x=>`<div class="msg">${x}</div>`).join("");
+  const st=(ok,t)=>`<span class="pill ${ok===true?"ok":ok===false?"warn":"na"}">${t}</span>`;
+  $("#doc-list").innerHTML=[["Memória descritiva e justificativa",st(true,"Gerada"),"Word para editar e assinar; também no PDF do processo."],["Termo de responsabilidade",st(true,"Minuta gerada"),"Confira com o modelo do portal e assine."],
+    ["Esquema unifilar",st(true,"Gerado"),"No PDF do processo, com os quadros DC e AC."],["Lista de material e resumo do dimensionamento",st(true,"Gerados"),"No PDF do processo."],
+    ["Ficha técnica do módulo",D.m.source?st(true,"Link"):st(null,"Juntar"),D.m.source?`<a href="${esc(D.m.source)}" target="_blank" rel="noopener">ficha do fabricante</a>`:""],
+    ["Ficha técnica e certificado do inversor",D.inv.source?st(true,"Link"):st(null,"Juntar"),(D.inv.source?`<a href="${esc(D.inv.source)}" target="_blank" rel="noopener">ficha do fabricante</a>. `:"")+(D.dm.lvl===2?"Consta da lista SERUP.":"Juntar certificado EN 50549-1 e declaração de conformidade.")],
+    ["Planta de localização / implantação",st(null,"Juntar"),"Não é gerada pela app."],["Autorização do proprietário",st(null,"Se aplicável"),"Quando o titular não é o proprietário do imóvel."],
+    ...(D.regime.k!=="mcp"?[["Relatório de inspecção e certificado de exploração",st(null,"Depois"),"Acima de 30 kW, após a inspecção."]]:[])].map(r=>`<tr><td><strong>${r[0]}</strong></td><td>${r[1]}</td><td class="note">${r[2]}</td></tr>`).join("");
+  document.querySelectorAll("#doc-view button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===docS.view));
+  if(docS.view==="fd") $("#doc-prev").innerHTML=`<p class="sub">Valores para preencher o formulário do portal do autoconsumo. Toque em Copiar ao lado de cada um.</p><table><tbody>${fdRows(D).map((r,i)=>`<tr><td>${esc(r[0])}</td><td class="mono">${esc(r[1]||"—")}</td><td>${r[1]?`<button class="btn cp" data-cp="${i}">Copiar</button>`:""}</td></tr>`).join("")}</tbody></table>`;
+  else $("#doc-prev").innerHTML=blocksHtml(docS.view==="tr"?trBlocks(D):mdBlocks(D));
+}
+document.addEventListener("input",e=>{ const m=(e.target.id||"").match(/^doc-([tied])-(\w+)$/); if(!m) return; docS[m[1]][m[2]]=e.target.value; docSave(m[1]==="e"); clearTimeout(docRender.t); docRender.t=setTimeout(()=>docRender(),250); });
+document.addEventListener("click",e=>{
+  const v=e.target.closest("#doc-view button"); if(v){ docS.view=v.dataset.v; docSave(false); docRender(); return }
+  const c=e.target.closest("[data-cp]"); if(c){ const D=docData(); const r=fdRows(D)[+c.dataset.cp]; navigator.clipboard.writeText(r[1]).then(()=>toast(`${r[0]} copiado.`),()=>toast("Não foi possível copiar.")); return }
+  if(e.target.id==="doc-w-md") docWord("md"); if(e.target.id==="doc-w-tr") docWord("tr"); if(e.target.id==="doc-pdf") docPdf();
+});
+/* ---------- Word (.docx), montado aqui: XML + ZIP sem compressão ---------- */
+const CRC=(()=>{ const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=c&1?0xEDB88320^(c>>>1):c>>>1; t[n]=c>>>0; } return t; })();
+function zip(files){ const enc=new TextEncoder(), parts=[], cen=[]; let off=0;
+  const u16=v=>[v&255,v>>8&255], u32=v=>[v&255,v>>8&255,v>>16&255,v>>>24&255];
+  for(const [name,txt] of files){ const data=enc.encode(txt), nm=enc.encode(name); let c=0xFFFFFFFF; for(const b of data) c=CRC[(c^b)&255]^(c>>>8); c=(c^0xFFFFFFFF)>>>0;
+    const head=[...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(c),...u32(data.length),...u32(data.length),...u16(nm.length),...u16(0)];
+    parts.push(new Uint8Array([...u32(0x04034b50),...head]),nm,data);
+    cen.push(new Uint8Array([...u32(0x02014b50),...u16(20),...head,...u16(0),...u16(0),...u16(0),...u32(0),...u32(off)]),nm);
+    off+=30+nm.length+data.length; }
+  const cs=cen.reduce((a,b)=>a+b.length,0);
+  return new Blob([...parts,...cen,new Uint8Array([...u32(0x06054b50),...u16(0),...u16(0),...u16(files.length),...u16(files.length),...u32(cs),...u32(off),...u16(0)])],{type:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"}); }
+const xe=s=>String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+function docxXml(B,title){
+  const run=(s,o={})=>`<w:r>${o.b||o.sz||o.c?`<w:rPr>${o.b?"<w:b/>":""}${o.c?`<w:color w:val="${o.c}"/>`:""}${o.sz?`<w:sz w:val="${o.sz}"/>`:""}</w:rPr>`:""}${String(s).split("\n").map(x=>x.split("\t").map(y=>`<w:t xml:space="preserve">${xe(y)}</w:t>`).join("<w:tab/>")).join("<w:br/>")}</w:r>`;
+  const par=(s,st,o={},pp="")=>`<w:p><w:pPr>${st?`<w:pStyle w:val="${st}"/>`:""}${pp}</w:pPr>${run(s,o)}</w:p>`;
+  const TW=9070, bd=`<w:tblBorders>${["top","left","bottom","right","insideH","insideV"].map(k=>`<w:${k} w:val="single" w:sz="4" w:space="0" w:color="B8C2C8"/>`).join("")}</w:tblBorders>`;
+  let body="";
+  for(const b of B){
+    if(b.t==="title") body+=par(b.s,"Title");
+    else if(b.t==="sub") body+=par(b.s,"Subtitle");
+    else if(b.t==="h1") body+=par(b.s,"Heading1"); else if(b.t==="h2") body+=par(b.s,"Heading2");
+    else if(b.t==="p") body+=par(b.s,null,{},`<w:jc w:val="both"/>`);
+    else if(b.t==="ul") body+=b.a.map(x=>par("•\t"+x,null,{},`<w:tabs><w:tab w:val="left" w:pos="360"/></w:tabs><w:ind w:left="360" w:hanging="360"/><w:spacing w:after="60"/>`)).join("");
+    else if(b.t==="table"){ const ws=b.w.map(p=>Math.round(TW*p/100));
+      // keepNext em todas as linhas menos a última: a tabela não fica partida com uma só linha no fim da página (as grandes partem-se na mesma)
+      const cell=(s,i,h,kn)=>`<w:tc><w:tcPr><w:tcW w:w="${ws[i]}" w:type="dxa"/>${h?`<w:shd w:val="clear" w:color="auto" w:fill="E9EEF1"/>`:""}</w:tcPr><w:p><w:pPr>${kn&&b.r.length<=16?"<w:keepNext/>":""}<w:spacing w:before="20" w:after="20"/></w:pPr>${run(s,{b:h,sz:18})}</w:p></w:tc>`;
+      body+=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/>${bd}<w:tblLayout w:type="fixed"/><w:tblCellMar><w:left w:w="80" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${ws.map(w=>`<w:gridCol w:w="${w}"/>`).join("")}</w:tblGrid>`+
+        `<w:tr><w:trPr><w:tblHeader/></w:trPr>${b.h.map((s,i)=>cell(s,i,true,true)).join("")}</w:tr>`+b.r.map((r,ri)=>`<w:tr><w:trPr><w:cantSplit/></w:trPr>${r.map((s,i)=>cell(s,i,false,ri<b.r.length-1)).join("")}</w:tr>`).join("")+`</w:tbl>`+par("",null,{},`<w:spacing w:after="60"/>`); }
+    else if(b.t==="sign") body+=par(`${b.place?b.place+", ":""}${b.date}`,null,{},`<w:keepNext/><w:spacing w:before="360"/>`)+par(b.role,null,{},`<w:keepNext/><w:spacing w:before="360"/>`)+par("_______________________________________",null,{},`<w:keepNext/><w:spacing w:before="720"/>`)+par(`${b.who||""}${b.num?" · DGEG n.º "+b.num:""}`);
+  }
+  const ft=`<w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:p><w:pPr><w:jc w:val="center"/></w:pPr>${run(title+" · página ",{sz:16,c:"5D6B75"})}<w:r><w:rPr><w:sz w:val="16"/><w:color w:val="5D6B75"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:rPr><w:sz w:val="16"/></w:rPr><w:instrText xml:space="preserve"> PAGE </w:instrText></w:r><w:r><w:rPr><w:sz w:val="16"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r></w:p></w:ftr>`;
+  const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><w:body>${body}<w:sectPr><w:footerReference w:type="default" r:id="rId2"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1418" w:right="1418" w:bottom="1418" w:left="1418" w:header="709" w:footer="709" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  const sty=(id,name,ppr,rpr,base="Normal")=>`<w:style w:type="paragraph" w:styleId="${id}"><w:name w:val="${name}"/><w:basedOn w:val="${base}"/><w:next w:val="Normal"/><w:qFormat/><w:pPr>${ppr}</w:pPr><w:rPr>${rpr}</w:rPr></w:style>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" w:eastAsia="Arial"/><w:sz w:val="20"/><w:szCs w:val="20"/><w:lang w:val="pt-PT"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>`+
+    `<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style>`+sty("Title","Title",`<w:spacing w:after="80"/>`,`<w:b/><w:sz w:val="36"/><w:color w:val="18232B"/>`)+sty("Subtitle","Subtitle",`<w:spacing w:after="360"/>`,`<w:sz w:val="22"/><w:color w:val="5D6B75"/>`)+
+    sty("Heading1","heading 1",`<w:keepNext/><w:spacing w:before="320" w:after="120"/><w:outlineLvl w:val="0"/>`,`<w:b/><w:sz w:val="26"/><w:color w:val="B5612A"/>`)+sty("Heading2","heading 2",`<w:keepNext/><w:spacing w:before="200" w:after="80"/><w:outlineLvl w:val="1"/>`,`<w:b/><w:sz w:val="22"/>`)+`</w:styles>`;
+  const nsR="http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+  return [["[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`],
+    ["_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="${nsR}/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>`],
+    ["docProps/core.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xe(title)}</dc:title><dc:language>pt-PT</dc:language><dcterms:created xsi:type="dcterms:W3CDTF">${new Date().toISOString().slice(0,19)}Z</dcterms:created></cp:coreProperties>`],
+    ["word/_rels/document.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="${nsR}/styles" Target="styles.xml"/><Relationship Id="rId2" Type="${nsR}/footer" Target="footer1.xml"/></Relationships>`],
+    ["word/document.xml",doc],["word/styles.xml",styles],["word/footer1.xml",ft]];
+}
+async function docWord(kind){ const D=docData(); if(!D||!PRDL) return;
+  const B=kind==="tr"?trBlocks(D):mdBlocks(D), title=(kind==="tr"?"Termo de responsabilidade":"Memória descritiva")+" · "+nn(sy.proj,"UPAC");
+  try{ await PRDL.save({filename:`${slug(sy.proj)||"upac"}-${kind==="tr"?"termo-responsabilidade":"memoria-descritiva"}.docx`,data:zip(docxXml(B,title))}); toast("Documento Word guardado."); }
+  catch(err){ if(err?.code!=="declined") toast(err?.code==="extension_not_enabled"?"Ficheiros Word não estão disponíveis nesta vista.":"Não consegui guardar o documento."); } }
+/* ---------- PDF do processo: memória e termo (A4 ao alto) + desenhos (A4 ao baixo) ---------- */
+function textPages(B,title,foot){
+  const W=1654,H=2339, mm=W/210, L=22*mm, Rr=W-20*mm, top=22*mm, bot=H-20*mm, pages=[]; let c,x,y;
+  const np=()=>{ c=document.createElement("canvas"); c.width=W; c.height=H; x=c.getContext("2d"); x.fillStyle="#fff"; x.fillRect(0,0,W,H); x.textBaseline="alphabetic"; pages.push(c); y=top; };
+  const F=(pt,b)=>`${b?"bold ":""}${Math.round(pt*200/72)}px Arial`;
+  const wrap=(t,w)=>{ const out=[]; for(const para of String(t).split("\n")){ let line=""; for(const wd of para.split(" ")){ const tt=line?line+" "+wd:wd; if(x.measureText(tt).width>w&&line){out.push(line); line=wd} else line=tt } out.push(line); } return out; };
+  const text=(t,pt,b,col,ind=0,gap=0.45)=>{ x.font=F(pt,b); const lh=pt*200/72*1.38; const ls=wrap(t,Rr-L-ind);
+    for(const l of ls){ if(y+lh>bot) np(); x.font=F(pt,b); x.fillStyle=col; y+=lh; x.fillText(l,L+ind,y-lh*0.25); } y+=lh*gap; };
+  np();
+  for(const b of B){
+    if(b.t==="title") text(b.s,17,true,"#18232b",0,0.2);
+    else if(b.t==="sub") { text(b.s,10.5,false,"#5d6b75",0,1.2); }
+    else if(b.t==="h1"){ if(y+40*mm>bot) np(); y+=3*mm; text(b.s,12.5,true,"#b5612a",0,0.25); }
+    else if(b.t==="h2") text(b.s,11,true,"#18232b",0,0.2);
+    else if(b.t==="p") text(b.s,10,false,"#18232b");
+    else if(b.t==="ul"){ const lh=10*200/72*1.38; for(const a of b.a){ if(y+lh>bot) np(); x.fillStyle="#18232b"; x.font=F(10,false); x.fillText("•",L+1.5*mm,y+lh*0.75); text(a,10,false,"#18232b",6*mm,0.15); } y+=2*mm; }
+    else if(b.t==="table"){ const pt=8.6, lh=pt*200/72*1.32, cw=b.w.map(p=>(Rr-L)*p/100), pad=1.6*mm;
+      const row=(r,head)=>{ x.font=F(pt,head); const ls=r.map((s,i)=>wrap(s,cw[i]-2*pad)); const h=Math.max(...ls.map(l=>l.length))*lh+2*pad;
+        if(y+h>bot){ np(); if(!head) row(b.h,true); x.font=F(pt,head); }
+        if(head){ x.fillStyle="#e9eef1"; x.fillRect(L,y,Rr-L,h); }
+        x.strokeStyle="#b8c2c8"; x.lineWidth=1.5; let cx=L; ls.forEach((l,i)=>{ x.strokeRect(cx,y,cw[i],h); x.fillStyle="#18232b"; x.font=F(pt,head); l.forEach((t,k)=>x.fillText(t,cx+pad,y+pad+(k+1)*lh-lh*0.28)); cx+=cw[i]; }); y+=h; };
+      if(y+3*lh*2>bot) np(); row(b.h,true); b.r.forEach(r=>row(r,false)); y+=4*mm; }
+    else if(b.t==="sign"){ if(y+60*mm>bot) np(); y+=8*mm; text(`${b.place?b.place+", ":""}${b.date}`,10,false,"#18232b",0,1); text(b.role,10,false,"#18232b",0,0.5); y+=22*mm; x.strokeStyle="#5d6b75"; x.lineWidth=2; x.beginPath(); x.moveTo(L,y); x.lineTo(L+80*mm,y); x.stroke(); y+=2*mm; text(`${b.who||""}${b.num?" · DGEG n.º "+b.num:""}`,10,false,"#18232b"); }
+  }
+  return pages.map((c,i)=>{ const x=c.getContext("2d"); x.font=F(8,false); x.fillStyle="#5d6b75"; x.textAlign="center"; x.fillText(`${title} · página ${i+1} de ${pages.length}`,W/2,H-10*mm); x.textAlign="left"; return c; });
+}
+async function docPdf(){ const D=docData(); if(!D||!PRDL) return; const btn=$("#doc-pdf"); btn.disabled=true; btn.textContent="A preparar…";
+  try{ const md=textPages(mdBlocks(D),"Memória descritiva · "+nn(sy.proj,"UPAC")), tr=textPages(trBlocks(D),"Termo de responsabilidade · "+nn(sy.proj,"UPAC"));
+    const dw=await sysPdfPages(D.R);
+    await PRDL.save({filename:`${slug(sy.proj)||"upac"}-processo-dgeg.pdf`,data:makePdf([...md,...dw,...tr])}); toast("PDF do processo guardado."); }
+  catch(err){ if(err?.code!=="declined") toast(err?.code==="unavailable"?"Não é possível guardar ficheiros nesta vista.":"Não consegui gerar o PDF."); }
+  finally{ btn.disabled=false; btn.textContent="Processo completo (PDF)"; } }
+
+prInit(); docInit(); prjUI();
+try{ const ref=JSON.parse(localStorage.getItem("pv-edit")); if(ref) editRestore(ref); }catch(e){}
+{ const t=(()=>{try{return localStorage.getItem("tab")}catch(e){return null}})(); if(t==="prod"||t==="doc") showTab(t); }
+</script>

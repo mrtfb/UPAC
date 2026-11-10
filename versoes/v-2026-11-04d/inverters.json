@@ -1,0 +1,6116 @@
+[
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-3KTL-L1",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3,
+  "pdc_max_kw": 4.5,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": "HV 350-560 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6ktl-l1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 15,
+  "iac_src": "ficha UE SUN2000-2-6KTL-L1 (04-202403)"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-5KTL-L1",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 5,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": "HV 350-560 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6ktl-l1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 25,
+  "iac_src": "ficha UE SUN2000-2-6KTL-L1 (04-202403)"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-6KTL-L1",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 6,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": "HV 350-560 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6ktl-l1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 27.3,
+  "iac_src": "ficha UE SUN2000-2-6KTL-L1 (04-202403)"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-5KTL-M1",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 5,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 140,
+  "mppt_max": 980,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   19.5,
+   19.5
+  ],
+  "battery": "HV 600-980 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6-8-10ktl-m1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 8.5,
+  "iac_src": "ficha UE SUN2000-3-10KTL-M1"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-8KTL-M1",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 8,
+  "pdc_max_kw": 12.0,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 140,
+  "mppt_max": 980,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   19.5,
+   19.5
+  ],
+  "battery": "HV 600-980 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6-8-10ktl-m1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 13.5,
+  "iac_src": "ficha UE SUN2000-3-10KTL-M1"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-10KTL-M1",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 10,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 140,
+  "mppt_max": 980,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   19.5,
+   19.5
+  ],
+  "battery": "HV 600-980 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6-8-10ktl-m1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 16.9,
+  "iac_src": "ficha UE SUN2000-3-10KTL-M1"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-12KTL-M2",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 12,
+  "pdc_max_kw": 18.0,
+  "vdc_max": 1080,
+  "v_start": 200,
+  "mppt_min": 160,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   22,
+   22
+  ],
+  "isc_mppt": [
+   30,
+   30
+  ],
+  "battery": null,
+  "source": "https://www.photomate.eu/wp-content/themes/sitetheme/assets/datasheets/dk/DK_Sheet_12-20KTL-M2_20201006.pdf",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 20,
+  "iac_src": "ficha SUN2000-12-20KTL-M2"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-15KTL-M2",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 15,
+  "pdc_max_kw": 22.5,
+  "vdc_max": 1080,
+  "v_start": 200,
+  "mppt_min": 160,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   22,
+   22
+  ],
+  "isc_mppt": [
+   30,
+   30
+  ],
+  "battery": null,
+  "source": "https://www.photomate.eu/wp-content/themes/sitetheme/assets/datasheets/dk/DK_Sheet_12-20KTL-M2_20201006.pdf",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 25.2,
+  "iac_src": "ficha SUN2000-12-20KTL-M2"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-20KTL-M2",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 20,
+  "pdc_max_kw": 30.0,
+  "vdc_max": 1080,
+  "v_start": 200,
+  "mppt_min": 160,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   22,
+   22
+  ],
+  "isc_mppt": [
+   30,
+   30
+  ],
+  "battery": null,
+  "source": "https://www.photomate.eu/wp-content/themes/sitetheme/assets/datasheets/dk/DK_Sheet_12-20KTL-M2_20201006.pdf",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 33.5,
+  "iac_src": "ficha SUN2000-12-20KTL-M2"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-30KTL-M3",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 30,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 4,
+  "strings_per_mppt": [
+   2,
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   26,
+   26,
+   26,
+   26
+  ],
+  "isc_mppt": [
+   40,
+   40,
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://cdn.autosolar.es/pdf/Huawei-SUN2000-30-36-40-KTL-M3.pdf",
+  "note": "8 entradas em 4 MPPT. Existe uma revisão mais recente («27A») com correntes diferentes: confirme a ficha do equipamento.",
+  "iac_max": 47.9,
+  "iac_src": "ficha SUN2000-30/36/40KTL-M3 (Smáx/3×230 V)"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-40KTL-M3",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 40,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 4,
+  "strings_per_mppt": [
+   2,
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   26,
+   26,
+   26,
+   26
+  ],
+  "isc_mppt": [
+   40,
+   40,
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://cdn.autosolar.es/pdf/Huawei-SUN2000-30-36-40-KTL-M3.pdf",
+  "note": "8 entradas em 4 MPPT. Existe uma revisão mais recente («27A») com correntes diferentes: confirme a ficha do equipamento.",
+  "iac_max": 63.8,
+  "iac_src": "ficha SUN2000-30/36/40KTL-M3 (Smáx/3×230 V)"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Boy 3.0 (SB3.0-1AV-41)",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 5.5,
+  "vdc_max": 600,
+  "v_start": 125,
+  "mppt_min": 110,
+  "mppt_max": 500,
+  "v_nom": 365,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   15,
+   15
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/SBxx-1AV-41/en-US/4177679243.html",
+  "iac_max": 16,
+  "iac_src": "ficha Sunny Boy 3.0-6.0 AV-41"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Boy 5.0 (SB5.0-1AV-41)",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 600,
+  "v_start": 125,
+  "mppt_min": 175,
+  "mppt_max": 500,
+  "v_nom": 365,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   15,
+   15
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/SBxx-1AV-41/en-US/4177754251.html",
+  "note": "a gama MPPT indicada é a de potência nominal; tensão mínima de entrada 100 V.",
+  "iac_max": 22,
+  "iac_src": "ficha Sunny Boy 3.0-6.0 AV-41"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Boy 6.0 (SB6.0-1AV-41)",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 600,
+  "v_start": 125,
+  "mppt_min": 210,
+  "mppt_max": 500,
+  "v_nom": 365,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   15,
+   15
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/SBxx-1AV-41/en-US/4177754251.html",
+  "note": "a gama MPPT indicada é a de potência nominal; tensão mínima de entrada 100 V.",
+  "iac_max": 26.1,
+  "iac_src": "ficha Sunny Boy 3.0-6.0 AV-41"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower 5.0 (STP5.0-3AV-40)",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 850,
+  "v_start": 175,
+  "mppt_min": 215,
+  "mppt_max": 800,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12,
+   12
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/STPxx-3av-40-BE/en-US/3190775563.html",
+  "note": "a gama MPPT indicada é a de potência nominal; tensão mínima de entrada 125 V.",
+  "iac_max": 7.6,
+  "iac_src": "manual STP5.0/6.0-3AV-40"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower 8.0 (STP8.0-3AV-40)",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 8.0,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 1000,
+  "v_start": 175,
+  "mppt_min": 260,
+  "mppt_max": 800,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   12
+  ],
+  "isc_mppt": [
+   30,
+   18
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/STP8-10-3AV-40/en-US/4176094859.html",
+  "note": "a gama MPPT indicada é a de potência nominal; tensão mínima de entrada 125 V.",
+  "iac_max": 12.1,
+  "iac_src": "ficha STP8-10-3AV-40"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower 10.0 (STP10.0-3AV-40)",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 10.0,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 1000,
+  "v_start": 175,
+  "mppt_min": 320,
+  "mppt_max": 800,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   12
+  ],
+  "isc_mppt": [
+   30,
+   18
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/STP8-10-3AV-40/en-US/4176094859.html",
+  "note": "a gama MPPT indicada é a de potência nominal; tensão mínima de entrada 125 V.",
+  "iac_max": 14.5,
+  "iac_src": "ficha STP8-10-3AV-40"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower X 15 (STP 15-50)",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 15,
+  "pdc_max_kw": 22.5,
+  "vdc_max": 1000,
+  "v_start": 188,
+  "mppt_min": 260,
+  "mppt_max": 800,
+  "v_nom": 580,
+  "mppt": 3,
+  "strings_per_mppt": [
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   24,
+   24,
+   24
+  ],
+  "isc_mppt": [
+   37.5,
+   37.5,
+   37.5
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/STPxx50/en-US/12078744715.html",
+  "note": "a gama MPPT indicada é a de potência nominal; gama total 150–1000 V.",
+  "iac_max": 25,
+  "iac_src": "manual STP xx-50 (Tripower X)"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower X 20 (STP 20-50)",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 20,
+  "pdc_max_kw": 30.0,
+  "vdc_max": 1000,
+  "v_start": 188,
+  "mppt_min": 345,
+  "mppt_max": 800,
+  "v_nom": 580,
+  "mppt": 3,
+  "strings_per_mppt": [
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   24,
+   24,
+   24
+  ],
+  "isc_mppt": [
+   37.5,
+   37.5,
+   37.5
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/STPxx50/en-US/12078744715.html",
+  "note": "a gama MPPT indicada é a de potência nominal; gama total 150–1000 V.",
+  "iac_max": 36.6,
+  "iac_src": "manual STP xx-50 (Tripower X)"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower X 25 (STP 25-50)",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 25,
+  "pdc_max_kw": 37.5,
+  "vdc_max": 1000,
+  "v_start": 188,
+  "mppt_min": 430,
+  "mppt_max": 800,
+  "v_nom": 580,
+  "mppt": 3,
+  "strings_per_mppt": [
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   24,
+   24,
+   24
+  ],
+  "isc_mppt": [
+   37.5,
+   37.5,
+   37.5
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/STPxx50/en-US/12078744715.html",
+  "note": "a gama MPPT indicada é a de potência nominal; gama total 150–1000 V.",
+  "iac_max": 36.6,
+  "iac_src": "manual STP xx-50 (Tripower X)"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower CORE1 (STP 50-41)",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 50,
+  "pdc_max_kw": 75,
+  "vdc_max": 1000,
+  "v_start": 188,
+  "mppt_min": 500,
+  "mppt_max": 800,
+  "v_nom": null,
+  "mppt": 6,
+  "strings_per_mppt": [
+   2,
+   2,
+   2,
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   20,
+   20,
+   20,
+   20,
+   20,
+   20
+  ],
+  "isc_mppt": [
+   30,
+   30,
+   30,
+   30,
+   30,
+   30
+  ],
+  "battery": null,
+  "source": "https://shop.krannich-solar.com/en-au/Sunny-Tripower-CORE1-STP-50-41/6643676",
+  "note": "12 entradas em 6 MPPT (assumidas 2 por MPPT); gama MPPT de potência nominal; entrada mínima 150 V.",
+  "iac_max": 72.5,
+  "iac_src": "ficha STP 50-41 CORE1"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower Smart Energy 5.0 (STP5.0-3SE-40)",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 210,
+  "mppt_max": 800,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV 150-600 V (Li-ion)",
+  "source": "https://manuals.sma.de/STPxx3SE40/en-US/14416373771.html",
+  "note": "a gama MPPT indicada é a de potência nominal; entrada mínima 150 V.",
+  "iac_max": 7.6,
+  "ibk_max": 20,
+  "iac_src": "ficha STPxx-3SE-40 (backup = corrente máx. cargas backup em rede)"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower Smart Energy 10.0 (STP10.0-3SE-40)",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 10.0,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 280,
+  "mppt_max": 800,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   2
+  ],
+  "imax_mppt": [
+   12.5,
+   25
+  ],
+  "isc_mppt": [
+   20,
+   40
+  ],
+  "battery": "HV 150-600 V (Li-ion)",
+  "source": "https://manuals.sma.de/STPxx3SE40/en-US/14416373771.html",
+  "note": "a gama MPPT indicada é a de potência nominal; entrada mínima 150 V.",
+  "iac_max": 15.2,
+  "ibk_max": 20,
+  "iac_src": "ficha STPxx-3SE-40 (backup = corrente máx. cargas backup em rede)"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Primo GEN24 5.0 Plus",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 600,
+  "v_start": 80,
+  "mppt_min": 230,
+  "mppt_max": 530,
+  "v_nom": 400,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   22,
+   12
+  ],
+  "isc_mppt": [
+   41.25,
+   22
+  ],
+  "battery": "HV 150-455 V",
+  "source": "https://www.fronius.com/en/help-center/solar-energy/products/solar-inverters/gen24/primo-gen24-plus/fronius-primo-gen24-5-0-plus",
+  "note": "gama MPPT de potência nominal; gama utilizável 65–530 V.",
+  "dgeg": "Primo 5.0 Gen24 Plus",
+  "iac_max": 27.5,
+  "iac_src": "página técnica Fronius Primo GEN24 5.0 Plus (27,5 A; outras fontes 22,7 A — usado o maior)"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Symo GEN24 6.0 Plus",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 1000,
+  "v_start": 80,
+  "mppt_min": 174,
+  "mppt_max": 800,
+  "v_nom": 610,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   25,
+   12.5
+  ],
+  "isc_mppt": [
+   40,
+   20
+  ],
+  "battery": "HV 160-700 V",
+  "source": "https://www.fronius.com/en/help-center/solar-energy/products/solar-inverters/gen24/symo-gen24-plus/fronius-symo-gen24-6-0-plus",
+  "note": "gama MPPT de potência nominal; gama utilizável 80–800 V; ligações DC 2/1.",
+  "dgeg": "Symo 6.0 Gen24 Plus"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Symo GEN24 8.0 Plus",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 8.0,
+  "pdc_max_kw": 12.0,
+  "vdc_max": 1000,
+  "v_start": 80,
+  "mppt_min": 224,
+  "mppt_max": 800,
+  "v_nom": 610,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   25,
+   12.5
+  ],
+  "isc_mppt": [
+   40,
+   20
+  ],
+  "battery": "HV 160-700 V",
+  "source": "https://www.fronius.com/en/help-center/solar-energy/products/solar-inverters/gen24/symo-gen24-plus/fronius-symo-gen24-8-0-plus",
+  "note": "gama MPPT de potência nominal; gama utilizável 80–800 V; ligações DC 2/1.",
+  "dgeg": "Symo 8.0 Gen24 Plus"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Symo GEN24 10.0 Plus",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 10.0,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 1000,
+  "v_start": 80,
+  "mppt_min": 278,
+  "mppt_max": 800,
+  "v_nom": 610,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   25,
+   12.5
+  ],
+  "isc_mppt": [
+   40,
+   20
+  ],
+  "battery": "HV 160-700 V",
+  "source": "https://www.fronius.com/en/help-center/solar-energy/products/solar-inverters/gen24/symo-gen24-plus/fronius-symo-gen24-10-0-plus",
+  "note": "gama MPPT de potência nominal; gama utilizável 80–800 V; ligações DC 2/1.",
+  "dgeg": "Symo 10.0 Gen24 Plus",
+  "iac_max": 16.4,
+  "iac_src": "ficha Fronius Symo GEN24 6.0-10.0 Plus"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Tauro 50-3-D",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 50,
+  "pdc_max_kw": 75,
+  "vdc_max": 1000,
+  "v_start": 200,
+  "mppt_min": 400,
+  "mppt_max": 870,
+  "v_nom": null,
+  "mppt": 3,
+  "strings_per_mppt": [
+   4,
+   3,
+   7
+  ],
+  "imax_mppt": [
+   36,
+   36,
+   72
+  ],
+  "isc_mppt": [
+   72,
+   72,
+   125
+  ],
+  "battery": null,
+  "source": "https://www.fronius.com/en-gb/uk/solar-energy/installers-partners/technical-data/all-products/inverters/fronius-tauro/tauro-50-3-d",
+  "note": "entradas protegidas por fusível por string (máx. 14,5 A, Isc 20 A por string).",
+  "iac_max": 75.8,
+  "iac_src": "ficha Fronius Tauro 50-3-D (a 220 V)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW5K-ET",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 6.5,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 200,
+  "mppt_max": 850,
+  "v_nom": 620,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   15.2,
+   15.2
+  ],
+  "battery": "HV 180-600 V (Li-ion)",
+  "source": "https://www.vpsolar.com/download/catalog/Inverter/GoodWE/GWxxK-ET/GoodWe_GWxxK-ET_datasheet_DE.pdf",
+  "note": "gama MPPT a plena carga: 240–850 V.",
+  "ibk_max": 8.5,
+  "iac_src": "ficha ET 5-10 kW (corrente máx. para a rede)",
+  "iac_max": 8.5
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW10K-ET",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 10.0,
+  "pdc_max_kw": 13.0,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 200,
+  "mppt_max": 850,
+  "v_nom": 620,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   15.2,
+   15.2
+  ],
+  "battery": "HV 180-600 V (Li-ion)",
+  "source": "https://www.vpsolar.com/download/catalog/Inverter/GoodWE/GWxxK-ET/GoodWe_GWxxK-ET_datasheet_DE.pdf",
+  "note": "gama MPPT a plena carga: 460–850 V.",
+  "ibk_max": 16.5,
+  "iac_src": "ficha ET 5-10 kW (corrente máx. para a rede)",
+  "iac_max": 16.5
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW10K-SDT-30",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 10.0,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   32,
+   22
+  ],
+  "isc_mppt": [
+   40,
+   27.5
+  ],
+  "battery": null,
+  "source": "https://www.solartraders.com/uploads/production/data_sheet/file/38835/data_sheet_gw20k_sdt_30_en_24-04-2025.pdf?locale=en",
+  "note": "na ficha surge como GW10K-SDT-EU30; correntes e entradas comuns aos modelos 10–20K.",
+  "iac_max": 16.7,
+  "iac_src": "ficha SDT G3 (Smáx/3×220 V)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW20K-SDT-30",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 20.0,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   32,
+   22
+  ],
+  "isc_mppt": [
+   40,
+   27.5
+  ],
+  "battery": null,
+  "source": "https://www.solartraders.com/uploads/production/data_sheet/file/38835/data_sheet_gw20k_sdt_30_en_24-04-2025.pdf?locale=en",
+  "note": "correntes e entradas comuns aos modelos 10–20K.",
+  "iac_max": 33.3,
+  "iac_src": "ficha SDT G3 (Smáx/3×220 V)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW30K-MT",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 30.0,
+  "pdc_max_kw": 39.0,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 200,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 3,
+  "strings_per_mppt": [
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   25,
+   25,
+   25
+  ],
+  "isc_mppt": [
+   31.3,
+   31.3,
+   31.3
+  ],
+  "battery": null,
+  "source": "https://tienda-solar.es/en/inverters/1466-solar-inverter-goodwe-gw30k-mt-three-phase",
+  "note": "dados de distribuidor; gama MPPT a plena carga 470–856 V.",
+  "iac_max": 48,
+  "iac_src": "ficha GoodWe SMT/MT"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW50KN-MT",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 50.0,
+  "pdc_max_kw": 65.0,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 620,
+  "mppt": 4,
+  "strings_per_mppt": [
+   3,
+   3,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   33,
+   33,
+   22,
+   22
+  ],
+  "isc_mppt": [
+   41.5,
+   41.5,
+   27.5,
+   27.5
+  ],
+  "battery": null,
+  "source": "https://www.solartraders.com/uploads/production/data_sheet/file/13925/datasheet.pdf?locale=da",
+  "note": "distribuição de entradas por MPPT a confirmar na ficha.",
+  "iac_max": 80,
+  "iac_src": "ficha GoodWe SMT/MT"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG5.0RS",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://info-support.sungrowpower.com/application/pdf/2022/04/15/DS_20220331_SG3.0_5.0RS_Datasheet_V12_EN%EF%BC%88AU%20DC%20switch%EF%BC%89.pdf",
+  "note": "ficha da versão australiana; potência AC 4999 W.",
+  "iac_max": 22.8,
+  "iac_src": "ficha SG3.0-6.0RS"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG10RT",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 10.0,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   32,
+   16
+  ],
+  "isc_mppt": [
+   45,
+   22.5
+  ],
+  "battery": null,
+  "source": "https://info-support.sungrowpower.com/datasheet-material/5004f494-c438-4270-9579-9db559e8c0a5.pdf",
+  "note": "entre 1000 e 1100 V fica em espera; valores da versão P2.",
+  "iac_max": 16.7,
+  "iac_src": "ficha SG5.0-12RT"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG15RT",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 15.0,
+  "pdc_max_kw": 22.5,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   32,
+   32
+  ],
+  "isc_mppt": [
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://info-support.sungrowpower.com/application/pdf/2024/09/13/DS_20240828_SG15_20RT_Datasheet_V13_EN(AU).pdf",
+  "note": "entre 1000 e 1100 V fica em espera.",
+  "iac_max": 25,
+  "iac_src": "ficha SG15/17/20RT"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG20RT",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 20.0,
+  "pdc_max_kw": 30.0,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   32,
+   32
+  ],
+  "isc_mppt": [
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://info-support.sungrowpower.com/application/pdf/2024/09/13/DS_20240828_SG15_20RT_Datasheet_V13_EN(AU).pdf",
+  "note": "entre 1000 e 1100 V fica em espera.",
+  "iac_max": 31.9,
+  "iac_src": "ficha SG15/17/20RT"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG33CX",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 33.0,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 250,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 585,
+  "mppt": 3,
+  "strings_per_mppt": [
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   26,
+   26,
+   26
+  ],
+  "isc_mppt": [
+   40,
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://en.sungrowpower.com/upload/documentFile/DS_SG33CX%20SG40CX%20SG50CX%20Datasheet_V14_EN.pdf.pdf",
+  "note": "corrente por MPPT = 78 A / 3; MPPT à potência nominal 550–850 V.",
+  "iac_max": 55.2,
+  "iac_src": "ficha SG33/40/50CX"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG50CX",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 50.0,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 250,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 585,
+  "mppt": 5,
+  "strings_per_mppt": [
+   2,
+   2,
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   26,
+   26,
+   26,
+   26,
+   26
+  ],
+  "isc_mppt": [
+   40,
+   40,
+   40,
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://en.sungrowpower.com/upload/documentFile/DS_SG33CX%20SG40CX%20SG50CX%20Datasheet_V14_EN.pdf.pdf",
+  "note": "corrente por MPPT = 130 A / 5; MPPT à potência nominal 550–850 V.",
+  "iac_max": 83.6,
+  "iac_src": "ficha SG33/40/50CX"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SH5.0RS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": null,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV 80-460 V (Li-ion)",
+  "source": "https://midsummer.ie/pdfs/ds-20220516-sh3.0-3.6-4.0-5.0-6.0rs-datasheet-v13-en.pdf",
+  "iac_max": 22.8,
+  "iac_src": "ficha SH3.0-6.0RS"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SH5.0RT",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 150,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": "HV 150-600 V (Li-ion)",
+  "source": "https://ger.sungrowpower.com/upload/file/20240916/DE_DS_SH5.0RT_6.0RT_8.0RT_10RT_Datenblatt.pdf",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 7.6,
+  "iac_src": "ficha SH5.0-10RT"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SH10RT",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 10.0,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 1000,
+  "v_start": 250,
+  "mppt_min": 200,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   2
+  ],
+  "imax_mppt": [
+   12.5,
+   25
+  ],
+  "isc_mppt": [
+   16,
+   32
+  ],
+  "battery": "HV 150-600 V (Li-ion)",
+  "source": "https://ger.sungrowpower.com/upload/file/20240916/DE_DS_SH5.0RT_6.0RT_8.0RT_10RT_Datenblatt.pdf",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 15.2,
+  "iac_src": "ficha SH5.0-10RT"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MOD 10KTL3-X",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 10.0,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   2
+  ],
+  "imax_mppt": [
+   13,
+   26
+  ],
+  "isc_mppt": [
+   16,
+   32
+  ],
+  "battery": null,
+  "source": "https://b2b.offgridtec.com/media/product_attachements/Growatt_MOD 10-15KTL3-X_Datenblatt.pdf",
+  "note": "divisão de correntes da ficha australiana, que indica arranque a 200 V.",
+  "iac_max": 16.7,
+  "iac_src": "ficha MOD 10-15KTL3-X (15K: Smáx 16,5 kVA ÷ 3×220 V)"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MID 20KTL3-X",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 20.0,
+  "pdc_max_kw": 30.0,
+  "vdc_max": 1100,
+  "v_start": 250,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   27,
+   27
+  ],
+  "isc_mppt": [
+   33.8,
+   33.8
+  ],
+  "battery": null,
+  "source": "https://fotovoltaika.sonepar.cz/wp-content/uploads/2024/01/Growatt-MID-15-25KTL3-X-Datasheet_CZ.pdf",
+  "note": "correntes e entradas por modelo a confirmar na ficha.",
+  "iac_max": 31.9,
+  "iac_src": "ficha MID 15-25KTL3-X"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MOD 10KTL3-XH",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 10.0,
+  "pdc_max_kw": 20.0,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV 600-950 V (ARK/APX HV)",
+  "source": "https://www.offgridtec.com/media/product_attachements/Growatt_MOD 3-10KTL3-XH_Datenblatt.pdf",
+  "note": "correntes por MPPT a confirmar na ficha.",
+  "iac_max": 16.7,
+  "iac_src": "ficha MOD 3-10KTL3-XH"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-GR1P5K",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 600,
+  "v_start": 120,
+  "mppt_min": 90,
+  "mppt_max": 520,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   14,
+   14
+  ],
+  "isc_mppt": [
+   22,
+   22
+  ],
+  "battery": null,
+  "source": "https://ginlong.com/uploads/file/Solis_datasheet_S6-GR1P(2,5-6)K_SWE_V1,2_2021_11.pdf",
+  "note": "tensões confirmadas por distribuidor; tensão nominal 330 V a confirmar.",
+  "iac_max": 22.7,
+  "iac_src": "ficha S6-GR1P(2.5-6)K V2.0 2024"
+ },
+ {
+  "brand": "Solis",
+  "model": "S5-GR3P15K",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 15.0,
+  "pdc_max_kw": 22.5,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   32,
+   32
+  ],
+  "isc_mppt": [
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S5-GR3P(5-20)K_IND_V2,4_202411.pdf",
+  "note": "valores do grupo 12–20K, confirmados em duas fichas.",
+  "iac_max": 23.8,
+  "iac_src": "ficha S5-GR3P(5-25)K (Smáx a 230 V)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S5-GC30K",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 30.0,
+  "pdc_max_kw": 45.0,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 3,
+  "strings_per_mppt": [
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   32,
+   32,
+   32
+  ],
+  "isc_mppt": [
+   40,
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S5-GC%2825-50%29K_VNM_V1%2C7_202406.pdf",
+  "iac_max": 50.2,
+  "iac_src": "ficha S5-GC(25-50)K"
+ },
+ {
+  "brand": "Solis",
+  "model": "RHI-3P10K-HVES-5G",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 10.0,
+  "pdc_max_kw": 16.0,
+  "vdc_max": 1000,
+  "v_start": 160,
+  "mppt_min": 200,
+  "mppt_max": 850,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   26,
+   26
+  ],
+  "isc_mppt": [
+   32.5,
+   32.5
+  ],
+  "battery": "HV 160-600 V (Li-ion)",
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_RHI-3P(5-10)K-HVES-5G_PRT_V1,8_202409.pdf",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 16.7,
+  "ibk_max": 16.7,
+  "iac_src": "ficha RHI-3P(5-10)K-HVES-5G (backup = saída backup)"
+ },
+ {
+  "brand": "Deye",
+  "model": "SUN-12K-SG04LP3-EU",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 12.0,
+  "pdc_max_kw": 18.0,
+  "vdc_max": 800,
+  "v_start": 160,
+  "mppt_min": 200,
+  "mppt_max": 650,
+  "v_nom": 550,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   26,
+   13
+  ],
+  "isc_mppt": [
+   34,
+   17
+  ],
+  "battery": "LV 40-60 V (lead-acid or Li-ion)",
+  "source": "https://deye.com/?p=7419",
+  "note": "potência DC máxima segundo a Deye (um distribuidor indica 15,6 kW).",
+  "iac_max": 20,
+  "iac_src": "ficha SUN-5-12K-SG04LP3"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-8K-LC0",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 8,
+  "pdc_max_kw": 12.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 3,
+  "strings_per_mppt": [
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20,
+   20
+  ],
+  "battery": "HV (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/SUN2000-8-10K-LC0/specs/",
+  "note": "3 entradas em 3 MPPT (1 por MPPT, inferido); a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 40.0,
+  "iac_src": "ficha Huawei SUN2000-8-10K-LC0"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-10K-LC0",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 10,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 3,
+  "strings_per_mppt": [
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20,
+   20
+  ],
+  "battery": "HV (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/SUN2000-8-10K-LC0/specs/",
+  "note": "3 entradas em 3 MPPT (1 por MPPT, inferido); a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 45.5,
+  "iac_src": "ficha Huawei SUN2000-8-10K-LC0"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Primo GEN24 10.0 Plus",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 10.0,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 600,
+  "v_start": 80,
+  "mppt_min": 260,
+  "mppt_max": 480,
+  "v_nom": 400,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   22,
+   22
+  ],
+  "isc_mppt": [
+   41.25,
+   36
+  ],
+  "battery": "HV 150-455 V",
+  "source": "https://www.fronius.com/en/help-center/solar-energy/products/solar-inverters/gen24/primo-gen24-plus/fronius-primo-gen24-10-0-plus",
+  "note": "gama MPPT de potência nominal; gama utilizável 65–480 V.",
+  "dgeg": "Primo 10.0 Gen24 Plus",
+  "iac_max": 45.45,
+  "iac_src": "ficha Fronius Primo GEN24 Plus (corrente a 220 V)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW8K-EHA-G20",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 8,
+  "pdc_max_kw": 16.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 400,
+  "mppt": 4,
+  "strings_per_mppt": [
+   1,
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "isc_mppt": [
+   26,
+   26,
+   26,
+   26
+  ],
+  "battery": "HV (Lynx)",
+  "source": "https://en.goodwe.com/Ftp/EN/Downloads/Datasheet/GW_ESA-3-10kW_Datasheet-EN.pdf",
+  "note": "série ESA; valores da ficha da série (confirmar na ficha do modelo).",
+  "iac_max": 34.8,
+  "ibk_max": 63,
+  "iac_src": "ficha EMEA ESA 3-10 kW (corrente para a rede a 230 V; bypass = saída backup)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW10K-EHA-G20",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 10,
+  "pdc_max_kw": 20.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 400,
+  "mppt": 4,
+  "strings_per_mppt": [
+   1,
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "isc_mppt": [
+   26,
+   26,
+   26,
+   26
+  ],
+  "battery": "HV (Lynx)",
+  "source": "https://en.goodwe.com/Ftp/EN/Downloads/Datasheet/GW_ESA-3-10kW_Datasheet-EN.pdf",
+  "note": "série ESA (na ficha australiana surge como GW9.999K-EHA-G20); confirmar na ficha do modelo.",
+  "iac_max": 43.5,
+  "ibk_max": 63,
+  "iac_src": "ficha EMEA ESA 3-10 kW (corrente para a rede a 230 V; bypass = saída backup)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-EH1P8K-L-PLUS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 8,
+  "pdc_max_kw": 12.8,
+  "vdc_max": 500,
+  "v_start": 90,
+  "mppt_min": 90,
+  "mppt_max": 435,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "LV 48 V",
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-EH1P8K-L-PLUS_GBR_V1%2C4_202406.pdf",
+  "note": "potência DC = máx. utilizável (12,8 kW; campo recomendado até 16 kWp); revisões mais recentes da ficha indicam 32 A por MPPT, usados os 16 A (mais conservador). Na lista DGEG surge sem o «-L».",
+  "dgeg": "S6-EH1P8K-PLUS",
+  "iac_max": 36.4,
+  "iac_src": "ficha S6-EH1P(3-8)K-L-PLUS (valor a 220 V, o maior)"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-2KTL-L1",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 2,
+  "pdc_max_kw": 3.0,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": "HV 350-560 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6ktl-l1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 10,
+  "iac_src": "ficha UE SUN2000-2-6KTL-L1 (04-202403)"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-3.68KTL-L1",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.68,
+  "pdc_max_kw": 5.52,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": "HV 350-560 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6ktl-l1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 16,
+  "iac_src": "ficha UE SUN2000-2-6KTL-L1 (04-202403)"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-4KTL-L1",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 4,
+  "pdc_max_kw": 6.0,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": "HV 350-560 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6ktl-l1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 20,
+  "iac_src": "ficha UE SUN2000-2-6KTL-L1 (04-202403)"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-4.6KTL-L1",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 4.6,
+  "pdc_max_kw": 6.9,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": "HV 350-560 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6ktl-l1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 23,
+  "iac_src": "ficha UE SUN2000-2-6KTL-L1 (04-202403)"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Boy 3.6 (SB3.6-1AV-41)",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 3.68,
+  "pdc_max_kw": 5.5,
+  "vdc_max": 600,
+  "v_start": 125,
+  "mppt_min": 130,
+  "mppt_max": 500,
+  "v_nom": 365,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   15,
+   15
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/SBxx-1AV-41/en-US/4177679243.html",
+  "iac_max": 16,
+  "iac_src": "ficha Sunny Boy 3.0-6.0 AV-41"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Boy 4.0 (SB4.0-1AV-41)",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 4.0,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 600,
+  "v_start": 125,
+  "mppt_min": 140,
+  "mppt_max": 500,
+  "v_nom": 365,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   15,
+   15
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/SBxx-1AV-41/en-US/4177679243.html",
+  "iac_max": 22,
+  "iac_src": "ficha Sunny Boy 3.0-6.0 AV-41"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Boy 1.5 (SB1.5-1VL-40)",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 1.5,
+  "pdc_max_kw": 3.0,
+  "vdc_max": 600,
+  "v_start": 80,
+  "mppt_min": 160,
+  "mppt_max": 500,
+  "v_nom": 360,
+  "mppt": 1,
+  "strings_per_mppt": [
+   1
+  ],
+  "imax_mppt": [
+   10
+  ],
+  "isc_mppt": [
+   18
+  ],
+  "battery": null,
+  "source": "https://files.sma.de/downloads/SBxx-1VL-40-DS-en-52.pdf",
+  "note": "1 MPPT, 1 entrada; gama MPPT de potência nominal; correntes da ficha da série.",
+  "iac_max": 7,
+  "iac_src": "ficha SB1.5-2.5-1VL-40"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Boy 2.0 (SB2.0-1VL-40)",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 2.0,
+  "pdc_max_kw": 4.0,
+  "vdc_max": 600,
+  "v_start": 80,
+  "mppt_min": 210,
+  "mppt_max": 500,
+  "v_nom": 360,
+  "mppt": 1,
+  "strings_per_mppt": [
+   1
+  ],
+  "imax_mppt": [
+   10
+  ],
+  "isc_mppt": [
+   18
+  ],
+  "battery": null,
+  "source": "https://files.sma.de/downloads/SBxx-1VL-40-DS-en-52.pdf",
+  "note": "1 MPPT, 1 entrada; gama MPPT de potência nominal; correntes da ficha da série.",
+  "iac_max": 9,
+  "iac_src": "ficha SB1.5-2.5-1VL-40"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Boy 2.5 (SB2.5-1VL-40)",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 2.5,
+  "pdc_max_kw": 5.0,
+  "vdc_max": 600,
+  "v_start": 80,
+  "mppt_min": 260,
+  "mppt_max": 500,
+  "v_nom": 360,
+  "mppt": 1,
+  "strings_per_mppt": [
+   1
+  ],
+  "imax_mppt": [
+   10
+  ],
+  "isc_mppt": [
+   18
+  ],
+  "battery": null,
+  "source": "https://files.sma.de/downloads/SBxx-1VL-40-DS-en-52.pdf",
+  "note": "1 MPPT, 1 entrada; gama MPPT de potência nominal; correntes da ficha da série.",
+  "iac_max": 11,
+  "iac_src": "ficha SB1.5-2.5-1VL-40"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Primo GEN24 3.0 Plus",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 4.5,
+  "vdc_max": 600,
+  "v_start": 80,
+  "mppt_min": 190,
+  "mppt_max": 530,
+  "v_nom": 400,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   22,
+   12
+  ],
+  "isc_mppt": [
+   41.25,
+   22
+  ],
+  "battery": "HV 150-455 V",
+  "source": "https://www.fronius.com/en/help-center/solar-energy/products/solar-inverters/gen24/primo-gen24-plus/fronius-primo-gen24-3-0-plus",
+  "note": "gama MPPT de potência nominal (4.0 e 4.6: mínimo estimado entre os modelos vizinhos); gama utilizável 65–530 V.",
+  "dgeg": "Primo 3.0 Gen24 Plus",
+  "iac_max": 13.6,
+  "iac_src": "ficha Fronius Primo GEN24 Plus (corrente a 220 V)"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Primo GEN24 3.6 Plus",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.68,
+  "pdc_max_kw": 5.4,
+  "vdc_max": 600,
+  "v_start": 80,
+  "mppt_min": 200,
+  "mppt_max": 530,
+  "v_nom": 400,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   22,
+   12
+  ],
+  "isc_mppt": [
+   41.25,
+   22
+  ],
+  "battery": "HV 150-455 V",
+  "source": "https://www.fronius.com/en/help-center/solar-energy/products/solar-inverters/gen24/primo-gen24-plus/fronius-primo-gen24-3-6-plus",
+  "note": "gama MPPT de potência nominal (4.0 e 4.6: mínimo estimado entre os modelos vizinhos); gama utilizável 65–530 V.",
+  "dgeg": "Primo 3.6 Gen24 Plus",
+  "iac_max": 16.7,
+  "iac_src": "ficha Fronius Primo GEN24 Plus (corrente a 220 V)"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Primo GEN24 4.0 Plus",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 4.0,
+  "pdc_max_kw": 6.0,
+  "vdc_max": 600,
+  "v_start": 80,
+  "mppt_min": 210,
+  "mppt_max": 530,
+  "v_nom": 400,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   22,
+   12
+  ],
+  "isc_mppt": [
+   41.25,
+   22
+  ],
+  "battery": "HV 150-455 V",
+  "source": "https://www.fronius.com/en/help-center/solar-energy/products/solar-inverters/gen24/primo-gen24-plus/fronius-primo-gen24-4-0-plus",
+  "note": "gama MPPT de potência nominal (4.0 e 4.6: mínimo estimado entre os modelos vizinhos); gama utilizável 65–530 V.",
+  "dgeg": "Primo 4.0 Gen24 Plus",
+  "iac_max": 18.2,
+  "iac_src": "ficha Fronius Primo GEN24 Plus (corrente a 220 V)"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Primo GEN24 4.6 Plus",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 4.6,
+  "pdc_max_kw": 6.9,
+  "vdc_max": 600,
+  "v_start": 80,
+  "mppt_min": 220,
+  "mppt_max": 530,
+  "v_nom": 400,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   22,
+   12
+  ],
+  "isc_mppt": [
+   41.25,
+   22
+  ],
+  "battery": "HV 150-455 V",
+  "source": "https://www.fronius.com/en/help-center/solar-energy/products/solar-inverters/gen24/primo-gen24-plus/fronius-primo-gen24-4-6-plus",
+  "note": "gama MPPT de potência nominal (4.0 e 4.6: mínimo estimado entre os modelos vizinhos); gama utilizável 65–530 V.",
+  "dgeg": "Primo 4.6 Gen24 Plus",
+  "iac_max": 20.9,
+  "iac_src": "ficha Fronius Primo GEN24 Plus (corrente a 220 V)"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Primo GEN24 6.0 Plus",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 600,
+  "v_start": 80,
+  "mppt_min": 230,
+  "mppt_max": 480,
+  "v_nom": 400,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   22,
+   12
+  ],
+  "isc_mppt": [
+   41.25,
+   22
+  ],
+  "battery": "HV 150-455 V",
+  "source": "https://www.fronius.com/en/help-center/solar-energy/products/solar-inverters/gen24/primo-gen24-plus/fronius-primo-gen24-6-0-plus",
+  "note": "gama MPPT de potência nominal (4.0 e 4.6: mínimo estimado entre os modelos vizinhos); gama utilizável 65–530 V.",
+  "dgeg": "Primo 6.0 Gen24 Plus",
+  "iac_max": 27.3,
+  "iac_src": "ficha Fronius Primo GEN24 Plus (corrente a 220 V)"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG3.0RS",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 4.5,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://info-support.sungrowpower.com/application/pdf/2022/04/15/DS_20220331_SG3.0_5.0RS_Datasheet_V12_EN%EF%BC%88AU%20DC%20switch%EF%BC%89.pdf",
+  "note": "valores da série SG3.0–6.0RS.",
+  "iac_max": 13.7,
+  "iac_src": "ficha SG3.0-6.0RS"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SH3.0RS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 4.5,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV 80-460 V (Li-ion)",
+  "source": "https://uk.sungrowpower.com/upload/file/20241022/EN_DS_SH3.0RS_SH3.6RS_SH4.0RS_SH5.0RS_SH6.0RS_Datasheet.pdf",
+  "note": "valores da série SH3.0–6.0RS (40–560 V, 16 A por MPPT).",
+  "iac_max": 13.7,
+  "iac_src": "ficha SH3.0-6.0RS"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG3.6RS",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 3.68,
+  "pdc_max_kw": 5.4,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://info-support.sungrowpower.com/application/pdf/2022/04/15/DS_20220331_SG3.0_5.0RS_Datasheet_V12_EN%EF%BC%88AU%20DC%20switch%EF%BC%89.pdf",
+  "note": "valores da série SG3.0–6.0RS.",
+  "iac_max": 16,
+  "iac_src": "ficha SG3.0-6.0RS"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SH3.6RS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.68,
+  "pdc_max_kw": 5.4,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV 80-460 V (Li-ion)",
+  "source": "https://uk.sungrowpower.com/upload/file/20241022/EN_DS_SH3.0RS_SH3.6RS_SH4.0RS_SH5.0RS_SH6.0RS_Datasheet.pdf",
+  "note": "valores da série SH3.0–6.0RS (40–560 V, 16 A por MPPT).",
+  "iac_max": 16,
+  "iac_src": "ficha SH3.0-6.0RS"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG4.0RS",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 4.0,
+  "pdc_max_kw": 6.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://info-support.sungrowpower.com/application/pdf/2022/04/15/DS_20220331_SG3.0_5.0RS_Datasheet_V12_EN%EF%BC%88AU%20DC%20switch%EF%BC%89.pdf",
+  "note": "valores da série SG3.0–6.0RS.",
+  "iac_max": 18.2,
+  "iac_src": "ficha SG3.0-6.0RS"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SH4.0RS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 4.0,
+  "pdc_max_kw": 6.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV 80-460 V (Li-ion)",
+  "source": "https://uk.sungrowpower.com/upload/file/20241022/EN_DS_SH3.0RS_SH3.6RS_SH4.0RS_SH5.0RS_SH6.0RS_Datasheet.pdf",
+  "note": "valores da série SH3.0–6.0RS (40–560 V, 16 A por MPPT).",
+  "iac_max": 18.2,
+  "iac_src": "ficha SH3.0-6.0RS"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG6.0RS",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://info-support.sungrowpower.com/application/pdf/2022/04/15/DS_20220331_SG3.0_5.0RS_Datasheet_V12_EN%EF%BC%88AU%20DC%20switch%EF%BC%89.pdf",
+  "note": "valores da série SG3.0–6.0RS.",
+  "iac_max": 27.3,
+  "iac_src": "ficha SG3.0-6.0RS"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SH6.0RS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV 80-460 V (Li-ion)",
+  "source": "https://uk.sungrowpower.com/upload/file/20241022/EN_DS_SH3.0RS_SH3.6RS_SH4.0RS_SH5.0RS_SH6.0RS_Datasheet.pdf",
+  "note": "valores da série SH3.0–6.0RS (40–560 V, 16 A por MPPT).",
+  "iac_max": 27.3,
+  "iac_src": "ficha SH3.0-6.0RS"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW3000-DNS-30",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 4.5,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   23,
+   23
+  ],
+  "battery": null,
+  "source": "https://en.goodwe.com/dns-g3",
+  "note": "série DNS G3; 1 string por MPPT.",
+  "iac_max": 14.4,
+  "iac_src": "ficha DNS G3 (maior valor entre mercados, versão AU)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW3600-DNS-30",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 3.68,
+  "pdc_max_kw": 5.4,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   23,
+   23
+  ],
+  "battery": null,
+  "source": "https://en.goodwe.com/dns-g3",
+  "note": "série DNS G3; 1 string por MPPT.",
+  "iac_max": 17.3,
+  "iac_src": "ficha DNS G3 (maior valor entre mercados, versão AU)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW5000-DNS-30",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   23,
+   23
+  ],
+  "battery": null,
+  "source": "https://en.goodwe.com/dns-g3",
+  "note": "série DNS G3; 1 string por MPPT.",
+  "iac_max": 24.0,
+  "iac_src": "ficha DNS G3 (maior valor entre mercados, versão AU)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW6000-DNS-30",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   23,
+   23
+  ],
+  "battery": null,
+  "source": "https://en.goodwe.com/dns-g3",
+  "note": "série DNS G3; 1 string por MPPT.",
+  "iac_max": 28.8,
+  "iac_src": "ficha DNS G3 (maior valor entre mercados, versão AU)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW3K-EHA-G20",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 6.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 400,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20
+  ],
+  "isc_mppt": [
+   26,
+   26
+  ],
+  "battery": "HV (Lynx)",
+  "source": "https://en.goodwe.com/Ftp/EN/Downloads/Datasheet/GW_ESA-3-10kW_Datasheet-EN.pdf",
+  "note": "série ESA: 2 MPPT nos modelos 3–6 kW; confirmar na ficha do modelo.",
+  "iac_max": 13.1,
+  "ibk_max": 27.3,
+  "iac_src": "ficha EMEA ESA 3-10 kW (corrente para a rede a 230 V; bypass = saída backup)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW3.6K-EHA-G20",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.68,
+  "pdc_max_kw": 7.2,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 400,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20
+  ],
+  "isc_mppt": [
+   26,
+   26
+  ],
+  "battery": "HV (Lynx)",
+  "source": "https://en.goodwe.com/Ftp/EN/Downloads/Datasheet/GW_ESA-3-10kW_Datasheet-EN.pdf",
+  "note": "série ESA: 2 MPPT nos modelos 3–6 kW; confirmar na ficha do modelo.",
+  "iac_max": 15.7,
+  "ibk_max": 32.8,
+  "iac_src": "ficha EMEA ESA 3-10 kW (corrente para a rede a 230 V; bypass = saída backup)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW5K-EHA-G20",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 10.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 400,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20
+  ],
+  "isc_mppt": [
+   26,
+   26
+  ],
+  "battery": "HV (Lynx)",
+  "source": "https://en.goodwe.com/Ftp/EN/Downloads/Datasheet/GW_ESA-3-10kW_Datasheet-EN.pdf",
+  "note": "série ESA: 2 MPPT nos modelos 3–6 kW; confirmar na ficha do modelo.",
+  "iac_max": 21.8,
+  "ibk_max": 45.5,
+  "iac_src": "ficha EMEA ESA 3-10 kW (corrente para a rede a 230 V; bypass = saída backup)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW6K-EHA-G20",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 12.0,
+  "vdc_max": 600,
+  "v_start": 50,
+  "mppt_min": 40,
+  "mppt_max": 560,
+  "v_nom": 400,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20
+  ],
+  "isc_mppt": [
+   26,
+   26
+  ],
+  "battery": "HV (Lynx)",
+  "source": "https://en.goodwe.com/Ftp/EN/Downloads/Datasheet/GW_ESA-3-10kW_Datasheet-EN.pdf",
+  "note": "série ESA: 2 MPPT nos modelos 3–6 kW; confirmar na ficha do modelo.",
+  "iac_max": 26.1,
+  "ibk_max": 50,
+  "iac_src": "ficha EMEA ESA 3-10 kW (corrente para a rede a 230 V; bypass = saída backup)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-GR1P2.5K",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 2.5,
+  "pdc_max_kw": 3.75,
+  "vdc_max": 550,
+  "v_start": 120,
+  "mppt_min": 50,
+  "mppt_max": 450,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   14,
+   14
+  ],
+  "isc_mppt": [
+   22,
+   22
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-GR1P(2,5-6)K_SAU_V1,6_202410.pdf",
+  "note": "valores da ficha S6-GR1P(2.5–6)K; outras revisões indicam gama MPPT até 550 V.",
+  "iac_max": 11.4,
+  "iac_src": "ficha S6-GR1P(2.5-6)K V2.0 2024"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-GR1P3K",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 4.5,
+  "vdc_max": 600,
+  "v_start": 120,
+  "mppt_min": 90,
+  "mppt_max": 520,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   14,
+   14
+  ],
+  "isc_mppt": [
+   22,
+   22
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-GR1P(2,5-6)K_SAU_V1,6_202410.pdf",
+  "note": "valores da ficha S6-GR1P(2.5–6)K; outras revisões indicam gama MPPT até 550 V.",
+  "iac_max": 13.6,
+  "iac_src": "ficha S6-GR1P(2.5-6)K V2.0 2024"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-GR1P3.6K",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 3.68,
+  "pdc_max_kw": 5.4,
+  "vdc_max": 600,
+  "v_start": 120,
+  "mppt_min": 90,
+  "mppt_max": 520,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   14,
+   14
+  ],
+  "isc_mppt": [
+   22,
+   22
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-GR1P(2,5-6)K_SAU_V1,6_202410.pdf",
+  "note": "valores da ficha S6-GR1P(2.5–6)K; outras revisões indicam gama MPPT até 550 V.",
+  "iac_max": 16,
+  "iac_src": "ficha S6-GR1P(2.5-6)K V2.0 2024"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-GR1P4K",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 4.0,
+  "pdc_max_kw": 6.0,
+  "vdc_max": 600,
+  "v_start": 120,
+  "mppt_min": 90,
+  "mppt_max": 520,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   14,
+   14
+  ],
+  "isc_mppt": [
+   22,
+   22
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-GR1P(2,5-6)K_SAU_V1,6_202410.pdf",
+  "note": "valores da ficha S6-GR1P(2.5–6)K; outras revisões indicam gama MPPT até 550 V.",
+  "iac_max": 18.2,
+  "iac_src": "ficha S6-GR1P(2.5-6)K V2.0 2024"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-GR1P4.6K",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 4.6,
+  "pdc_max_kw": 6.9,
+  "vdc_max": 600,
+  "v_start": 120,
+  "mppt_min": 90,
+  "mppt_max": 520,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   14,
+   14
+  ],
+  "isc_mppt": [
+   22,
+   22
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-GR1P(2,5-6)K_SAU_V1,6_202410.pdf",
+  "note": "valores da ficha S6-GR1P(2.5–6)K; outras revisões indicam gama MPPT até 550 V.",
+  "iac_max": 20.9,
+  "iac_src": "ficha S6-GR1P(2.5-6)K V2.0 2024"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-GR1P6K",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 600,
+  "v_start": 120,
+  "mppt_min": 90,
+  "mppt_max": 520,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   14,
+   14
+  ],
+  "isc_mppt": [
+   22,
+   22
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-GR1P(2,5-6)K_SAU_V1,6_202410.pdf",
+  "note": "valores da ficha S6-GR1P(2.5–6)K; outras revisões indicam gama MPPT até 550 V.",
+  "iac_max": 27.3,
+  "iac_src": "ficha S6-GR1P(2.5-6)K V2.0 2024"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-EH1P3K-L-PLUS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 4.8,
+  "vdc_max": 500,
+  "v_start": 90,
+  "mppt_min": 90,
+  "mppt_max": 435,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "LV 48 V",
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-EH1P%283-8%29K-L-PLUS_Global_V2%2C0_202406.pdf",
+  "note": "potência DC = máx. utilizável; entradas por MPPT conforme leitura da ficha da série (2/2 ou 2/4). Na lista DGEG surge sem o «-L».",
+  "dgeg": "S6-EH1P3K-PLUS",
+  "iac_max": 13.7,
+  "iac_src": "ficha S6-EH1P(3-8)K-L-PLUS (valor a 220 V, o maior)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-EH1P3.6K-L-PLUS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.68,
+  "pdc_max_kw": 5.76,
+  "vdc_max": 500,
+  "v_start": 90,
+  "mppt_min": 90,
+  "mppt_max": 435,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "LV 48 V",
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-EH1P%283-8%29K-L-PLUS_Global_V2%2C0_202406.pdf",
+  "note": "potência DC = máx. utilizável; entradas por MPPT conforme leitura da ficha da série (2/2 ou 2/4). Na lista DGEG surge sem o «-L».",
+  "dgeg": "S6-EH1P3.6K-PLUS",
+  "iac_max": 16.4,
+  "iac_src": "ficha S6-EH1P(3-8)K-L-PLUS (valor a 220 V, o maior)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-EH1P4.6K-L-PLUS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 4.6,
+  "pdc_max_kw": 7.36,
+  "vdc_max": 500,
+  "v_start": 90,
+  "mppt_min": 90,
+  "mppt_max": 435,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "LV 48 V",
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-EH1P%283-8%29K-L-PLUS_Global_V2%2C0_202406.pdf",
+  "note": "potência DC = máx. utilizável; entradas por MPPT conforme leitura da ficha da série (2/2 ou 2/4). Na lista DGEG surge sem o «-L».",
+  "dgeg": "S6-EH1P4.6K-PLUS",
+  "iac_max": 20.9,
+  "iac_src": "ficha S6-EH1P(3-8)K-L-PLUS (valor a 220 V, o maior)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-EH1P5K-L-PLUS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 8.0,
+  "vdc_max": 500,
+  "v_start": 90,
+  "mppt_min": 90,
+  "mppt_max": 435,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "LV 48 V",
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-EH1P%283-8%29K-L-PLUS_Global_V2%2C0_202406.pdf",
+  "note": "potência DC = máx. utilizável; entradas por MPPT conforme leitura da ficha da série (2/2 ou 2/4). Na lista DGEG surge sem o «-L».",
+  "dgeg": "S6-EH1P5K-PLUS",
+  "iac_max": 22.8,
+  "iac_src": "ficha S6-EH1P(3-8)K-L-PLUS (valor a 220 V, o maior)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S6-EH1P6K-L-PLUS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 9.6,
+  "vdc_max": 500,
+  "v_start": 90,
+  "mppt_min": 90,
+  "mppt_max": 435,
+  "v_nom": 330,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "LV 48 V",
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S6-EH1P%283-8%29K-L-PLUS_Global_V2%2C0_202406.pdf",
+  "note": "potência DC = máx. utilizável; entradas por MPPT conforme leitura da ficha da série (2/2 ou 2/4). Na lista DGEG surge sem o «-L».",
+  "dgeg": "S6-EH1P6K-PLUS",
+  "iac_max": 27.3,
+  "iac_src": "ficha S6-EH1P(3-8)K-L-PLUS (valor a 220 V, o maior)"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MIN 2500TL-X",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 2.5,
+  "pdc_max_kw": 3.5,
+  "vdc_max": 500,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 500,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16.9,
+   16.9
+  ],
+  "battery": null,
+  "source": "https://rexel.it/files/uploads/documenti/Schede%20tecniche%20Growatt/Growatt-MIN-TL-X-2500-6000.pdf",
+  "note": "série MIN TL-X (não XE/XH).",
+  "iac_max": 11.3,
+  "iac_src": "ficha e certificado CE MIN 2500-6000TL-X"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MIN 3000TL-X",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 4.2,
+  "vdc_max": 500,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 500,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16.9,
+   16.9
+  ],
+  "battery": null,
+  "source": "https://rexel.it/files/uploads/documenti/Schede%20tecniche%20Growatt/Growatt-MIN-TL-X-2500-6000.pdf",
+  "note": "série MIN TL-X (não XE/XH).",
+  "iac_max": 13.6,
+  "iac_src": "ficha e certificado CE MIN 2500-6000TL-X"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MIN 3600TL-X",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 3.6,
+  "pdc_max_kw": 5.04,
+  "vdc_max": 550,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16.9,
+   16.9
+  ],
+  "battery": null,
+  "source": "https://rexel.it/files/uploads/documenti/Schede%20tecniche%20Growatt/Growatt-MIN-TL-X-2500-6000.pdf",
+  "note": "série MIN TL-X (não XE/XH).",
+  "iac_max": 16,
+  "iac_src": "ficha e certificado CE MIN 2500-6000TL-X"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MIN 4200TL-X",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 4.2,
+  "pdc_max_kw": 5.88,
+  "vdc_max": 550,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16.9,
+   16.9
+  ],
+  "battery": null,
+  "source": "https://rexel.it/files/uploads/documenti/Schede%20tecniche%20Growatt/Growatt-MIN-TL-X-2500-6000.pdf",
+  "note": "série MIN TL-X (não XE/XH).",
+  "iac_max": 19,
+  "iac_src": "ficha e certificado CE MIN 2500-6000TL-X"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MIN 4600TL-X",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 4.6,
+  "pdc_max_kw": 6.44,
+  "vdc_max": 550,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16.9,
+   16.9
+  ],
+  "battery": null,
+  "source": "https://rexel.it/files/uploads/documenti/Schede%20tecniche%20Growatt/Growatt-MIN-TL-X-2500-6000.pdf",
+  "note": "série MIN TL-X (não XE/XH).",
+  "iac_max": 20.9,
+  "iac_src": "ficha e certificado CE MIN 2500-6000TL-X"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MIN 5000TL-X",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 7.0,
+  "vdc_max": 550,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16.9,
+   16.9
+  ],
+  "battery": null,
+  "source": "https://rexel.it/files/uploads/documenti/Schede%20tecniche%20Growatt/Growatt-MIN-TL-X-2500-6000.pdf",
+  "note": "série MIN TL-X (não XE/XH).",
+  "iac_max": 22.7,
+  "iac_src": "ficha e certificado CE MIN 2500-6000TL-X"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MIN 6000TL-X",
+  "phases": 1,
+  "hybrid": false,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 8.1,
+  "vdc_max": 550,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16.9,
+   16.9
+  ],
+  "battery": null,
+  "source": "https://rexel.it/files/uploads/documenti/Schede%20tecniche%20Growatt/Growatt-MIN-TL-X-2500-6000.pdf",
+  "note": "série MIN TL-X (não XE/XH).",
+  "iac_max": 27.2,
+  "iac_src": "ficha e certificado CE MIN 2500-6000TL-X"
+ },
+ {
+  "brand": "Deye",
+  "model": "SUN-3.6K-SG03LP1-EU",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.6,
+  "pdc_max_kw": 4.68,
+  "vdc_max": 500,
+  "v_start": 125,
+  "mppt_min": 150,
+  "mppt_max": 425,
+  "v_nom": 370,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13,
+   13
+  ],
+  "isc_mppt": [
+   17,
+   17
+  ],
+  "battery": "LV 40-60 V (chumbo ou lítio)",
+  "source": "https://www.deyeinverter.com/",
+  "note": "série SG03LP1: gama MPPT e correntes de distribuidor; confirmar na ficha Deye.",
+  "iac_max": 18,
+  "iac_src": "manual SUN-3.6/5/6K-SG03LP1-EU"
+ },
+ {
+  "brand": "Deye",
+  "model": "SUN-5K-SG03LP1-EU",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 6.5,
+  "vdc_max": 500,
+  "v_start": 125,
+  "mppt_min": 150,
+  "mppt_max": 425,
+  "v_nom": 370,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13,
+   13
+  ],
+  "isc_mppt": [
+   17,
+   17
+  ],
+  "battery": "LV 40-60 V (chumbo ou lítio)",
+  "source": "https://www.deyeinverter.com/",
+  "note": "série SG03LP1: gama MPPT e correntes de distribuidor; confirmar na ficha Deye.",
+  "iac_max": 25,
+  "iac_src": "manual SUN-3.6/5/6K-SG03LP1-EU"
+ },
+ {
+  "brand": "Deye",
+  "model": "SUN-6K-SG03LP1-EU",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 7.8,
+  "vdc_max": 500,
+  "v_start": 125,
+  "mppt_min": 150,
+  "mppt_max": 425,
+  "v_nom": 370,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13,
+   13
+  ],
+  "isc_mppt": [
+   17,
+   17
+  ],
+  "battery": "LV 40-60 V (chumbo ou lítio)",
+  "source": "https://www.deyeinverter.com/",
+  "note": "série SG03LP1: gama MPPT e correntes de distribuidor; confirmar na ficha Deye.",
+  "iac_max": 30,
+  "iac_src": "manual SUN-3.6/5/6K-SG03LP1-EU"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-3KTL-M1",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 3,
+  "pdc_max_kw": 4.5,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 140,
+  "mppt_max": 980,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   19.5,
+   19.5
+  ],
+  "battery": "HV 600-980 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6-8-10ktl-m1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 5.1,
+  "iac_src": "ficha UE SUN2000-3-10KTL-M1"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-4KTL-M1",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 4,
+  "pdc_max_kw": 6.0,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 140,
+  "mppt_max": 980,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   19.5,
+   19.5
+  ],
+  "battery": "HV 600-980 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6-8-10ktl-m1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 6.8,
+  "iac_src": "ficha UE SUN2000-3-10KTL-M1"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-6KTL-M1",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 6,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 140,
+  "mppt_max": 980,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   19.5,
+   19.5
+  ],
+  "battery": "HV 600-980 V (LUNA2000)",
+  "source": "https://solar.huawei.com/en/products/sun2000-3-4-5-6-8-10ktl-m1/specs/",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 10.1,
+  "iac_src": "ficha UE SUN2000-3-10KTL-M1"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-17KTL-M2",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 17,
+  "pdc_max_kw": 25.5,
+  "vdc_max": 1080,
+  "v_start": 200,
+  "mppt_min": 160,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   22,
+   22
+  ],
+  "isc_mppt": [
+   30,
+   30
+  ],
+  "battery": null,
+  "source": "https://www.photomate.eu/wp-content/themes/sitetheme/assets/datasheets/dk/DK_Sheet_12-20KTL-M2_20201006.pdf",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 28.5,
+  "iac_src": "ficha SUN2000-12-20KTL-M2"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-36KTL-M3",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 36,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 4,
+  "strings_per_mppt": [
+   2,
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   26,
+   26,
+   26,
+   26
+  ],
+  "isc_mppt": [
+   40,
+   40,
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://cdn.autosolar.es/pdf/Huawei-SUN2000-30-36-40-KTL-M3.pdf",
+  "note": "8 entradas em 4 MPPT. Existe uma revisão mais recente («27A») com correntes diferentes: confirme a ficha do equipamento.",
+  "iac_max": 58.0,
+  "iac_src": "ficha SUN2000-30/36/40KTL-M3 (Smáx/3×230 V)"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-50KTL-M3",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 50,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 4,
+  "strings_per_mppt": [
+   2,
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   30,
+   30,
+   30,
+   30
+  ],
+  "isc_mppt": [
+   40,
+   40,
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://www.sonnenladen.de/downloads/HW-07-50.0-05/SUN2000-50KTL-M3%20-%20Datenblatt%20Deutsch.pdf",
+  "note": "8 entradas em 4 MPPT; 30 A por MPPT.",
+  "iac_max": 79.8,
+  "iac_src": "ficha Huawei SUN2000-50KTL-M3 (a 400 V)"
+ },
+ {
+  "brand": "Huawei",
+  "model": "SUN2000-100KTL-M2",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 100,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 200,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 10,
+  "strings_per_mppt": [
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   30,
+   30,
+   30,
+   30,
+   30,
+   30,
+   30,
+   30,
+   30,
+   30
+  ],
+  "isc_mppt": [
+   40,
+   40,
+   40,
+   40,
+   40,
+   40,
+   40,
+   40,
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://shop.krannich-solar.com/de-en/inverters/solar-inverters/42588/sun2000-100ktl-m2",
+  "note": "20 entradas em 10 MPPT; corrente por MPPT de distribuidor (30 A).",
+  "iac_max": 160.4,
+  "iac_src": "ficha Huawei SUN2000-100KTL-M2 (a 400 V)"
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower 3.0 (STP3.0-3AV-40)",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 6.0,
+  "vdc_max": 850,
+  "v_start": 175,
+  "mppt_min": 140,
+  "mppt_max": 800,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12,
+   12
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/STPxx-3av-40-BE/en-US/3190770571.html",
+  "note": "a gama MPPT indicada é a de potência nominal; tensão mínima de entrada 125 V."
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower 4.0 (STP4.0-3AV-40)",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 4.0,
+  "pdc_max_kw": 8.0,
+  "vdc_max": 850,
+  "v_start": 175,
+  "mppt_min": 175,
+  "mppt_max": 800,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12,
+   12
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/STPxx-3av-40-BE/en-US/3190770571.html",
+  "note": "a gama MPPT indicada é a de potência nominal; tensão mínima de entrada 125 V."
+ },
+ {
+  "brand": "SMA",
+  "model": "Sunny Tripower 6.0 (STP6.0-3AV-40)",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 850,
+  "v_start": 175,
+  "mppt_min": 260,
+  "mppt_max": 800,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12,
+   12
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": null,
+  "source": "https://manuals.sma.de/STPxx-3av-40-BE/en-US/3190770571.html",
+  "note": "a gama MPPT indicada é a de potência nominal; tensão mínima de entrada 125 V.",
+  "iac_max": 9.1,
+  "iac_src": "manual STP5.0/6.0-3AV-40"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG12RT",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 12.0,
+  "pdc_max_kw": 18.0,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   32,
+   16
+  ],
+  "isc_mppt": [
+   45,
+   22.5
+  ],
+  "battery": null,
+  "source": "https://info-support.sungrowpower.com/datasheet-material/5004f494-c438-4270-9579-9db559e8c0a5.pdf",
+  "note": "valores da série SG RT (como o SG10RT); confirmar na ficha.",
+  "iac_max": 20,
+  "iac_src": "ficha SG5.0-12RT"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG17RT",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 17.0,
+  "pdc_max_kw": 25.5,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   32,
+   32
+  ],
+  "isc_mppt": [
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://info-support.sungrowpower.com/application/pdf/2024/09/13/DS_20240828_SG15_20RT_Datasheet_V13_EN(AU).pdf",
+  "note": "valores da série SG RT (como o SG15/20RT).",
+  "iac_max": 28.3,
+  "iac_src": "ficha SG15/17/20RT"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG40CX",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 40.0,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 250,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 585,
+  "mppt": 4,
+  "strings_per_mppt": [
+   2,
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   26,
+   26,
+   26,
+   26
+  ],
+  "isc_mppt": [
+   40,
+   40,
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://en.sungrowpower.com/upload/documentFile/DS_SG33CX%20SG40CX%20SG50CX%20Datasheet_V14_EN.pdf.pdf",
+  "note": "série CX: 4 MPPT, 26 A por MPPT.",
+  "iac_max": 66.9,
+  "iac_src": "ficha SG33/40/50CX"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SG110CX",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 110,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 250,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 585,
+  "mppt": 9,
+  "strings_per_mppt": [
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   26,
+   26,
+   26,
+   26,
+   26,
+   26,
+   26,
+   26,
+   26
+  ],
+  "isc_mppt": [
+   40,
+   40,
+   40,
+   40,
+   40,
+   40,
+   40,
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://en.sungrowpower.com/upload/documentFile/DS_SG110CX%20Datasheet_V14_EN.pdf.pdf",
+  "note": "9 MPPT × 2 entradas (versão original; a SG110CX-P2 tem 12 MPPT).",
+  "iac_max": 158.8,
+  "iac_src": "ficha SG110CX V1.1"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SH6.0RT",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 150,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": "HV 150-600 V (Li-ion)",
+  "source": "https://ger.sungrowpower.com/upload/file/20240916/DE_DS_SH5.0RT_6.0RT_8.0RT_10RT_Datenblatt.pdf",
+  "note": "a potência DC máxima é a recomendada pelo fabricante.",
+  "iac_max": 9.1,
+  "iac_src": "ficha SH5.0-10RT"
+ },
+ {
+  "brand": "Sungrow",
+  "model": "SH8.0RT",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 8.0,
+  "pdc_max_kw": 12.0,
+  "vdc_max": 1000,
+  "v_start": 250,
+  "mppt_min": 200,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   2
+  ],
+  "imax_mppt": [
+   12.5,
+   25
+  ],
+  "isc_mppt": [
+   16,
+   32
+  ],
+  "battery": "HV 150-600 V (Li-ion)",
+  "source": "https://ger.sungrowpower.com/upload/file/20240916/DE_DS_SH5.0RT_6.0RT_8.0RT_10RT_Datenblatt.pdf",
+  "note": "valores como o SH10RT; confirmar na ficha.",
+  "iac_max": 12.1,
+  "iac_src": "ficha SH5.0-10RT"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW8K-ET",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 8.0,
+  "pdc_max_kw": 10.4,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 200,
+  "mppt_max": 850,
+  "v_nom": 620,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   15.2,
+   15.2
+  ],
+  "battery": "HV 180-600 V (Li-ion)",
+  "source": "https://www.vpsolar.com/download/catalog/Inverter/GoodWE/GWxxK-ET/GoodWe_GWxxK-ET_datasheet_DE.pdf",
+  "note": "gama MPPT a plena carga: 460–850 V.",
+  "ibk_max": 13.5,
+  "iac_src": "ficha ET 5-10 kW (corrente máx. para a rede)",
+  "iac_max": 13.5
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW12K-SDT-30",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 12.0,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   32,
+   22
+  ],
+  "isc_mppt": [
+   40,
+   27.5
+  ],
+  "battery": null,
+  "source": "https://www.solartraders.com/uploads/production/data_sheet/file/38835/data_sheet_gw20k_sdt_30_en_24-04-2025.pdf?locale=en",
+  "note": "correntes e entradas comuns aos modelos 10–20K.",
+  "iac_max": 20.0,
+  "iac_src": "ficha SDT G3 (Smáx/3×220 V)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW15K-SDT-30",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 15.0,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   32,
+   22
+  ],
+  "isc_mppt": [
+   40,
+   27.5
+  ],
+  "battery": null,
+  "source": "https://www.solartraders.com/uploads/production/data_sheet/file/38835/data_sheet_gw20k_sdt_30_en_24-04-2025.pdf?locale=en",
+  "note": "correntes e entradas comuns aos modelos 10–20K.",
+  "iac_max": 25.0,
+  "iac_src": "ficha SDT G3 (Smáx/3×220 V)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW17K-SDT-30",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 17.0,
+  "pdc_max_kw": null,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   32,
+   22
+  ],
+  "isc_mppt": [
+   40,
+   27.5
+  ],
+  "battery": null,
+  "source": "https://www.solartraders.com/uploads/production/data_sheet/file/38835/data_sheet_gw20k_sdt_30_en_24-04-2025.pdf?locale=en",
+  "note": "correntes e entradas comuns aos modelos 10–20K.",
+  "iac_max": 28.3,
+  "iac_src": "ficha SDT G3 (Smáx/3×220 V)"
+ },
+ {
+  "brand": "GoodWe",
+  "model": "GW25K-MT",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 25.0,
+  "pdc_max_kw": 32.5,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 200,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 3,
+  "strings_per_mppt": [
+   2,
+   2,
+   2
+  ],
+  "imax_mppt": [
+   25,
+   25,
+   25
+  ],
+  "isc_mppt": [
+   31.3,
+   31.3,
+   31.3
+  ],
+  "battery": null,
+  "source": "https://tienda-solar.es/en/inverters/1466-solar-inverter-goodwe-gw30k-mt-three-phase",
+  "note": "dados de distribuidor; gama MPPT a plena carga 470–856 V.",
+  "iac_max": 40,
+  "iac_src": "ficha GoodWe SMT/MT"
+ },
+ {
+  "brand": "Solis",
+  "model": "S5-GR3P5K",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 5,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S5-GR3P(3-20)K_POL_V2,2_202409.pdf",
+  "note": "série S5-GR3P(3–20)K: modelos pequenos com 1 entrada e 16 A por MPPT.",
+  "iac_max": 7.9,
+  "iac_src": "ficha S5-GR3P(5-25)K (Smáx a 230 V)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S5-GR3P6K",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 6,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S5-GR3P(3-20)K_POL_V2,2_202409.pdf",
+  "note": "série S5-GR3P(3–20)K: modelos pequenos com 1 entrada e 16 A por MPPT.",
+  "iac_max": 9.5,
+  "iac_src": "ficha S5-GR3P(5-25)K (Smáx a 230 V)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S5-GR3P8K",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 8,
+  "pdc_max_kw": 12.0,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S5-GR3P(3-20)K_POL_V2,2_202409.pdf",
+  "note": "série S5-GR3P(3–20)K: modelos pequenos com 1 entrada e 16 A por MPPT.",
+  "iac_max": 12.7,
+  "iac_src": "ficha S5-GR3P(5-25)K (Smáx a 230 V)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S5-GR3P10K",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 10,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S5-GR3P(3-20)K_POL_V2,2_202409.pdf",
+  "note": "série S5-GR3P(3–20)K: modelos pequenos com 1 entrada e 16 A por MPPT.",
+  "iac_max": 15.9,
+  "iac_src": "ficha S5-GR3P(5-25)K (Smáx a 230 V)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S5-GR3P12K",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 12,
+  "pdc_max_kw": 18.0,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   32,
+   32
+  ],
+  "isc_mppt": [
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S5-GR3P(3-20)K_POL_V2,2_202409.pdf",
+  "note": "valores do grupo 12–20K, confirmados em duas fichas.",
+  "iac_max": 19.1,
+  "iac_src": "ficha S5-GR3P(5-25)K (Smáx a 230 V)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S5-GR3P17K",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 17,
+  "pdc_max_kw": 25.5,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   32,
+   32
+  ],
+  "isc_mppt": [
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S5-GR3P(3-20)K_POL_V2,2_202409.pdf",
+  "note": "valores do grupo 12–20K, confirmados em duas fichas.",
+  "iac_max": 27.0,
+  "iac_src": "ficha S5-GR3P(5-25)K (Smáx a 230 V)"
+ },
+ {
+  "brand": "Solis",
+  "model": "S5-GR3P20K",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 20,
+  "pdc_max_kw": 30.0,
+  "vdc_max": 1100,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 1000,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   32,
+   32
+  ],
+  "isc_mppt": [
+   40,
+   40
+  ],
+  "battery": null,
+  "source": "https://solisinverters.com/uploads/file/Solis_datasheet_S5-GR3P(3-20)K_POL_V2,2_202409.pdf",
+  "note": "valores do grupo 12–20K, confirmados em duas fichas.",
+  "iac_max": 31.8,
+  "iac_src": "ficha S5-GR3P(5-25)K (Smáx a 230 V)"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MOD 12KTL3-X",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 12,
+  "pdc_max_kw": 18.0,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   2
+  ],
+  "imax_mppt": [
+   13,
+   26
+  ],
+  "isc_mppt": [
+   16,
+   32
+  ],
+  "battery": null,
+  "source": "https://b2b.offgridtec.com/media/product_attachements/Growatt_MOD%2010-15KTL3-X_Datenblatt.pdf",
+  "note": "série MOD 10–15KTL3-X: 1/2 strings por MPPT, 13/26 A.",
+  "iac_max": 20.0,
+  "iac_src": "ficha MOD 10-15KTL3-X (15K: Smáx 16,5 kVA ÷ 3×220 V)"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MOD 15KTL3-X",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 15,
+  "pdc_max_kw": 22.5,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   2
+  ],
+  "imax_mppt": [
+   13,
+   26
+  ],
+  "isc_mppt": [
+   16,
+   32
+  ],
+  "battery": null,
+  "source": "https://b2b.offgridtec.com/media/product_attachements/Growatt_MOD%2010-15KTL3-X_Datenblatt.pdf",
+  "note": "série MOD 10–15KTL3-X: 1/2 strings por MPPT, 13/26 A.",
+  "iac_max": 25.0,
+  "iac_src": "ficha MOD 10-15KTL3-X (15K: Smáx 16,5 kVA ÷ 3×220 V)"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MOD 5000TL3-X",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 5,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13,
+   13
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": null,
+  "source": "https://b2b.offgridtec.com/media/product_attachements/Growatt_MOD 10-15KTL3-X_Datenblatt.pdf",
+  "note": "série MOD 3–10KTL3-X: 1 string e 13 A por MPPT (a confirmar na ficha).",
+  "iac_max": 8.3,
+  "iac_src": "manual MOD 3-15KTL3-X"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MOD 6000TL3-X",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 6,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13,
+   13
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": null,
+  "source": "https://b2b.offgridtec.com/media/product_attachements/Growatt_MOD 10-15KTL3-X_Datenblatt.pdf",
+  "note": "série MOD 3–10KTL3-X: 1 string e 13 A por MPPT (a confirmar na ficha).",
+  "iac_max": 10.0,
+  "iac_src": "manual MOD 3-15KTL3-X"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MOD 8000TL3-X",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 8,
+  "pdc_max_kw": 12.0,
+  "vdc_max": 1100,
+  "v_start": 160,
+  "mppt_min": 140,
+  "mppt_max": 1000,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13,
+   13
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": null,
+  "source": "https://b2b.offgridtec.com/media/product_attachements/Growatt_MOD 10-15KTL3-X_Datenblatt.pdf",
+  "note": "série MOD 3–10KTL3-X: 1 string e 13 A por MPPT (a confirmar na ficha).",
+  "iac_max": 13.3,
+  "iac_src": "manual MOD 3-15KTL3-X"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MID 15KTL3-X",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 15,
+  "pdc_max_kw": 22.5,
+  "vdc_max": 1100,
+  "v_start": 250,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   27,
+   27
+  ],
+  "isc_mppt": [
+   33.8,
+   33.8
+  ],
+  "battery": null,
+  "source": "https://fotovoltaika.sonepar.cz/wp-content/uploads/2024/01/Growatt-MID-15-25KTL3-X-Datasheet_CZ.pdf",
+  "note": "correntes e entradas por modelo a confirmar na ficha.",
+  "iac_max": 24.2,
+  "iac_src": "ficha MID 15-25KTL3-X"
+ },
+ {
+  "brand": "Growatt",
+  "model": "MID 25KTL3-X",
+  "phases": 3,
+  "hybrid": false,
+  "pac_kw": 25,
+  "pdc_max_kw": 37.5,
+  "vdc_max": 1100,
+  "v_start": 250,
+  "mppt_min": 200,
+  "mppt_max": 1000,
+  "v_nom": 580,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   27,
+   27
+  ],
+  "isc_mppt": [
+   33.8,
+   33.8
+  ],
+  "battery": null,
+  "source": "https://fotovoltaika.sonepar.cz/wp-content/uploads/2024/01/Growatt-MID-15-25KTL3-X-Datasheet_CZ.pdf",
+  "note": "correntes e entradas por modelo a confirmar na ficha.",
+  "iac_max": 40.2,
+  "iac_src": "ficha MID 15-25KTL3-X"
+ },
+ {
+  "brand": "Fronius",
+  "model": "Symo GEN24 4.0 Plus",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 4.0,
+  "pdc_max_kw": 6.0,
+  "vdc_max": 1000,
+  "v_start": 80,
+  "mppt_min": 170,
+  "mppt_max": 800,
+  "v_nom": 610,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV 160-700 V",
+  "source": "https://www.fronius.com/en/help-center/solar-energy/products/solar-inverters/gen24/symo-gen24-plus/fronius-symo-gen24-4-0-plus",
+  "note": "2 MPPT de 12,5 A; gama MPPT de potência nominal 170–800 V.",
+  "dgeg": "Symo 4.0 Gen24 Plus"
+ },
+ {
+  "brand": "Deye",
+  "model": "SUN-6K-SG04LP3-EU",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 6,
+  "pdc_max_kw": 7.8,
+  "vdc_max": 800,
+  "v_start": 160,
+  "mppt_min": 200,
+  "mppt_max": 650,
+  "v_nom": 550,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13,
+   13
+  ],
+  "isc_mppt": [
+   17,
+   17
+  ],
+  "battery": "LV 40-60 V (lead-acid or Li-ion)",
+  "source": "https://deye.com/?p=7419",
+  "note": "série SG04LP3: valores de distribuidor; confirmar na ficha Deye.",
+  "iac_max": 10,
+  "iac_src": "ficha SUN-5-12K-SG04LP3"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "KH7",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 7,
+  "pdc_max_kw": 10.5,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 500,
+  "v_nom": 360,
+  "mppt": 3,
+  "strings_per_mppt": [
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20,
+   20
+  ],
+  "battery": "HV (Fox EP/ECS)",
+  "source": "https://au.fox-ess.com/download/upfiles/EN-KH-KA-Datasheet(AU)-V1.5-20250613.pdf",
+  "note": "série KH: 16 A por entrada; KH7/KH8 com 3 MPPT, KH9–10.5 com 4 (valores de distribuidor e da ficha AU)."
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "KH8",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 8,
+  "pdc_max_kw": 12.0,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 500,
+  "v_nom": 360,
+  "mppt": 3,
+  "strings_per_mppt": [
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20,
+   20
+  ],
+  "battery": "HV (Fox EP/ECS)",
+  "source": "https://au.fox-ess.com/download/upfiles/EN-KH-KA-Datasheet(AU)-V1.5-20250613.pdf",
+  "note": "série KH: 16 A por entrada; KH7/KH8 com 3 MPPT, KH9–10.5 com 4 (valores de distribuidor e da ficha AU).",
+  "iac_max": 38.3,
+  "iac_src": "ficha Fox KH (KH8)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "KH9",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 9,
+  "pdc_max_kw": 13.5,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 500,
+  "v_nom": 360,
+  "mppt": 4,
+  "strings_per_mppt": [
+   1,
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16,
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "battery": "HV (Fox EP/ECS)",
+  "source": "https://au.fox-ess.com/download/upfiles/EN-KH-KA-Datasheet(AU)-V1.5-20250613.pdf",
+  "note": "série KH: 16 A por entrada; KH7/KH8 com 3 MPPT, KH9–10.5 com 4 (valores de distribuidor e da ficha AU)."
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "KH10",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 10,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 500,
+  "v_nom": 360,
+  "mppt": 4,
+  "strings_per_mppt": [
+   1,
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16,
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "battery": "HV (Fox EP/ECS)",
+  "source": "https://au.fox-ess.com/download/upfiles/EN-KH-KA-Datasheet(AU)-V1.5-20250613.pdf",
+  "note": "série KH: 16 A por entrada; KH7/KH8 com 3 MPPT, KH9–10.5 com 4 (valores de distribuidor e da ficha AU)."
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "KH10.5",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 10.5,
+  "pdc_max_kw": 15.75,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 80,
+  "mppt_max": 500,
+  "v_nom": 360,
+  "mppt": 4,
+  "strings_per_mppt": [
+   1,
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16,
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "battery": "HV (Fox EP/ECS)",
+  "source": "https://au.fox-ess.com/download/upfiles/EN-KH-KA-Datasheet(AU)-V1.5-20250613.pdf",
+  "note": "série KH: 16 A por entrada; KH7/KH8 com 3 MPPT, KH9–10.5 com 4 (valores de distribuidor e da ficha AU)."
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H1-3.0-E",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 3.9,
+  "vdc_max": 600,
+  "v_start": 75,
+  "mppt_min": 80,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": "HV (Fox HV)",
+  "source": "https://de.fox-ess.com/download/upfiles/DE%20-%20H1&AC1%20Datenblatt-V3.7-4.24.pdf",
+  "note": "série H1-E: 13,5 A por MPPT.",
+  "dgeg": "H1-3.0",
+  "iac_max": 14.3,
+  "iac_src": "ficha H1 (geração 1)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H1-3.7-E",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.68,
+  "pdc_max_kw": 4.68,
+  "vdc_max": 600,
+  "v_start": 75,
+  "mppt_min": 80,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": "HV (Fox HV)",
+  "source": "https://de.fox-ess.com/download/upfiles/DE%20-%20H1&AC1%20Datenblatt-V3.7-4.24.pdf",
+  "note": "série H1-E: 13,5 A por MPPT.",
+  "dgeg": "H1-3.7",
+  "iac_max": 17.6,
+  "iac_src": "ficha H1 (geração 1)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H1-4.6-E",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 4.6,
+  "pdc_max_kw": 5.98,
+  "vdc_max": 600,
+  "v_start": 75,
+  "mppt_min": 80,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": "HV (Fox HV)",
+  "source": "https://de.fox-ess.com/download/upfiles/DE%20-%20H1&AC1%20Datenblatt-V3.7-4.24.pdf",
+  "note": "série H1-E: 13,5 A por MPPT.",
+  "dgeg": "H1-4.6",
+  "iac_max": 22,
+  "iac_src": "ficha H1 (geração 1)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H1-5.0-E",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 6.5,
+  "vdc_max": 600,
+  "v_start": 75,
+  "mppt_min": 80,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": "HV (Fox HV)",
+  "source": "https://de.fox-ess.com/download/upfiles/DE%20-%20H1&AC1%20Datenblatt-V3.7-4.24.pdf",
+  "note": "série H1-E: 13,5 A por MPPT.",
+  "dgeg": "H1-5",
+  "iac_max": 23.9,
+  "iac_src": "ficha H1 (geração 1)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H1-6.0-E",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 7.8,
+  "vdc_max": 600,
+  "v_start": 75,
+  "mppt_min": 80,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13.5,
+   13.5
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": "HV (Fox HV)",
+  "source": "https://de.fox-ess.com/download/upfiles/DE%20-%20H1&AC1%20Datenblatt-V3.7-4.24.pdf",
+  "note": "série H1-E: 13,5 A por MPPT.",
+  "dgeg": "H1-6",
+  "iac_max": 28.7,
+  "iac_src": "ficha H1 (geração 1)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H3-5.0-E",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 5,
+  "pdc_max_kw": 8.0,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   14,
+   14
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": "HV (Fox HV)",
+  "source": "https://cdn.shopify.com/s/files/1/0656/6894/0044/files/Datenblatt_FoxESS_Wechselrichter.pdf",
+  "note": "série H3-E: 8,0 e 10,0 com a divisão de correntes do 12,0 (a confirmar na ficha).",
+  "iac_max": 8.8,
+  "iac_src": "declaração CEI 0-21 H3 (+ ficha 5.0-E: 8,8 A)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H3-6.0-E",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 6,
+  "pdc_max_kw": 8.0,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   14,
+   14
+  ],
+  "isc_mppt": [
+   16,
+   16
+  ],
+  "battery": "HV (Fox HV)",
+  "source": "https://cdn.shopify.com/s/files/1/0656/6894/0044/files/Datenblatt_FoxESS_Wechselrichter.pdf",
+  "note": "série H3-E: 8,0 e 10,0 com a divisão de correntes do 12,0 (a confirmar na ficha).",
+  "iac_max": 10.6,
+  "iac_src": "declaração CEI 0-21 H3 (+ ficha 5.0-E: 8,8 A)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H3-8.0-E",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 8,
+  "pdc_max_kw": null,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   26,
+   14
+  ],
+  "isc_mppt": [
+   32,
+   16
+  ],
+  "battery": "HV (Fox HV)",
+  "source": "https://cdn.shopify.com/s/files/1/0656/6894/0044/files/Datenblatt_FoxESS_Wechselrichter.pdf",
+  "note": "série H3-E: 8,0 e 10,0 com a divisão de correntes do 12,0 (a confirmar na ficha).",
+  "iac_max": 14.1,
+  "iac_src": "declaração CEI 0-21 H3 (+ ficha 5.0-E: 8,8 A)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H3-10.0-E",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 10,
+  "pdc_max_kw": null,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   26,
+   14
+  ],
+  "isc_mppt": [
+   32,
+   16
+  ],
+  "battery": "HV (Fox HV)",
+  "source": "https://cdn.shopify.com/s/files/1/0656/6894/0044/files/Datenblatt_FoxESS_Wechselrichter.pdf",
+  "note": "série H3-E: 8,0 e 10,0 com a divisão de correntes do 12,0 (a confirmar na ficha).",
+  "iac_max": 17.6,
+  "iac_src": "declaração CEI 0-21 H3 (+ ficha 5.0-E: 8,8 A)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H3-12.0-E",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 12,
+  "pdc_max_kw": 13.0,
+  "vdc_max": 1000,
+  "v_start": 180,
+  "mppt_min": 160,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   1
+  ],
+  "imax_mppt": [
+   26,
+   14
+  ],
+  "isc_mppt": [
+   32,
+   16
+  ],
+  "battery": "HV (Fox HV)",
+  "source": "https://cdn.shopify.com/s/files/1/0656/6894/0044/files/Datenblatt_FoxESS_Wechselrichter.pdf",
+  "note": "série H3-E: 8,0 e 10,0 com a divisão de correntes do 12,0 (a confirmar na ficha).",
+  "iac_max": 21.2,
+  "iac_src": "declaração CEI 0-21 H3 (+ ficha 5.0-E: 8,8 A)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H3-5.0-Smart",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 5,
+  "pdc_max_kw": 10,
+  "vdc_max": 1000,
+  "v_start": 140,
+  "mppt_min": 120,
+  "mppt_max": 950,
+  "v_nom": 620,
+  "mppt": 3,
+  "strings_per_mppt": [
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20,
+   20
+  ],
+  "isc_mppt": [
+   25,
+   25,
+   25
+  ],
+  "battery": "HV (Fox EQ/EP)",
+  "source": "https://fox-ess.com/wp-content/uploads/2024/08/EN-H3-Smart-Datasheet-V1.7-8.1.pdf",
+  "note": "série H3 Smart: 3 MPPT de 20 A.",
+  "iac_max": 8.3,
+  "ibk_max": 7.2,
+  "iac_src": "ficha e manual H3 Smart (EPS = saída backup)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H3-6.0-Smart",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 6,
+  "pdc_max_kw": 12,
+  "vdc_max": 1000,
+  "v_start": 140,
+  "mppt_min": 120,
+  "mppt_max": 950,
+  "v_nom": 620,
+  "mppt": 3,
+  "strings_per_mppt": [
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20,
+   20
+  ],
+  "isc_mppt": [
+   25,
+   25,
+   25
+  ],
+  "battery": "HV (Fox EQ/EP)",
+  "source": "https://fox-ess.com/wp-content/uploads/2024/08/EN-H3-Smart-Datasheet-V1.7-8.1.pdf",
+  "note": "série H3 Smart: 3 MPPT de 20 A.",
+  "iac_max": 10,
+  "ibk_max": 8.7,
+  "iac_src": "ficha e manual H3 Smart (EPS = saída backup)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H3-8.0-Smart",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 8,
+  "pdc_max_kw": 16,
+  "vdc_max": 1000,
+  "v_start": 140,
+  "mppt_min": 120,
+  "mppt_max": 950,
+  "v_nom": 620,
+  "mppt": 3,
+  "strings_per_mppt": [
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20,
+   20
+  ],
+  "isc_mppt": [
+   25,
+   25,
+   25
+  ],
+  "battery": "HV (Fox EQ/EP)",
+  "source": "https://fox-ess.com/wp-content/uploads/2024/08/EN-H3-Smart-Datasheet-V1.7-8.1.pdf",
+  "note": "série H3 Smart: 3 MPPT de 20 A.",
+  "iac_max": 13.3,
+  "ibk_max": 11.6,
+  "iac_src": "ficha e manual H3 Smart (EPS = saída backup)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H3-10.0-Smart",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 10,
+  "pdc_max_kw": 20,
+  "vdc_max": 1000,
+  "v_start": 140,
+  "mppt_min": 120,
+  "mppt_max": 950,
+  "v_nom": 620,
+  "mppt": 3,
+  "strings_per_mppt": [
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20,
+   20
+  ],
+  "isc_mppt": [
+   25,
+   25,
+   25
+  ],
+  "battery": "HV (Fox EQ/EP)",
+  "source": "https://fox-ess.com/wp-content/uploads/2024/08/EN-H3-Smart-Datasheet-V1.7-8.1.pdf",
+  "note": "série H3 Smart: 3 MPPT de 20 A.",
+  "iac_max": 16.7,
+  "ibk_max": 14.5,
+  "iac_src": "ficha e manual H3 Smart (EPS = saída backup)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H3-12.0-Smart",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 12,
+  "pdc_max_kw": 24,
+  "vdc_max": 1000,
+  "v_start": 140,
+  "mppt_min": 120,
+  "mppt_max": 950,
+  "v_nom": 620,
+  "mppt": 3,
+  "strings_per_mppt": [
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20,
+   20
+  ],
+  "isc_mppt": [
+   25,
+   25,
+   25
+  ],
+  "battery": "HV (Fox EQ/EP)",
+  "source": "https://fox-ess.com/wp-content/uploads/2024/08/EN-H3-Smart-Datasheet-V1.7-8.1.pdf",
+  "note": "série H3 Smart: 3 MPPT de 20 A.",
+  "iac_max": 20,
+  "ibk_max": 17.4,
+  "iac_src": "ficha e manual H3 Smart (EPS = saída backup)"
+ },
+ {
+  "brand": "Fox ESS",
+  "model": "H3-15.0-Smart",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 15,
+  "pdc_max_kw": 30,
+  "vdc_max": 1000,
+  "v_start": 140,
+  "mppt_min": 120,
+  "mppt_max": 950,
+  "v_nom": 620,
+  "mppt": 3,
+  "strings_per_mppt": [
+   1,
+   1,
+   1
+  ],
+  "imax_mppt": [
+   20,
+   20,
+   20
+  ],
+  "isc_mppt": [
+   25,
+   25,
+   25
+  ],
+  "battery": "HV (Fox EQ/EP)",
+  "source": "https://fox-ess.com/wp-content/uploads/2024/08/EN-H3-Smart-Datasheet-V1.7-8.1.pdf",
+  "note": "série H3 Smart: 3 MPPT de 20 A.",
+  "iac_max": 25,
+  "ibk_max": 21.7,
+  "iac_src": "ficha e manual H3 Smart (EPS = saída backup)"
+ },
+ {
+  "brand": "SolaX",
+  "model": "X1-Hybrid-3.0-D G4",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 6.0,
+  "vdc_max": 600,
+  "v_start": 90,
+  "mppt_min": 70,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV (T-BAT)",
+  "source": "https://www.solaxpower.com/uploads/file/solax-x1-hybrid-g4-datasheet-en.pdf",
+  "note": "série X1-Hybrid G4.",
+  "dgeg": "X1-Hybrid-3.0D G4",
+  "iac_max": 14.4,
+  "iac_src": "ficha X1-Hybrid G4 (corrente contínua máx.)"
+ },
+ {
+  "brand": "SolaX",
+  "model": "X1-Hybrid-3.7-D G4",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.68,
+  "pdc_max_kw": 7.36,
+  "vdc_max": 600,
+  "v_start": 90,
+  "mppt_min": 70,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV (T-BAT)",
+  "source": "https://www.solaxpower.com/uploads/file/solax-x1-hybrid-g4-datasheet-en.pdf",
+  "note": "série X1-Hybrid G4.",
+  "dgeg": "X1-Hybrid-3.7D G4",
+  "iac_max": 16,
+  "iac_src": "ficha X1-Hybrid G4 (corrente contínua máx.)"
+ },
+ {
+  "brand": "SolaX",
+  "model": "X1-Hybrid-5.0-D G4",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 10.0,
+  "vdc_max": 600,
+  "v_start": 90,
+  "mppt_min": 70,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV (T-BAT)",
+  "source": "https://www.solaxpower.com/uploads/file/solax-x1-hybrid-g4-datasheet-en.pdf",
+  "note": "série X1-Hybrid G4.",
+  "dgeg": "X1-Hybrid-5.0D G4",
+  "iac_max": 23.9,
+  "iac_src": "ficha X1-Hybrid G4 (corrente contínua máx.)"
+ },
+ {
+  "brand": "SolaX",
+  "model": "X1-Hybrid-6.0-D G4",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 12.0,
+  "vdc_max": 600,
+  "v_start": 90,
+  "mppt_min": 70,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV (T-BAT)",
+  "source": "https://www.solaxpower.com/uploads/file/solax-x1-hybrid-g4-datasheet-en.pdf",
+  "note": "série X1-Hybrid G4.",
+  "dgeg": "X1-Hybrid-6.0D G4",
+  "iac_max": 28.6,
+  "iac_src": "ficha X1-Hybrid G4 (corrente contínua máx.)"
+ },
+ {
+  "brand": "SolaX",
+  "model": "X1-Hybrid-7.5-D G4",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 7.5,
+  "pdc_max_kw": 15.0,
+  "vdc_max": 600,
+  "v_start": 90,
+  "mppt_min": 70,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV (T-BAT)",
+  "source": "https://www.solaxpower.com/uploads/file/solax-x1-hybrid-g4-datasheet-en.pdf",
+  "note": "série X1-Hybrid G4.",
+  "dgeg": "X1-Hybrid-7.5D G4",
+  "iac_max": 32.6,
+  "iac_src": "ficha X1-Hybrid G4 (corrente contínua máx.)"
+ },
+ {
+  "brand": "SolaX",
+  "model": "X3-Hybrid-5.0-D G4",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 5,
+  "pdc_max_kw": 10,
+  "vdc_max": 1000,
+  "v_start": 200,
+  "mppt_min": 180,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV (T-BAT)",
+  "source": "https://www.solaxpower.com/products/x3-hybrid-g4.html",
+  "note": "série X3-Hybrid G4 (16 A por MPPT confirmado no 5.0; restantes a confirmar).",
+  "iac_max": 8.1,
+  "iac_src": "ficha X3-Hybrid G4"
+ },
+ {
+  "brand": "SolaX",
+  "model": "X3-Hybrid-6.0-D G4",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 6,
+  "pdc_max_kw": 12,
+  "vdc_max": 1000,
+  "v_start": 200,
+  "mppt_min": 180,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV (T-BAT)",
+  "source": "https://www.solaxpower.com/products/x3-hybrid-g4.html",
+  "note": "série X3-Hybrid G4 (16 A por MPPT confirmado no 5.0; restantes a confirmar).",
+  "iac_max": 9.7,
+  "iac_src": "ficha X3-Hybrid G4"
+ },
+ {
+  "brand": "SolaX",
+  "model": "X3-Hybrid-8.0-D G4",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 8,
+  "pdc_max_kw": 16,
+  "vdc_max": 1000,
+  "v_start": 200,
+  "mppt_min": 180,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV (T-BAT)",
+  "source": "https://www.solaxpower.com/products/x3-hybrid-g4.html",
+  "note": "série X3-Hybrid G4 (16 A por MPPT confirmado no 5.0; restantes a confirmar)."
+ },
+ {
+  "brand": "SolaX",
+  "model": "X3-Hybrid-10.0-D G4",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 10,
+  "pdc_max_kw": 20,
+  "vdc_max": 1000,
+  "v_start": 200,
+  "mppt_min": 180,
+  "mppt_max": 950,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   16,
+   16
+  ],
+  "isc_mppt": [
+   20,
+   20
+  ],
+  "battery": "HV (T-BAT)",
+  "source": "https://www.solaxpower.com/products/x3-hybrid-g4.html",
+  "note": "série X3-Hybrid G4 (16 A por MPPT confirmado no 5.0; restantes a confirmar)."
+ },
+ {
+  "brand": "Sofar",
+  "model": "HYD3000-EP",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.0,
+  "pdc_max_kw": 4.5,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13,
+   13
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": "HV (Sofar Amass)",
+  "source": "https://www.sofarsolar.com/upload/file/20230210/1676007357326042113.pdf",
+  "note": "série HYD 3000–6000-EP: 13 A por MPPT.",
+  "iac_max": 13.6,
+  "iac_src": "ficha HYD 3000-6000-EP"
+ },
+ {
+  "brand": "Sofar",
+  "model": "HYD4000-EP",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 4.0,
+  "pdc_max_kw": 6.0,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13,
+   13
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": "HV (Sofar Amass)",
+  "source": "https://www.sofarsolar.com/upload/file/20230210/1676007357326042113.pdf",
+  "note": "série HYD 3000–6000-EP: 13 A por MPPT.",
+  "iac_max": 18.2,
+  "iac_src": "ficha HYD 3000-6000-EP"
+ },
+ {
+  "brand": "Sofar",
+  "model": "HYD5000-EP",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": 7.5,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13,
+   13
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": "HV (Sofar Amass)",
+  "source": "https://www.sofarsolar.com/upload/file/20230210/1676007357326042113.pdf",
+  "note": "série HYD 3000–6000-EP: 13 A por MPPT.",
+  "iac_max": 22.7,
+  "iac_src": "ficha HYD 3000-6000-EP"
+ },
+ {
+  "brand": "Sofar",
+  "model": "HYD6000-EP",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 6.0,
+  "pdc_max_kw": 9.0,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 550,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   13,
+   13
+  ],
+  "isc_mppt": [
+   18,
+   18
+  ],
+  "battery": "HV (Sofar Amass)",
+  "source": "https://www.sofarsolar.com/upload/file/20230210/1676007357326042113.pdf",
+  "note": "série HYD 3000–6000-EP: 13 A por MPPT."
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "1PH HYD3000 ZSS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.0,
+  "pdc_max_kw": null,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 580,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12,
+   12
+  ],
+  "isc_mppt": [
+   15,
+   15
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://zcsazzurro.com/uploads/documetazione/Datenblatt-ZCS-1PH-HYD-3000-6000-ZSS-DE.pdf",
+  "note": "série 1PH HYD ZSS (não HP): 12 A por MPPT; gama MPPT de distribuidor.",
+  "iac_max": 15,
+  "iac_src": "ficha ZCS 1PH HYD 3000-6000 ZSS (HP)"
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "1PH HYD3680 ZSS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 3.68,
+  "pdc_max_kw": null,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 580,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12,
+   12
+  ],
+  "isc_mppt": [
+   15,
+   15
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://zcsazzurro.com/uploads/documetazione/Datenblatt-ZCS-1PH-HYD-3000-6000-ZSS-DE.pdf",
+  "note": "série 1PH HYD ZSS (não HP): 12 A por MPPT; gama MPPT de distribuidor.",
+  "iac_max": 16,
+  "iac_src": "ficha ZCS 1PH HYD 3000-6000 ZSS (HP)"
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "1PH HYD4000 ZSS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 4.0,
+  "pdc_max_kw": null,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 580,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12,
+   12
+  ],
+  "isc_mppt": [
+   15,
+   15
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://zcsazzurro.com/uploads/documetazione/Datenblatt-ZCS-1PH-HYD-3000-6000-ZSS-DE.pdf",
+  "note": "série 1PH HYD ZSS (não HP): 12 A por MPPT; gama MPPT de distribuidor.",
+  "iac_max": 20,
+  "iac_src": "ficha ZCS 1PH HYD 3000-6000 ZSS (HP)"
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "1PH HYD4600 ZSS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 4.6,
+  "pdc_max_kw": null,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 580,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12,
+   12
+  ],
+  "isc_mppt": [
+   15,
+   15
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://zcsazzurro.com/uploads/documetazione/Datenblatt-ZCS-1PH-HYD-3000-6000-ZSS-DE.pdf",
+  "note": "série 1PH HYD ZSS (não HP): 12 A por MPPT; gama MPPT de distribuidor.",
+  "iac_max": 20.9,
+  "iac_src": "ficha ZCS 1PH HYD 3000-6000 ZSS (HP)"
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "1PH HYD5000 ZSS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 5.0,
+  "pdc_max_kw": null,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 580,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12,
+   12
+  ],
+  "isc_mppt": [
+   15,
+   15
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://zcsazzurro.com/uploads/documetazione/Datenblatt-ZCS-1PH-HYD-3000-6000-ZSS-DE.pdf",
+  "note": "série 1PH HYD ZSS (não HP): 12 A por MPPT; gama MPPT de distribuidor.",
+  "iac_max": 25,
+  "iac_src": "ficha ZCS 1PH HYD 3000-6000 ZSS (HP)"
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "1PH HYD6000 ZSS",
+  "phases": 1,
+  "hybrid": true,
+  "pac_kw": 6.0,
+  "pdc_max_kw": null,
+  "vdc_max": 600,
+  "v_start": 100,
+  "mppt_min": 90,
+  "mppt_max": 580,
+  "v_nom": 360,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12,
+   12
+  ],
+  "isc_mppt": [
+   15,
+   15
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://zcsazzurro.com/uploads/documetazione/Datenblatt-ZCS-1PH-HYD-3000-6000-ZSS-DE.pdf",
+  "note": "série 1PH HYD ZSS (não HP): 12 A por MPPT; gama MPPT de distribuidor.",
+  "iac_max": 27.3,
+  "iac_src": "ficha ZCS 1PH HYD 3000-6000 ZSS (HP)"
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "3PH HYD5000 ZSS",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 5,
+  "pdc_max_kw": null,
+  "vdc_max": 1000,
+  "v_start": 200,
+  "mppt_min": 180,
+  "mppt_max": 960,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   15,
+   15
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://www.zcsazzurro.com/uploads/documetazione/certificazioni/Certification-of-Conformity-with-UTE_C15-VDE0126-HYD5000-20000-ZSS.pdf",
+  "note": "série 3PH HYD ZSS: gama MPPT total 180–960 V (à potência nominal é mais estreita); 2 entradas por MPPT nos 10–20 kW (inferido de 25 A).",
+  "iac_max": 8,
+  "iac_src": "ficha ZCS 3PH HYD 5000-20000 ZSS"
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "3PH HYD6000 ZSS",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 6,
+  "pdc_max_kw": null,
+  "vdc_max": 1000,
+  "v_start": 200,
+  "mppt_min": 180,
+  "mppt_max": 960,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   15,
+   15
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://www.zcsazzurro.com/uploads/documetazione/certificazioni/Certification-of-Conformity-with-UTE_C15-VDE0126-HYD5000-20000-ZSS.pdf",
+  "note": "série 3PH HYD ZSS: gama MPPT total 180–960 V (à potência nominal é mais estreita); 2 entradas por MPPT nos 10–20 kW (inferido de 25 A).",
+  "iac_max": 10,
+  "iac_src": "ficha ZCS 3PH HYD 5000-20000 ZSS"
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "3PH HYD8000 ZSS",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 8,
+  "pdc_max_kw": null,
+  "vdc_max": 1000,
+  "v_start": 200,
+  "mppt_min": 180,
+  "mppt_max": 960,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   1,
+   1
+  ],
+  "imax_mppt": [
+   12.5,
+   12.5
+  ],
+  "isc_mppt": [
+   15,
+   15
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://www.zcsazzurro.com/uploads/documetazione/certificazioni/Certification-of-Conformity-with-UTE_C15-VDE0126-HYD5000-20000-ZSS.pdf",
+  "note": "série 3PH HYD ZSS: gama MPPT total 180–960 V (à potência nominal é mais estreita); 2 entradas por MPPT nos 10–20 kW (inferido de 25 A).",
+  "iac_max": 13,
+  "iac_src": "ficha ZCS 3PH HYD 5000-20000 ZSS"
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "3PH HYD10000 ZSS",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 10,
+  "pdc_max_kw": null,
+  "vdc_max": 1000,
+  "v_start": 200,
+  "mppt_min": 180,
+  "mppt_max": 960,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   25,
+   25
+  ],
+  "isc_mppt": [
+   30,
+   30
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://www.zcsazzurro.com/uploads/documetazione/certificazioni/Certification-of-Conformity-with-UTE_C15-VDE0126-HYD5000-20000-ZSS.pdf",
+  "note": "série 3PH HYD ZSS: gama MPPT total 180–960 V (à potência nominal é mais estreita); 2 entradas por MPPT nos 10–20 kW (inferido de 25 A).",
+  "iac_max": 16,
+  "iac_src": "ficha ZCS 3PH HYD 5000-20000 ZSS"
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "3PH HYD15000 ZSS",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 15,
+  "pdc_max_kw": null,
+  "vdc_max": 1000,
+  "v_start": 200,
+  "mppt_min": 180,
+  "mppt_max": 960,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   25,
+   25
+  ],
+  "isc_mppt": [
+   30,
+   30
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://www.zcsazzurro.com/uploads/documetazione/certificazioni/Certification-of-Conformity-with-UTE_C15-VDE0126-HYD5000-20000-ZSS.pdf",
+  "note": "série 3PH HYD ZSS: gama MPPT total 180–960 V (à potência nominal é mais estreita); 2 entradas por MPPT nos 10–20 kW (inferido de 25 A).",
+  "iac_max": 24,
+  "iac_src": "ficha ZCS 3PH HYD 5000-20000 ZSS"
+ },
+ {
+  "brand": "ZCS Azzurro",
+  "model": "3PH HYD20000 ZSS",
+  "phases": 3,
+  "hybrid": true,
+  "pac_kw": 20,
+  "pdc_max_kw": null,
+  "vdc_max": 1000,
+  "v_start": 200,
+  "mppt_min": 180,
+  "mppt_max": 960,
+  "v_nom": 600,
+  "mppt": 2,
+  "strings_per_mppt": [
+   2,
+   2
+  ],
+  "imax_mppt": [
+   25,
+   25
+  ],
+  "isc_mppt": [
+   30,
+   30
+  ],
+  "battery": "HV (Weco/Pylontech)",
+  "source": "https://www.zcsazzurro.com/uploads/documetazione/certificazioni/Certification-of-Conformity-with-UTE_C15-VDE0126-HYD5000-20000-ZSS.pdf",
+  "note": "série 3PH HYD ZSS: gama MPPT total 180–960 V (à potência nominal é mais estreita); 2 entradas por MPPT nos 10–20 kW (inferido de 25 A).",
+  "iac_max": 32,
+  "iac_src": "ficha ZCS 3PH HYD 5000-20000 ZSS"
+ }
+]

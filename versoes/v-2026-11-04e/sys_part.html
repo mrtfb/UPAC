@@ -1,0 +1,977 @@
+<style>
+/* Separador "Unifilar e protecções": parte da configuração escolhida no separador Fotovoltaico */
+.tabs{flex-wrap:wrap}
+.sy-svg{overflow-x:auto;background:var(--bg);border:1px solid var(--line);border-radius:8px}
+.sy-svg svg{display:block;min-width:760px;width:100%;height:auto}
+.sy-svg .l{stroke:var(--ink);stroke-width:1.6;fill:none}
+.sy-svg .dc{stroke:var(--accent)}
+.sy-svg .pe{stroke:var(--ok)}
+.sy-svg .bx{fill:var(--panel);stroke:var(--ink);stroke-width:1.6}
+.sy-svg .pvc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.6}
+.sy-svg text{fill:var(--ink);font-family:var(--f-body);font-size:12px}
+.sy-svg text.m{fill:var(--muted);font-size:11px}
+.sy-svg text.mo{font-family:var(--f-mono);font-size:11.5px}
+.sy-svg text.h{font-family:var(--f-display);font-weight:600;font-size:14px}
+.sy-svg [data-k]{cursor:pointer}
+.sy-svg [data-k]:hover .l,.sy-svg [data-k].on .l,.sy-svg [data-k]:hover .bx,.sy-svg [data-k].on .bx{stroke-width:2.6}
+.sy-svg [data-k].on text{fill:var(--accent)}
+.sy-svg .hit{fill:transparent;stroke:none}
+.sy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.sy-card{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:var(--panel);min-width:0;cursor:pointer}
+.sy-card.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.sy-card .ttl{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.sy-card .ttl strong{font-family:var(--f-display);font-size:16px;font-weight:600}
+.sy-card .res{font-family:var(--f-mono);font-size:14px;background:var(--accent-soft);border-radius:6px;padding:6px 10px}
+.sy-card .eq{white-space:normal}
+.sy-grp{display:flex;flex-direction:column;gap:10px}
+.sy-bom td{white-space:normal;vertical-align:top}
+.sy-bom tbody tr{cursor:default}
+.sy-leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted)}
+.sy-leg i{display:inline-block;width:18px;height:0;border-top:2px solid var(--accent);vertical-align:middle;margin-right:5px}
+.sy-leg i.ac{border-color:var(--ink)}
+.sy-leg i.nn{border-color:var(--muted)}
+.sy-leg i.pe{border-color:var(--ok)}
+.sy-svg .nn{stroke:var(--muted)}
+.adv>summary{font-size:13px}
+.adv>*+*{margin-top:10px}
+#sy-kpi{grid-template-columns:repeat(auto-fit,minmax(112px,1fr))}
+#sy-kpi .kv{cursor:pointer}
+#sy-kpi .kv:hover{border-color:var(--muted)}
+#sy-zoom{width:100vw;height:100vh;max-width:100vw;max-height:100vh;margin:0;padding:0;border:0;background:var(--bg);color:var(--ink)}
+#sy-zoom[open]{display:flex;flex-direction:column}
+#sy-zoom::backdrop{background:rgba(0,0,0,.5)}
+.sy-zbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+.sy-zbody{flex:1;overflow:auto;border:0;border-radius:0;padding:12px}
+.sy-zbody svg{min-width:0!important;max-width:none!important;margin:0 auto}
+.sy-topo{display:flex;flex-direction:column;gap:6px}
+.sy-topo button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;padding:8px 10px;border-radius:8px;cursor:pointer}
+.sy-topo button small{color:var(--muted);font-size:12px;line-height:1.35}
+.sy-topo button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-soft)}
+.sy-topo button strong{font-weight:600}
+.sy-topo button b.cd{display:inline-block;min-width:30px;margin-right:6px;padding:0 5px;border-radius:4px;background:var(--line);font-size:12px;text-align:center}
+.sy-topo button em{font-style:normal;font-size:11px;font-weight:600;color:var(--ok);margin-left:6px}
+.sy-cs{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.sy-cs .seg button{padding:5px 8px;font-size:12.5px}
+.sy-rec{border:1px solid var(--ok);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:13px;line-height:1.45}
+.sy-rec strong.t{display:block;font-size:14px;margin-bottom:4px}
+.sy-rec ul{margin:4px 0 6px;padding-left:18px}
+.sy-rec .x{color:var(--muted);font-size:12px;margin:4px 0 0}
+.sy-opts{display:flex;flex-direction:column;gap:8px}
+.sy-opt{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;font-size:13px}
+.sy-opt>span{min-width:0}
+.sy-opt.wide{grid-template-columns:1fr}
+.sy-opt .seg button{padding:4px 7px;font-size:12px}
+#view-sys fieldset,#view-sys .pv>.panel{min-width:0}
+#view-sys .seg{flex-wrap:wrap}
+#sy-ser button,.sy-opt .seg button{white-space:normal;line-height:1.25}
+.sy-opt input[type=checkbox]{width:auto;justify-self:end}
+.sy-opts h4{margin:6px 0 0;font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+@media (max-width:420px){.sy-opt{grid-template-columns:1fr}.sy-opt input[type=checkbox]{justify-self:start}}
+
+/* painel lateral com o cálculo do elemento escolhido no esquema */
+:root{--detw:min(420px,36vw)}
+.sy-det{position:fixed;z-index:30;top:0;right:0;bottom:0;width:var(--detw);background:var(--panel);color:var(--ink);border-left:1px solid var(--line);box-shadow:-6px 0 18px rgba(0,0,0,.12);display:flex;flex-direction:column}
+.sy-det[hidden]{display:none}
+.sy-det-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px 10px 16px;border-bottom:1px solid var(--line)}
+.sy-det-h strong{font-family:var(--f-display);font-size:15px;font-weight:600}
+.sy-det-h span{display:flex;gap:6px}
+.sy-det-h .btn{padding:4px 10px}
+.sy-det-b{flex:1;overflow:auto;padding:12px 16px 16px;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}
+.sy-det-b .sy-card{cursor:default;border-color:var(--accent)}
+.sy-det-b .eq{font-size:13px}
+.sy-det-hint{font-size:12px;color:var(--muted);margin:0}
+body.sy-det-on{padding-right:var(--detw)}
+#sy-zoom.det-on .sy-zbar,#sy-zoom.det-on .sy-zbody{margin-right:var(--detw)}
+@media (max-width:999px){
+  .sy-det{top:auto;left:0;width:auto;height:min(46vh,440px);border-left:0;border-top:1px solid var(--line);box-shadow:0 -6px 18px rgba(0,0,0,.14);border-radius:12px 12px 0 0}
+  body.sy-det-on{padding-right:0;padding-bottom:min(46vh,440px)}
+  #sy-zoom.det-on .sy-zbar{margin-right:0}
+  #sy-zoom.det-on .sy-zbody{margin-right:0;margin-bottom:min(46vh,440px)}
+}
+</style>
+
+<section id="view-sys" hidden>
+  <div class="pv">
+    <div class="panel pv-in">
+      <p class="note" id="sy-cfg"></p>
+      <label class="f"><span>Nome do projecto (sai no PDF)</span><input id="sy-proj" placeholder="ex.: Moradia Silva, Leiria"></label>
+      <fieldset><h3>Tipo de ligação</h3>
+        <div class="sy-cs" id="sy-cs">
+          <div class="f"><span>A casa do cliente: backup quando falta a rede?</span><div class="seg" id="sy-cs-bk"><button type="button" data-v="auto">Auto</button><button type="button" data-v="none">Não</button><button type="button" data-v="ess">Só o essencial</button><button type="button" data-v="all">Casa toda</button></div><small id="sy-cs-bk-n"></small></div>
+          <div class="f"><span>Há espaço no Q.G.E. para um circuito antes do diferencial geral?</span><div class="seg" id="sy-cs-space"><button type="button" data-v="yes">Sim</button><button type="button" data-v="no">Não / Q.G.E. antigo</button></div></div>
+          <div class="grid" style="grid-template-columns:1fr 1fr">
+            <label class="f"><span>Diferencial geral do Q.G.E.</span><select id="sy-cs-rcdG"><option value="30">30 mA</option><option value="300S">300 mA tipo S</option><option value="300">300 mA (não S)</option><option value="none">Não tem / não sei</option></select></label>
+            <label class="f"><span>Potência contratada (kVA)</span><input id="sy-cs-pc" type="number" min="0" step="0.15" placeholder="ex.: 6,9"><small>a mesma do separador 4</small></label>
+          </div>
+          <div class="f" id="sy-cs-box-w"><span>O fabricante tem caixa de backup (EPS) para este inversor?</span><div class="seg" id="sy-cs-box"><button type="button" data-v="yes">Sim</button><button type="button" data-v="no">Não / não sei</button></div></div>
+        </div>
+        <div class="sy-rec" id="sy-rec"></div>
+        <div class="sy-topo" id="sy-topo">
+          <button type="button" data-v="pre"><strong><b class="cd">S1</b>Quadro FV próprio antes do Q.G.E. · sem backup</strong><small>Derivação a seguir ao contador → quadro FV (disjuntor + diferencial) → inversor. Para Q.G.E. cheio ou antigo.</small></button>
+          <button type="button" data-v="grid"><strong><b class="cd">S2</b>Circuito próprio no Q.G.E. · sem backup</strong><small>No Q.G.E., a seguir ao corte geral e antes do diferencial geral: disjuntor + diferencial próprio → inversor. Desliga quando falta a rede.</small></button>
+          <button type="button" data-v="series"><strong><b class="cd" id="sy-ser-cd">S5b</b>Inversor em série · casa toda na saída backup</strong><small>Rede → diferencial de entrada 300 mA S → inversor (GRID) → saída BACKUP → comutador I-0-II → 30 mA novo → circuitos da casa.</small></button>
+          <button type="button" data-v="crit"><strong><b class="cd">S6</b>Inversor em série · cargas prioritárias</strong><small>Circuito próprio do Q.G.E. → inversor (GRID) → saída BACKUP → quadro só com os circuitos escolhidos. O resto da casa fica directo na rede.</small></button>
+          <button type="button" data-v="eps"><strong><b class="cd">S7</b>Caixa de backup (EPS) antes do Q.G.E.</strong><small>Caixa do fabricante entre o contador e o Q.G.E. Se faltar a rede abre, e o inversor alimenta a casa toda pela porta AC normal.</small></button>
+        </div>
+        <div class="f" id="sy-ser-w" style="margin-top:8px"><span>Montagem em série</span><div class="seg" id="sy-ser"><button type="button" data-v="qge">No Q.G.E. (S5b)</button><button type="button" data-v="qfv">Quadro de protecção à parte (S5)</button></div></div>
+        <p class="note" id="sy-topo-n"></p>
+        <div class="grid" id="sy-bk-w" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span id="sy-Lbk-l">Saída backup → quadro (m)</span><input id="sy-Lbk" type="number" min="0" step="1"><small id="sy-Lbk-n"></small></label>
+          <label class="f"><span>I máx. backup / passagem (A)</span><input id="sy-ibk" type="number" step="0.1" min="0"><small id="sy-ibk-n"></small></label>
+        </div>
+      </fieldset>
+      <fieldset><h3>1 · Comprimentos dos cabos</h3>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>Strings → inversor (m)</span><input id="sy-Ldc" type="number" min="1" step="1"><small>Percurso, só ida</small></label>
+          <label class="f"><span id="sy-Lac-l">Inversor → quadro (m)</span><input id="sy-Lac" type="number" min="1" step="1"></label>
+          <label class="f" id="sy-Lf-w"><span>Quadro FV → Q.G.E. (m)</span><input id="sy-Lf" type="number" min="1" step="1"></label>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>ΔU máx. DC (%)</span><input id="sy-dcDu" type="number" min="0.1" step="0.1"></label>
+          <label class="f"><span>ΔU máx. AC (%)</span><input id="sy-acDu" type="number" min="0.1" step="0.1"></label>
+        </div>
+        <label class="f"><span>I AC máx. do inversor (A)</span><input id="sy-iac" type="number" step="0.1" min="0"><small id="sy-iac-n"></small></label>
+      </fieldset>
+      <details class="adv"><summary>Instalação do cabo DC</summary>
+        <div class="f"><span>Instalação</span><div class="seg" id="sy-dcInst"><button type="button" data-v="air">Ao ar</button><button type="button" data-v="surface">Sobre superfície</button><button type="button" data-v="touch">Juntos (2+)</button></div></div>
+        <div class="grid" style="grid-template-columns:1fr 1fr 1fr">
+          <label class="f"><span>T. ambiente (°C)</span><input id="sy-tdc" type="number" step="5"></label>
+          <label class="f"><span>F. agrup.</span><input id="sy-fcdc" type="number" step="0.05" min="0.3" max="1"></label>
+          <label class="f"><span>S mín. (mm²)</span><select id="sy-dcMin"><option value="2.5">2,5</option><option value="4">4</option><option value="6">6</option></select></label>
+        </div>
+        <small class="note">Atrás dos painéis os cabos chegam a 70 °C ou mais. Cabo solar H1Z2Z2-K (EN 50618).</small>
+      </details>
+      <details class="adv"><summary>Instalação do cabo AC e disjuntor</summary>
+        <label class="f"><span>Método de referência</span><select id="sy-met"></select></label>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <div class="f"><span>Alma</span><div class="seg" id="sy-mat"><button type="button" data-v="Cu">Cobre</button><button type="button" data-v="Al">Alumínio</button></div></div>
+          <div class="f"><span>Isolamento</span><div class="seg" id="sy-ins"><button type="button" data-v="PVC">PVC</button><button type="button" data-v="XLPE">XLPE</button></div></div>
+          <label class="f"><span>F. correcção</span><input id="sy-fc" type="number" step="0.05" min="0.3"></label>
+          <div class="f"><span>Curva do disjuntor</span><div class="seg" id="sy-curve"><button type="button" data-v="B">B</button><button type="button" data-v="C">C</button></div></div>
+        </div>
+      </details>
+      <fieldset><h3>2 · Diferencial e terra</h3>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>Sensibilidade IΔn</span><select id="sy-rcd"><option value="auto">Automática (maior que a terra permite)</option><option value="30">30 mA</option><option value="100">100 mA</option><option value="300">300 mA</option></select></label>
+          <label class="f"><span>Terra medida Re (Ω)</span><input id="sy-RA" type="number" min="1" step="1"></label>
+          <label class="f" style="grid-column:1/-1"><span>Local do inversor (tensão limite UL)</span><select id="sy-UL"><option value="50">Interior, local seco · UL = 50 V</option><option value="25">Exterior ou local húmido · UL = 25 V</option></select></label>
+        </div>
+        <label class="f" style="flex-direction:row;align-items:center;gap:8px"><input id="sy-rcdB" type="checkbox" style="width:auto"><span>O manual do inversor exige diferencial tipo B</span></label>
+      </fieldset>
+      <fieldset><h3>3 · Descargas atmosféricas</h3>
+        <label class="f" style="flex-direction:row;align-items:center;gap:8px"><input id="sy-lps" type="checkbox" style="width:auto"><span>Edifício com pára-raios (SPDP)</span></label>
+        <label class="f" id="sy-sep-w" style="flex-direction:row;align-items:center;gap:8px"><input id="sy-sep" type="checkbox" style="width:auto"><span>Distância de separação ao pára-raios garantida</span></label>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>Ng (descargas/km²·ano)</span><input id="sy-Ng" type="number" min="0.1" step="0.1"></label>
+          <label class="f"><span>Tipo de instalação</span><select id="sy-bldg"><option value="res">Edifício de habitação</option><option value="ground">Central no solo</option><option value="ind">Serviços / indústria</option></select></label>
+        </div>
+        <small class="note">Em Portugal continental Ng anda tipicamente entre 0,5 e 2. Consulte o mapa de densidade de descargas do IPMA para o local.</small>
+      </fieldset>
+      <details class="adv" id="sy-opts-d"><summary>Elementos do esquema (avançado: incluir ou retirar)</summary>
+        <div class="sy-opts">
+          <h4>Lado DC</h4>
+          <div class="sy-opt"><span>Seccionador DC</span><div class="seg" id="sy-o-isoDc"><button type="button" data-v="ext">Externo</button><button type="button" data-v="int">No inversor</button></div></div>
+          <div class="sy-opt"><span>Descarregador DC</span><div class="seg" id="sy-o-spdDc"><button type="button" data-v="ext">Externo</button><button type="button" data-v="int">No inversor</button><button type="button" data-v="none">Sem</button></div></div>
+          <label class="sy-opt" id="sy-o-spdPv-w"><span>Descarregador DC também junto aos painéis (cabos &gt; 10 m)</span><input type="checkbox" id="sy-o-spdPv"></label>
+          <div class="sy-opt"><span>Fusíveis de string</span><div class="seg" id="sy-o-fuse"><button type="button" data-v="auto">Se precisos</button><button type="button" data-v="on">Sim</button><button type="button" data-v="off">Não</button></div></div>
+          <label class="sy-opt" id="sy-o-batP-w"><span>Protecção e seccionamento DC da bateria</span><input type="checkbox" id="sy-o-batP"></label>
+          <h4>Lado AC</h4>
+          <label class="sy-opt"><span>Diferencial no circuito do inversor</span><input type="checkbox" id="sy-o-rcd"></label>
+          <label class="sy-opt"><span>Descarregador AC no quadro FV</span><input type="checkbox" id="sy-o-spdAc"></label>
+          <div class="sy-opt"><span>Medidor de energia (smart meter) no ponto de ligação</span><div class="seg" id="sy-o-meter"><button type="button" data-v="auto">Auto</button><button type="button" data-v="on">Sim</button><button type="button" data-v="off">Não</button></div></div>
+          <div class="sy-opt"><span>Contador de produção (totalizador, obrigatório &gt; 4 kW)</span><div class="seg" id="sy-o-cprod"><button type="button" data-v="auto">Auto</button><button type="button" data-v="on">Sim</button><button type="button" data-v="off">Não</button></div></div>
+          <div class="sy-opt sy-bko wide"><span>Comutador rede / backup</span><div class="seg" id="sy-o-sw"><button type="button" data-v="auto">Auto</button><button type="button" data-v="man">Manual (bypass)</button><button type="button" data-v="ats">Automático</button><button type="button" data-v="none">Sem</button></div></div>
+          <label class="sy-opt sy-bko"><span id="sy-o-rcdBk-l">Diferencial na saída backup (só se o troço até ao Q.G.E. não for classe II)</span><input type="checkbox" id="sy-o-rcdBk"></label>
+          <label class="sy-opt sy-isl"><span>Ligação N–PE em modo ilha (relé do inversor ou caixa)</span><input type="checkbox" id="sy-o-npe"></label>
+          <h4>Terras</h4>
+          <label class="sy-opt"><span>Desenhar terras (eléctrodo e estruturas)</span><input type="checkbox" id="sy-o-earth"></label>
+          <label class="sy-opt"><span>Eléctrodo de terra novo (vai na lista de material)</span><input type="checkbox" id="sy-o-newE"></label>
+        </div>
+      </details>
+    </div>
+
+    <div class="pv-out">
+      <div class="panel sec"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Resumo</h2>
+        <span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="sy-tocalc">Enviar cabos AC para Canalizações</button><button class="btn pri" id="sy-pdf" hidden>Exportar PDF</button></span></div>
+        <p class="note" id="sy-pdf-n" hidden>A exportação para PDF funciona quando abre a app no claude.ai.</p>
+        <div class="kpis" id="sy-kpi"></div>
+        <div id="sy-warn" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+      <div class="panel sec"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Esquema unifilar</h2><span style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap"><span class="note">Toque num elemento para ver o cálculo.</span><button class="btn" data-zoom="sy-svg">⤢ Ampliar</button></span></div>
+        <div class="sy-svg" id="sy-svg"></div>
+        <div class="sy-leg"><span><i></i>Corrente contínua (DC)</span><span><i class="ac"></i>Corrente alternada (AC)</span><span>Traços oblíquos = n.º de condutores</span></div>
+      </div>
+      <div class="panel sec"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Esquema do quadro DC</h2><span style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap"><span class="note">Pólos + e − em separado.</span><button class="btn" data-zoom="sy-dcbox">⤢ Ampliar</button></span></div>
+        <div class="sy-svg" id="sy-dcbox"></div>
+        <p class="note" id="sy-dcbox-n"></p>
+      </div>
+      <div class="panel sec"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Esquema do quadro AC</h2><span style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap"><span class="note">Fases, neutro e PE em separado.</span><button class="btn" data-zoom="sy-acbox">⤢ Ampliar</button></span></div>
+        <div class="sy-svg" id="sy-acbox"></div>
+        <div class="sy-leg"><span><i class="ac"></i>Fase</span><span><i class="nn"></i>Neutro</span><span><i class="pe"></i>Protecção (PE)</span></div>
+        <p class="note" id="sy-acbox-n"></p>
+      </div>
+      <div class="panel sec"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Lista de material</h2><button class="btn" id="sy-copy">Copiar para Excel</button></div>
+        <div class="tbl sy-bom"><table><thead><tr><th>Elemento</th><th>Especificação</th><th class="n">Qtd.</th></tr></thead><tbody id="sy-bom"></tbody></table></div></div>
+      <div class="panel sec" id="sy-how"></div>
+    </div>
+  </div>
+  <aside class="sy-det" id="sy-det" hidden aria-label="Cálculo do elemento">
+    <div class="sy-det-h"><strong id="sy-det-t">Cálculo</strong><span><button class="btn" id="sy-det-prev" aria-label="Elemento anterior">‹</button><button class="btn" id="sy-det-next" aria-label="Elemento seguinte">›</button><button class="btn" id="sy-det-x" aria-label="Fechar painel">✕</button></span></div>
+    <div class="sy-det-b" id="sy-det-b"></div>
+  </aside>
+  <dialog id="sy-zoom" aria-label="Esquema ampliado">
+    <div class="sy-zbar"><strong id="sy-z-t"></strong><span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" id="sy-z-out" aria-label="Reduzir">−</button><button class="btn" id="sy-z-fit">Ajustar</button><button class="btn" id="sy-z-in" aria-label="Aumentar">+</button><button class="btn pri" id="sy-z-x">Fechar</button></span></div>
+    <div class="sy-svg sy-zbody" id="sy-z-b"></div>
+  </dialog>
+</section>
+
+<script>
+/* ---------- Unifilar, cabos e protecções ---------- */
+// EN 50618 (H1Z2Z2-K), anexo A: corrente admissível a 60 °C ambiente, condutor a 120 °C
+const IZDC={air:{1.5:30,2.5:41,4:55,6:70,10:98,16:132,25:176,35:218},surface:{1.5:29,2.5:39,4:52,6:67,10:93,16:125,25:167,35:207},touch:{1.5:24,2.5:33,4:44,6:57,10:79,16:107,25:142,35:176}};
+const DCINST={air:"um cabo ao ar livre",surface:"um cabo sobre superfície",touch:"dois ou mais cabos juntos sobre superfície"};
+const KTDC=[[60,1],[70,0.91],[80,0.82],[90,0.71],[100,0.58],[110,0.41]]; // factor de temperatura (EN 50618, quadro A.4)
+const kTdc=t=>{ if(t<=60) return 1; for(let i=1;i<KTDC.length;i++){const [a,fa]=KTDC[i-1],[b,fb]=KTDC[i]; if(t<=b) return fa+(fb-fa)*(t-a)/(b-a);} return 0.41; };
+const RHO=0.0225; // Ω·mm²/m, cobre (valor das RTIEBT, já com o aquecimento)
+const GPV=[6,8,10,12,15,16,20,25,30,32]; // fusíveis gPV 10×38
+const VDC=[600,800,1000,1100,1200,1500];
+const MCB=[6,10,16,20,25,32,40,50,63], MCBO=[80,100,125,160,200,250,315,400];
+const RCDN=[25,40,63,80,100,125];
+const LCRIT={res:[115,"edifício de habitação"],ground:[200,"central no solo"],ind:[450,"edifício de serviços ou industrial"]};
+const SY0={Ldc:20,dcDu:1.5,dcInst:"touch",tdc:70,fcdc:1,dcMin:4,Lac:15,acDu:1.5,met:"B2",mat:"Cu",ins:"XLPE",fc:1,iac:{},curve:"C",Lf:10,rcd:"auto",RA:100,rcdB:false,Ng:1,bldg:"res",lps:false,sep:true,proj:"",UL:50,topo:"auto",ser:"qge",cs:{},Lbk:0,ibk:{},opt:{},on:null}; // valores de um projecto novo
+// situação da casa do cliente (escolhe a ligação recomendada): backup pretendido, espaço no Q.G.E., diferencial geral existente, caixa de backup do fabricante
+const CS0={bk:"auto",space:"yes",rcdG:"30",box:"no"};
+const syCs=()=>({...CS0,...(sy.cs||{})});
+// elementos opcionais do esquema (sy.opt guarda só o que o utilizador mudou)
+const OPT0={isoDc:"ext",spdDc:"ext",spdPv:true,fuse:"auto",batP:true,rcd:true,spdAc:true,meter:"auto",cprod:"auto",sw:"auto",rcdBk:false,rcdPr:true,npe:true,earth:true,newE:false};
+const syO=k=>(sy.opt&&sy.opt[k]!=null)?sy.opt[k]:OPT0[k];
+// rcdPr = diferencial 30 mA a jusante da saída BACKUP (quadro prioritário na S6, 30 mA novo no Q.G.E. na S5b); rcdBk = 100 mA S opcional da S5
+const rcdBkKey=()=>{ try{ const p=syPick(pv.edit&&pv.edit.inv); return p.topo==="crit"||(p.topo==="series"&&p.ser==="qge")?"rcdPr":"rcdBk" }catch(e){ return "rcdBk" } };
+// códigos iguais aos da página "Pontos de ligação do inversor" (S1–S7)
+const TOPO={pre:"Quadro FV próprio antes do Q.G.E., sem backup",grid:"Circuito próprio no Q.G.E., sem backup",eps:"Caixa de backup (EPS) antes do Q.G.E.",series:"Inversor em série, casa toda na saída backup",crit:"Inversor em série, cargas prioritárias na saída backup"};
+const topoCode=(t,ser)=>({pre:"S1",grid:"S2",series:ser==="qfv"?"S5":"S5b",crit:"S6",eps:"S7"})[t]||"";
+const topoName=R=>`${topoCode(R.topo,R.ser)} · ${TOPO[R.topo]}${R.topo==="series"?(R.ser==="qfv"?" (quadro de protecção à parte)":" (no Q.G.E.)"):""}`;
+const SYREF="https://claude.ai/artifact/JZFkow1zLphmVVim5FuiYg";
+// ligação recomendada para a situação da casa (regras da página de referência S1–S7)
+function syRec(inv){
+  const cs=syCs(), E=pv.edit||{}, N=E.N||1, why=[];
+  if(!inv) return {topo:"grid",ser:"qge",why,want:"none"};
+  const bat=!!(inv.hybrid&&+pv.bat), want=cs.bk==="auto"?(bat?"all":"none"):cs.bk, space=cs.space!=="no";
+  const ph=inv.phases, est=Math.round(inv.pac_kw*1000/(ph*230)*1.1*10)/10, iac=+(sy.iac||{})[invName(inv)]||+inv.iac_max||est;
+  const ibk=+((sy.ibk||{})[invName(inv)])||+inv.ibk_max||iac, pass=N*ibk;
+  let pc=0; try{ pc=+docS.i.pc||0 }catch(e){}
+  const Ipc=pc>0?pc*1000/(ph*230):0;
+  if(want==="none"||!bat){
+    why.push(want==="none"?(cs.bk==="auto"?"sem bateria, por isso sem backup (escolha «Só o essencial» ou «Casa toda» se o cliente quiser backup)":"o cliente não precisa de energia quando falta a rede")
+      :!inv.hybrid?"o cliente quer backup, mas o inversor escolhido não é híbrido: escolha um híbrido com bateria no separador 1 para ver as opções com backup"
+      :"o cliente quer backup, mas não há bateria (separador 1): sem bateria a saída backup só funciona com sol, por isso fica a ligação normal");
+    if(space){ why.push("há espaço no Q.G.E.: circuito próprio a seguir ao corte geral e antes do diferencial geral, com disjuntor e diferencial próprios; os 30 mA da casa não veem a fuga do gerador FV"); return {topo:"grid",ser:"qge",why,want} }
+    why.push("o Q.G.E. não tem espaço ou é antigo: quadro FV próprio, ligado por derivação entre o contador e o Q.G.E., sem mexer no Q.G.E."); return {topo:"pre",ser:"qge",why,want};
+  }
+  if(want==="ess"){
+    why.push("o cliente só quer o essencial com backup: mudam-se esses circuitos (frigorífico, router, iluminação…) para um quadro de cargas prioritárias na saída BACKUP, com 30 mA próprio");
+    why.push(`o resto da casa fica directo na rede: a potência contratada não fica limitada pela corrente de passagem do inversor (${fmt(pass,1)} A)`);
+    return {topo:"crit",ser:"qge",why,want};
+  }
+  if(Ipc>pass+0.5){
+    why.push(`a potência contratada (${fmt(pc,2)} kVA ≈ ${fmt(Ipc,1)} A) é maior que a corrente de passagem do inversor (${fmt(pass,1)} A): em série a casa toda ficaria limitada pelo inversor`);
+    if(cs.box==="yes"){ why.push("o fabricante tem caixa de backup: com rede a casa fica na rede como sempre, e só na falha passa a ser alimentada pelo inversor (em ilha limitada à potência do inversor, deslastrar cargas grandes)"); return {topo:"eps",ser:"qge",why,want} }
+    why.push("sem caixa de backup do fabricante, a solução é pôr só os circuitos essenciais na saída BACKUP (ou baixar a potência contratada, ou escolher um inversor com maior corrente de passagem)");
+    return {topo:"crit",ser:"qge",why,want};
+  }
+  why.push(Ipc>0?`a potência contratada (${fmt(pc,2)} kVA ≈ ${fmt(Ipc,1)} A) cabe na corrente de passagem do inversor (${fmt(pass,1)} A), por isso a casa toda pode ficar na saída BACKUP`
+    :`indique a potência contratada para confirmar que cabe na corrente de passagem do inversor (${fmt(pass,1)} A)`);
+  if(space){ why.push(`tudo no Q.G.E.: o diferencial de entrada passa a ser o do lado da rede (300 mA tipo S${cs.rcdG==="30"?"; o de 30 mA existente é trocado":""}) e põe-se um 30 mA novo a jusante do BACKUP, antes do barramento dos circuitos`); return {topo:"series",ser:"qge",why,want} }
+  why.push("o Q.G.E. não tem espaço: as protecções do lado da rede (disjuntor e diferencial 300 mA S) ficam num quadro próprio, e o Q.G.E. mantém os seus 30 mA a jusante do BACKUP");
+  return {topo:"series",ser:"qfv",why,want};
+}
+// tipo de ligação em uso: o escolhido pelo utilizador ou, em automático, o recomendado
+function syPick(inv){ const rec=syRec(inv);
+  if(sy.topo&&sy.topo!=="auto") return {topo:sy.topo,ser:sy.ser||"qge",rec};
+  return {topo:rec.topo,ser:rec.ser||"qge",rec}; }
+// comprimento da saída backup: vazio/0 = igual ao do cabo rede/Q.G.E. → inversor (normalmente fazem o mesmo percurso)
+const syLbk=()=>+sy.Lbk>0?+sy.Lbk:+sy.Lac;
+// automático: a ligação recomendada pela situação da casa (syRec)
+const syTopo=inv=>syPick(inv).topo;
+let sy={...SY0,iac:{},ibk:{},opt:{}};
+try{const s=JSON.parse(localStorage.getItem("sys-v1")); if(s) sy={...sy,...s,on:null}; if(sy.Lbk===5) sy.Lbk=0; /* 5 m era o valor por defeito antigo */}catch(e){}
+const sySave=()=>{try{const {on,...s}=sy; localStorage.setItem("sys-v1",JSON.stringify(s))}catch(e){}};
+const up=(v,list)=>list.find(x=>x>=v-1e-9);
+
+function acCircuit(Ib,L,ph,du=sy.acDu){
+  const Un=ph==1?230:400, P=ph==1?Ib*230/1000:Math.sqrt(3)*400*Ib/1000;
+  const des=(sy.mat==="Al"?"L":"")+(sy.ins==="XLPE"?"XV":"VV");
+  const ins=[...MCB.map(v=>["D (M)",v]),...MCBO.map(v=>["D (O)",v])].filter(([,v])=>v>=Ib);
+  let last=null;
+  for(const [prot,In] of ins.slice(0,3)) for(const S of SECTIONS.filter(s=>s>=(sy.mat==="Al"?16:2.5))){
+    const c={P,cos:1,U:Un,prot,In,mat:sy.mat,ins:sy.ins,cond:ph==1?3:5,n:1,S,met:sy.met,fc:sy.fc,L,des};
+    const r=calc(c,{mode:"rtiebt",du}); if(r.Izc==null) continue; last={c,r,ok:false};
+    if(r.c1&&r.c2&&r.c3) return {c,r,ok:true};
+  }
+  return last;
+}
+
+function sysCalc(){
+  const E=pv.edit; if(!E) return null;
+  const {m,inv,N}=E, e=evaluate(m,inv,N,E.cfg), t=e.t;
+  const bk1=bifK(m), isc=m.isc*bk1, iscM=1.25*isc, kT=kTdc(sy.tdc), k=kT*(+sy.fcdc||1);
+  const dc=[];
+  E.cfg.forEach((c,j)=>{ if(!c.s) return;
+    const Np=c.s, rev=(Np-1)*iscM, needF=Np>=3&&rev>(m.fuse_max||Infinity);
+    const fLo=1.5*isc, fHi=Math.min(2.4*isc,m.fuse_max||Infinity), fuse=needF?(GPV.find(x=>x>=fLo&&x<=fHi)||null):null;
+    const Ireq=needF?Math.max(fuse||fLo,iscM):iscM*Math.max(1,Np-1);
+    const vmpp=c.ns*m.vmpp; let pick=null;
+    for(const S of [1.5,2.5,4,6,10,16,25,35].filter(s=>s>=+sy.dcMin)){
+      const Iz=IZDC[sy.dcInst][S]*k, dU=2*sy.Ldc*m.impp*RHO/S, dUp=dU/vmpp*100;
+      pick={S,Iz,dU,dUp,ok:Iz>=Ireq&&dUp<=sy.dcDu}; if(pick.ok) break; }
+    const voc=c.ns*t.vocCold, vocS=c.ns*m.voc;
+    const loss=2*sy.Ldc*RHO/pick.S*m.impp**2*Np;
+    const fo=syO("fuse"), hasF=fo==="on"||(fo==="auto"&&needF), fuseV=fuse||(hasF?GPV.find(x=>x>=fLo&&x<=fHi)||null:null);
+    dc.push({j,c,Np,rev,needF,fLo,fHi,fuse:fuseV,hasF,Ireq,vmpp,...pick,loss,voc,vocS,Ue:up(voc,VDC),Ie:iscM*Np,Ucpv:up(Math.max(voc,1.2*vocS),VDC)});
+  });
+  const ph=inv.phases, est=Math.round(inv.pac_kw*1000/(ph*230)*1.1*10)/10;
+  // I AC máx.: valor seu > valor da ficha no catálogo (iac_max) > estimativa
+  const iacUser=+(sy.iac[invName(inv)])||0, iacCat=+inv.iac_max||0, iacSrc=iacUser?"user":iacCat?"cat":"est";
+  const iac=iacUser||iacCat||est;
+  // tipo de ligação: em série a linha do lado da rede leva também a corrente que passa para a casa
+  // bk = linha da saída backup (só em série); box = caixa de backup entre a rede e a instalação (tipo Fox ESS Backup Box)
+  const pick=syPick(inv), topo=pick.topo, serM=pick.ser, s5b=topo==="series"&&serM==="qge", bk=topo==="series"||topo==="crit", crit=topo==="crit", box=topo==="eps", ibk=+((sy.ibk||{})[invName(inv)])||+inv.ibk_max||iac;
+  // a corrente que passa para a casa fica limitada pelo disjuntor geral (potência contratada, separador 4), se indicada
+  let pc=0; try{ pc=+docS.i.pc||0 }catch(e){}
+  const Ipc=pc>0?pc*1000/(ph*230):0, ibkG=Ipc>0&&!crit?Math.min(N*ibk,Ipc)/N:ibk; // com cargas prioritárias o resto da casa não passa pelo inversor
+  const Ig=bk?Math.max(iac,ibkG):iac;
+  const ac=acCircuit(Ig,sy.Lac,ph);
+  const fd=N>1?acCircuit(N*Ig,sy.Lf,ph,Math.max(0.2,sy.acDu-(ac.r.dUp||0))):null; // a ΔU limite é a do conjunto inversor → Q.G.E.
+  const bkC=bk?acCircuit(N*ibkG,syLbk(),ph):null;
+  let inj=true; try{ inj=pr.inj!=="zero" }catch(e){}
+  const mo=syO("meter"), meter=mo==="on"||(mo==="auto"&&(!!inv.hybrid||!inj));
+  const cpI=cprodInfo(inv,N), cpo=syO("cprod"), cprod=cpo==="on"||(cpo==="auto"&&cpI.need);
+  const so=syO("sw"), sw=!bk?"none":so==="auto"?(topo==="eps"?"ats":"man"):so;
+  // TT: UL ≥ Re × IΔ. No automático escolhe o maior IΔn normalizado que cumpre (menos disparos intempestivos)
+  const UL=+sy.UL||50, IDN=[30,100,300], Imax=UL/(+sy.RA||1)*1000, fit=IDN.filter(v=>v<=Imax+1e-9);
+  const idn=sy.rcd==="auto"?(fit.length?fit[fit.length-1]:30):+sy.rcd, nxt=IDN.find(v=>v>idn);
+  // em série: diferencial do lado da rede selectivo (S), a montante do da saída backup (100 mA S), que está a montante dos 30 mA da casa
+  const ser=bk&&!!syO("rcd"); // com rede, os defeitos na casa passam por ele: selectivo com os 30 mA da casa
+  const rcd={sel:ser,idn,type:(sy.rcdB?"B":"A")+(ser?", selectivo (S)":""),In:up(ac.c.In,RCDN)||ac.c.In,poles:ph==1?"2P":"4P",UL,Imax,RAmax:UL/(idn/1000),nxt,RAnxt:nxt?UL/(nxt/1000):null};
+  const Lsum=sy.Ldc*dc.length, Lc=LCRIT[sy.bldg][0]/(+sy.Ng||1);
+  const spd={L:Lsum,Lc,need:sy.lps||Lsum>=Lc,t1:sy.lps&&!sy.sep,two:sy.Ldc>10&&syO("spdPv")&&syO("spdDc")==="ext",acTwo:sy.Lac>10};
+  // diferencial da saída backup: 30 mA tipo A para circuitos finais (EPS); em série fica a montante dos diferenciais da casa, por isso selectivo (S)
+  // S6: 30 mA no quadro prioritário; S5b: 30 mA novo no Q.G.E. a jusante do BACKUP (o de entrada passou para o lado da rede); S5: 100 mA S opcional
+  const rcdBk=bk&&syO(crit||s5b?"rcdPr":"rcdBk")?(crit||s5b?{idn:30,type:"A",In:up(bkC.c.In,RCDN)||bkC.c.In,poles:rcd.poles,sel:false}:{idn:100,type:"A, selectivo (S)",In:up(bkC.c.In,RCDN)||bkC.c.In,poles:rcd.poles,sel:true}):null;
+  const opt={isoDc:syO("isoDc"),spdDc:syO("spdDc"),rcd:syO("rcd"),spdAc:syO("spdAc"),earth:syO("earth"),newE:syO("newE"),npe:syO("npe"),batP:syO("batP")};
+  const hasDcBox=opt.isoDc==="ext"||opt.spdDc==="ext"||dc.some(d=>d.hasF);
+  return {duT:ac.r.dUp+(fd?fd.r.dUp||0:0),isc,bk1,E,m,inv,N,e,t,dc,iac,est,iacSrc,iacCat,ac,fd,rcd,spd,ph,k,kT,iscM,pe:sy.lps?16:6,topo,ser:serM,s5b,pre:topo==="pre",code:topoCode(topo,serM),rcdAfter:!!rcdBk&&(crit||s5b)&&sw!=="none",rec:pick.rec,cs:syCs(),bk,ibk,ibkG,Ig,bkC,rcdBk,meter,cprod,cpNeed:cpI.need,Pinst:cpI.P,sw,opt,hasDcBox,Ipc,pc,inj,box,crit,isl:bk||box,bat:!!(pv.bat&&inv.hybrid)};
+}
+
+/* ---------- desenho ---------- */
+function sysSvg(R){
+  const {dc,inv,N,ph,ac,fd,rcd,spd,m,topo,bk,bkC,rcdBk,sw,meter,opt}=R, n=dc.length, rowH=84, top=34;
+  const Hr=Math.max(n*rowH,bk?250:190), yc=top+Hr/2, yG=bk?top+75:yc, yB=top+Hr-55;
+  const bat=R.bat, H=top+Hr+(bat?(opt.batP?130:110):70)+(opt.earth&&!bat?0:0);
+  const yRow=i=>yc+(i-(n-1)/2)*rowH;
+  const L=(x1,y1,x2,y2,c="")=>`<line class="l ${c}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  const T=(x,y,s,c="",a="start")=>`<text class="${c}" x="${x}" y="${y}" text-anchor="${a}">${s}</text>`;
+  const sl=(x,y,k,c)=>Array.from({length:k},(_,i)=>L(x+i*6-4,y+6,x+i*6+4,y-6,c)).join("");
+  const earth=(x,y,c="")=>L(x,y,x,y+8,c)+L(x-9,y+8,x+9,y+8,c)+L(x-6,y+12,x+6,y+12,c)+L(x-3,y+16,x+3,y+16,c);
+  const spdS=(x,y,c)=>L(x,y,x,y+14,c)+`<rect class="bx" x="${x-8}" y="${y+14}" width="16" height="22"/>`+`<path class="l ${c}" d="M${x} ${y+16} l-4 9 h8 l-4 9"/>`+earth(x,y+36,c);
+  const brk=(x,y,c,cross)=>L(x-22,y,x-8,y,c)+L(x-8,y,x+8,y-12,c)+L(x+10,y,x+22,y,c)+(cross?L(x+6,y-4,x+14,y+4,c)+L(x+6,y+4,x+14,y-4,c):"");
+  const g=(k,s)=>`<g data-k="${k}">${s}</g>`;
+  const hit=(x,y,w,h)=>`<rect class="hit" x="${x}" y="${y}" width="${w}" height="${h}"/>`;
+  const gap=(x,y)=>`<rect x="${x-22}" y="${y-3}" width="44" height="6" fill="var(--bg)"/>`;
+  const mcbS=(k,cx,y,In,sub)=>g(k,hit(cx-28,y-36,56,52)+gap(cx,y)+brk(cx,y,"",true)+T(cx,y-20,In,"mo","middle")+T(cx,y+20,sub,"m","middle"));
+  const rcdS=(k,cx,y,a,b,c)=>g(k,hit(cx-28,y-36,56,62)+gap(cx,y)+brk(cx,y,"")+`<ellipse class="l" cx="${cx-10}" cy="${y}" rx="5" ry="10"/>`+T(cx,y-20,a,"mo","middle")+T(cx,y+26,b,"m","middle")+T(cx,y+40,c,"m","middle"));
+  let s="";
+  dc.forEach((d,i)=>{ const y=yRow(i);
+    s+=g("pv",hit(14,y-40,130,64)+`<rect class="pvc" x="20" y="${y-20}" width="110" height="40" rx="3"/>`+Array.from({length:4},(_,q)=>L(20+22*(q+1),y-20,20+22*(q+1),y+20,"dc")).join("")+L(20,y,130,y,"dc")+
+      T(20,y-27,`MPPT ${d.j+1}`,"m")+T(75,y+36,`${d.c.s} × ${d.c.ns} mód.`,"mo","middle"));
+    s+=L(130,y,600,y,"dc");
+    s+=g("dc-cable",hit(150,y-34,150,58)+sl(210,y,2,"dc")+T(225,y-14,`${d.c.s}×2 × 1×${fS(d.S)} mm²`,"mo","middle")+T(225,y+22,`H1Z2Z2-K · ${fmt(sy.Ldc,0)} m`,"m","middle"));
+    if(d.hasF) s+=g("fuse",hit(306,y-24,40,40)+`<rect class="bx" x="312" y="${y-6}" width="28" height="12"/>`+L(312,y,340,y,"dc")+T(326,y-12,`gPV ${d.fuse||"?"} A`,"m","middle"));
+    if(opt.spdDc==="ext") s+=g("spd-dc",hit(366,y-20,40,74)+`<circle cx="386" cy="${y}" r="2.5" fill="var(--accent)"/>`+spdS(386,y,"")+T(400,y+30,`SPD DC T${spd.t1?"1+2":"2"}`,"m"));
+    if(opt.isoDc==="ext") s+=g("isol-dc",hit(450,y-30,70,44)+gap(484,y)+brk(484,y,"dc")+T(484,y-18,`${d.Ue} V`,"m","middle"));
+    s+=T(596,y-5,`${d.c.s}×`,"m","end");
+  });
+  if(spd.two) s+=T(386,top-14,"+ SPD DC junto aos painéis (> 10 m)","m","middle");
+  const integ=[opt.isoDc==="int"?"seccionador DC":"",opt.spdDc==="int"?"SPD DC":""].filter(Boolean);
+  if(integ.length) s+=g(opt.isoDc==="int"?"isol-dc":"spd-dc",T(665,top-8,`${integ.join(" e ")} no inversor`,"m","middle"));
+  if(opt.earth){ const yl=yRow(n-1)+20, ye=top+Hr+8; s+=g("grid",L(28,yl,28,ye,"pe")+earth(28,ye,"pe")+T(42,ye+14,`Estruturas e molduras · ${R.pe} mm² Cu`,"m")); }
+  // inversor
+  s+=g("inv",`<rect class="bx" x="600" y="${top}" width="130" height="${Hr}" rx="4"/>`+L(600,top+Hr,730,top)+
+    `<text class="h" x="614" y="${top+22}">=</text><text class="h" x="716" y="${top+Hr-10}" text-anchor="end">~</text>`+
+    T(665,top+Hr+16,esc(inv.model).slice(0,30),"m","middle")+(N>1?T(612,top+Hr-12,`× ${N}`,"h"):"")+
+    (bk?T(724,yG-6,"GRID","m","end")+T(724,yB-6,topo==="eps"?"EPS":"BACKUP","m","end"):""));
+  if(bat){ const yb=top+Hr+22, yBx=yb+(opt.batP?42:22);
+    s+=g("bat",L(665,yb,665,yBx,"dc")+(opt.batP?`<rect class="bx" x="659" y="${yb+8}" width="12" height="24"/>`+T(679,yb+24,"Fusível / seccionador DC","m"):"")+
+      `<rect class="bx" x="625" y="${yBx}" width="80" height="30" rx="3"/>`+T(665,yBx+20,"Bateria","","middle")+T(715,yBx+20+(opt.batP?0:0),esc(inv.battery||"").slice(0,30),"m")); }
+  // AC, linha do lado da rede (porta GRID)
+  const nc=ph==1?3:5;
+  let x=730;
+  const acLine=(k,C,y,L0,lab)=>g(k,hit(x+15,y-34,150,58)+sl(x+75,y,nc,"")+T(x+90,y-14,`${esc(C.c.des)} ${C.r.form}`,"mo","middle")+T(x+90,y+22,`${fmt(L0,0)} m${lab?" · "+lab:""}`,"m","middle"));
+  s+=acLine("ac-cable",ac,yG,sy.Lac,methLabel(sy.met)); x+=165;
+  const xP0=x; // início do grupo de protecções (onde ficam fisicamente: Q.G.E., quadro FV ou quadro de protecção)
+  if(opt.spdAc){ s+=g("spd-ac",hit(x+10,yG-20,40,74)+`<circle cx="${x+30}" cy="${yG}" r="2.5" fill="var(--ink)"/>`+spdS(x+30,yG,"")+T(x+44,yG+30,`SPD AC T${sy.lps?"1+2":"2"}`,"m")); x+=84; }
+  s+=mcbS("mcb",x+33,yG,`${ac.c.In} A ${sy.curve}`,ph==1?"2P":"4P"); x+=62;
+  if(opt.rcd){ const w=rcd.sel?(rcd.type.length>16?56:44):33; s+=rcdS("rcd",x+w,yG,`${rcd.idn} mA`,`${rcd.In} A ${rcd.poles}`,rcd.sel?`tipo ${rcd.type.replace(", selectivo (S)","")} · S`:`tipo ${rcd.type}`); x+=2*w-4; }
+  if(N==1){ const lab=R.pre?"Quadro FV":topo==="grid"?"No Q.G.E., antes do dif. geral":topo==="series"&&!R.s5b?"Quadro de protecção AC":"No Q.G.E.";
+    s+=`<rect x="${xP0+2}" y="${yG-44}" width="${x-xP0+4}" height="${yG+64-(yG-44)}" fill="none" stroke="var(--muted)" stroke-width="1" stroke-dasharray="6 4" rx="5"/>`+T(xP0+8,yG+78,lab,"m"); x+=24; }
+  if(N>1){ const x0=x+10; s+=g("feeder",L(x0,yG-30,x0,yG+30)+T(x0,yG-38,"Quadro FV","m","middle")+hit(x0+20,yG-34,120,58)+sl(x0+70,yG,nc,"")+T(x0+90,yG-14,`${esc(fd.c.des)} ${fd.r.form}`,"mo","middle")+T(x0+90,yG+22,`${fmt(sy.Lf,0)} m`,"m","middle")+
+      gap(x0+168,yG)+brk(x0+168,yG,"",true)+T(x0+168,yG-20,`${fd.c.In} A`,"mo","middle")); x=x0+195; }
+  if(R.cprod){ s+=g("cprod",hit(x+6,yG-34,60,84)+`<rect class="bx" x="${x+16}" y="${yG-13}" width="40" height="26" rx="2"/>`+`<rect class="bx" x="${x+19}" y="${yG-10}" width="34" height="20" rx="1" stroke-width="1"/>`+T(x+36,yG+4,"kWh","m","middle")+
+      T(x+36,yG+30,"Contador","m","middle")+T(x+36,yG+43,"de produção","m","middle")+T(x+36,yG-20,R.cpNeed?"> 4 kW":"opcional","m","middle")); x+=72; }
+  const meterS=x=>g("meter",hit(x+8,yG-24,56,60)+`<rect class="bx" x="${x+20}" y="${yG-12}" width="32" height="24" rx="2"/>`+T(x+36,yG+4,"kWh","m","middle")+T(x+36,yG+28,"Medidor","m","middle")+
+      `<path class="l" d="M${x+36} ${yG-12} V${top+12} H730" stroke-dasharray="4 3"/>`+T(x+30,top+6,"RS485 → inversor","m","end"));
+  if(meter&&topo==="series"){ s+=meterS(x); x+=72; }
+  // linha da saída backup (porta EPS/BACKUP)
+  let xb=730;
+  if(bk){ const xs0=x; x=730;
+    s+=acLine("bk",bkC,yB,syLbk(),""); x+=165;
+    s+=mcbS("bk",x+33,yB,`${bkC.c.In} A ${sy.curve}`,ph==1?"2P":"4P"); x+=62;
+    if(rcdBk&&!R.rcdAfter){ s+=rcdS("rcd-bk",x+33,yB,`${rcdBk.idn} mA`,`${rcdBk.In} A ${rcdBk.poles}`,rcdBk.sel?"tipo A · S":"tipo A"); x+=62; }
+    xb=x; x=Math.max(xs0,xb+10);
+    if(opt.npe) s+=g("topo",T(736,yB+42,"N–PE em modo ilha","m"));
+  }
+  // em série a rede liga directamente ao quadro FV (Q.G.E. da casa fica na saída backup); nos outros casos o quadro FV liga ao Q.G.E., que recebe da rede
+  const ser=topo==="series", xe=x, W=R.pre?xe+290+(meter?72:0):xe+(bk?(sw!=="none"?340+(R.rcdAfter?95:0):260):170)+(ser?0:150+(meter?72:0)+(R.box?130:0));
+  const difG={"30":"dif. geral 30 mA","300S":"dif. geral 300 mA S","300":"dif. geral 300 mA",none:"circuitos"}[R.cs.rcdG]||"circuitos";
+  const arr=(x,y,dir)=>`<path class="l" d="M${x} ${y-5} l${dir*8} 5 l${-dir*8} 5"/>`;
+  s=L(730,yG,xe,yG)+s;
+  const rede=(x0,x1)=>g("grid",`<rect class="bx" x="${x0}" y="${yG-38}" width="${x1-x0}" height="76" rx="4"/>`+T(x0+12,yG-16,"Rede E-REDES","h")+T(x0+12,yG+2,R.s5b?"Contador · corte geral":"Contador · DCP","m")+T(x0+12,yG+18,`BT ${ph==1?"230 V":"3×400 V"}`,"m"));
+  const loads=(x0,y0,lab)=>[0,12,24].map(d=>L(x0+d,y0,x0+d,y0+14)+`<path class="l" d="M${x0+d-3} ${y0+9} l3 5 l3 -5"/>`).join("")+T(x0+32,y0+13,lab,"m");
+  if(ser){ s+=rede(xe,W-14); }
+  else if(R.pre){ // S1: derivação entre o contador e o Q.G.E.; o Q.G.E. fica pendurado na derivação, sem alterações
+    const xn=xe+50, xr=xn+30+(meter?72:0);
+    s+=L(xe,yG,xr,yG)+`<circle cx="${xn}" cy="${yG}" r="3.5" fill="var(--ink)"/>`+T(xn,yG-10,"derivação","m","middle")+(meter?meterS(xn+10):"")+rede(xr,W-14)+
+      g("grid",L(xn,yG,xn,yG+54)+`<rect class="bx" x="${xn-30}" y="${yG+54}" width="170" height="62" rx="4"/>`+T(xn-18,yG+74,"Q.G.E. (sem alterações)","h")+T(xn-18,yG+92,`corte geral → ${difG}`,"m")+loads(xn+40,yG+116,"cargas"));
+  }
+  else { const xq=xe+150, qT=topo==="grid"||topo==="crit"; s+=g("grid",`<rect class="bx" x="${xe}" y="${yG-38}" width="150" height="76" rx="4"/>`+T(xe+12,yG-16,"Q.G.E.","h")+T(xe+12,yG+2,qT?"corte geral →":"Instalação de","m")+T(xe+12,yG+18,qT?difG:"utilização","m")+loads(xe+80,yG+38,bk?"cargas normais":"cargas"))+
+      (R.box?g("bkbox",L(xq,yG,xq+130,yG)+`<rect class="bx" x="${xq+10}" y="${yG-34}" width="120" height="72" rx="4"/>`+gap(xq+70,yG-6)+brk(xq+70,yG-6,"")+`<rect class="l" x="${xq+62}" y="${yG-28}" width="16" height="8"/>`+
+        T(xq+70,yG-40,"Caixa de backup","m","middle")+T(xq+70,yG+17,"KM: abre sem rede","m","middle")+(opt.npe?T(xq+70,yG+31,"N–PE em ilha","m","middle"):"")):"")+
+      ((x0)=>L(x0,yG,x0+30+(meter?72:0),yG)+(meter?meterS(x0):"")+rede(x0+30+(meter?72:0),W-14))(xq+(R.box?130:0)); }
+  s+=T(W-14,16,topoName(R),"h","end");
+  if(bk){ const xS=xe+40, xL=sw!=="none"?xe+130+(R.rcdAfter?95:0):xe+20;
+    s+=L(730,yB,sw!=="none"?xS-12:xL,yB);
+    if(sw!=="none"){
+      s+=g("sw",hit(xS-26,yG+38,52,yB-yG+10)+L(xS-2,yG+38,xS-2,yB-16)+`<circle cx="${xS-2}" cy="${yB-16}" r="2.5" fill="var(--ink)"/><circle cx="${xS-12}" cy="${yB}" r="2.5" fill="var(--ink)"/>`+
+        L(xS+12,yB,xS-6,yB-10)+L(xS+12,yB,xL,yB)+T(xS-6,yB-22,"I","m","end")+T(xS-16,yB-6,"II","m","end")+T(xS-10,(yG+38+yB-16)/2+4,"bypass","m","end")+
+        T(xS+10,yB+22,sw==="ats"?"Comutador automático":"Comutador I-0-II","m","middle")+T(xS+10,yB+36,sw==="ats"?"(caixa de backup)":"(bypass manual)","m","middle"));
+      if(R.rcdAfter) s+=rcdS("rcd-bk",xe+155,yB,`${rcdBk.idn} mA`,`${rcdBk.In} A ${rcdBk.poles}`,R.s5b?"novo, tipo A":"tipo A");
+    }
+    const lt=R.s5b?["Q.G.E. · circuitos","barramento só pelo comutador",`máx. ${fmt(R.N*R.ibk,1)} A pelo inversor`]:ser?["Q.G.E. da casa","Instalação de utilização",`máx. ${fmt(R.N*R.ibk,1)} A pelo inversor`]:["Quadro prioritário","Circuitos escolhidos",`máx. ${fmt(R.N*R.ibk,1)} A pelo inversor`];
+    const xL2=ser?W-14:xL+200;
+    s+=g("bk",`<rect class="bx" x="${xL}" y="${yB-38}" width="${xL2-xL}" height="76" rx="4"/>`+T(xL+12,yB-16,lt[0],"h")+T(xL+12,yB+2,lt[1],"m")+T(xL+12,yB+18,lt[2],"m")+loads(xL+20,yB+38,ser?"toda a casa":"cargas prioritárias"));
+    if(opt.earth) s+=g("grid",L(xL2-20,yB+38,xL2-20,yB+50)+earth(xL2-20,yB+50)+T(xL2-24,yB+80,`RA ≤ ${fmt(rcd.RAmax,0)} Ω`,"m","end"));
+  } else if(opt.earth){ const xg=R.pre?xe+220:xe+30, yg=R.pre?yG+116:yG+38; s+=g("grid",L(xg,yg,xg,yg+16)+earth(xg,yg+16)+(R.pre?T(xg-12,yg+32,`RA ≤ ${fmt(rcd.RAmax,0)} Ω`,"m","end"):T(xg+14,yg+30,`RA ≤ ${fmt(rcd.RAmax,0)} Ω`,"m"))); }
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Esquema unifilar da instalação fotovoltaica">${s}</svg>`;
+}
+
+/* ---------- cálculos explicados ---------- */
+function sysRender(){
+  if($("#view-sys").hidden&&sysRender.lazy) return; sysRender.lazy=true;
+  const R=sysCalc();
+  if(!R){$("#sy-svg").innerHTML=`<div class="msg" style="margin:12px">Escolha primeiro uma combinação no separador Fotovoltaico.</div>`;$("#sy-bom").innerHTML="";$("#sy-how").innerHTML="";$("#sy-cfg").textContent="";return}
+  const {m,inv,N,e,t,dc,iac,est,ac,fd,rcd,spd,ph,k,kT,iscM,pe,topo,bk,ibk,Ig,bkC,rcdBk,meter,sw,opt,isc}=R;
+  syOptUI(R);
+  // MPPT com strings iguais aparecem juntos nas explicações
+  const G=[]; dc.forEach(d=>{const k=[d.c.s,d.c.ns,d.S].join("|"); const x=G.find(x=>x.k===k); if(x) x.js.push(d.j+1); else G.push({k,d,js:[d.j+1]})});
+  $("#sy-cfg").innerHTML=`<strong>${N>1?N+" × ":""}${esc(invName(inv))}</strong> com ${e.n} × ${esc(modName(m))} (${fmt(e.kWp,2)} kWp). Para mudar, use o separador <a href="#" id="sy-go">Fotovoltaico</a>.`;
+  $("#sy-iac").placeholder=fmt(R.iacCat||est,1); $("#sy-iac").value=sy.iac[invName(inv)]||"";
+  $("#sy-iac-n").textContent=R.iacSrc==="user"?"valor seu":R.iacSrc==="cat"?`vazio = ${fmt(R.iacCat,1)} A, ${esc(inv.iac_src||"ficha do fabricante")}`:`vazio = estimado ${fmt(est,1)} A; ponha o da ficha`;
+  $("#sy-Lf-w").hidden=N<2; $("#sy-sep-w").hidden=!sy.lps;
+  $("#sy-svg").innerHTML=sysSvg(R); $("#sy-dcbox").innerHTML=R.hasDcBox?sysDcBox(R):""; $("#sy-dcbox").closest(".panel").hidden=!R.hasDcBox; $("#sy-acbox").innerHTML=sysAcBox(R);
+  $("#sy-acbox-n").innerHTML=[`X = bornes`,`Q = disjuntor (× nas fases)`,(opt.rcd||rcdBk)?`ID = diferencial (o toro envolve fases e neutro)`:"",opt.spdAc?`FV1 = descarregador AC ${ph==1?"1+1":"3+1"}`:"",N>1?`Q0 = disjuntor geral do quadro FV`:"",
+    bk?`QB / IDB = protecções da saída ${topo==="eps"?"EPS":"backup"}`:"",sw==="man"?"SC = comutador manual I-0-II (I = rede directa, 0 = desligado, II = pelo inversor)":sw==="ats"?"KA = comutador automático (caixa de backup)":"",R.cprod?`contador de produção a jusante deste quadro${R.cpNeed?" (obrigatório, > 4 kW)":""}, ver unifilar`:""].filter(Boolean).join(" · ")+`. Afixe no Q.G.E. e junto ao contador o aviso de dupla alimentação (instalação com produção própria).`;
+  $("#sy-dcbox-n").innerHTML=[`X = bornes de entrada e saída`,dc.some(d=>d.hasF)?"F = fusíveis gPV nos dois pólos":"",opt.spdDc==="ext"?"FV = descarregador DC ligado em Y (+/PE e −/PE)":"",opt.isoDc==="ext"?"Q = seccionador DC bipolar com corte em carga":""].filter(Boolean).join(" · ")+
+    `.${opt.isoDc==="int"?" Seccionador DC: o integrado no inversor.":""}${opt.spdDc==="int"?" Descarregador DC: o integrado no inversor.":""}`;
+  const warn=[];
+  { const c=typeof invConf==="function"?invConf(inv):{}; if(c.lvl==="warn") warn.push(`Não tenho a ficha técnica completa do ${esc(invName(inv))}: falta confirmar ${c.gaps.map(esc).join("; ")}. Carregue a ficha no separador 1 (botão «Carregar ficha / corrigir valores») para confirmar os valores usados nestes cálculos.`); }
+  dc.filter(d=>!d.ok).forEach(d=>warn.push(`MPPT ${d.j+1}: nenhuma secção até 35 mm² cumpre a corrente e a queda de tensão. Encurte o cabo ou aumente a ΔU DC.`));
+  dc.filter(d=>d.hasF&&!d.fuse).forEach(d=>warn.push(`MPPT ${d.j+1}: não há fusível gPV normalizado entre ${fmt(d.fLo,1)} A e ${fmt(d.fHi,1)} A. Reduza as strings em paralelo.`));
+  dc.filter(d=>d.ok&&d.S>6).forEach(d=>warn.push(`MPPT ${d.j+1}: a queda de tensão pede cabo DC de ${fS(d.S)} mm², mas os conectores MC4 habituais só aceitam 4–6 mm². Encurte o percurso, aumente a ΔU DC (até 1,5–2 % é aceitável) ou use conectores próprios para essa secção.`));
+  if(!ac.ok) warn.push(`Cabo AC: nenhuma secção cumpre as três verificações com este método. Mude o método ou aumente a ΔU AC.`);
+  if(R.duT>sy.acDu+1e-9) warn.push(`Queda de tensão AC acumulada do inversor ao Q.G.E. = ${fmt(R.duT,2)} % (inversor → quadro FV ${fmt(ac.r.dUp,2)} % + quadro FV → Q.G.E. ${fmt(fd.r.dUp,2)} %), acima de ${fmt(sy.acDu,1)} %. Aumente as secções: com subida de tensão o inversor pode desligar por sobretensão.`);
+  if(fd&&!fd.ok) warn.push(`Cabo Quadro FV → Q.G.E.: nenhuma secção cumpre as três verificações.`);
+  dc.filter(d=>d.needF&&!d.hasF).forEach(d=>warn.push(`MPPT ${d.j+1}: retirou os fusíveis, mas com ${d.Np} strings em paralelo a corrente inversa (${fmt(d.rev,1)} A) excede a do fusível do módulo (${m.fuse_max} A). São obrigatórios, salvo se o inversor os tiver por entrada.`));
+  if(opt.spdDc==="none"&&spd.need) warn.push(`Retirou o descarregador DC, mas ${sy.lps?"o edifício tem pára-raios":`L = ${fmt(spd.L,0)} m ≥ Lcrit = ${fmt(spd.Lc,0)} m`}: é obrigatório. Use o integrado no inversor (se for tipo 2 e a ficha o declarar) ou um externo.`);
+  if(opt.spdDc==="int"&&spd.t1) warn.push(`Com pára-raios sem distância de separação o SPD DC tem de ser tipo 1+2, e os integrados nos inversores são normalmente só tipo 2. Confirme na ficha.`);
+  if(!opt.rcd) warn.push(`Sem diferencial no circuito do inversor: a protecção contra contactos indirectos tem de ser feita pelo diferencial a montante no Q.G.E. (selectivo e com IΔn compatível com a terra). Diga-o na memória.`);
+  if(!opt.spdAc&&sy.lps) warn.push(`Retirou o descarregador AC, mas com pára-raios é obrigatório (tipo 1+2 na origem da instalação). Confirme se já existe no Q.G.E.`);
+  if(R.isl&&!inv.hybrid) warn.push(`O inversor escolhido (${esc(invName(inv))}) não é híbrido no catálogo: confirme na ficha se tem saída backup/EPS, ou escolha "Ligação à rede, sem backup".`);
+  if(bkC&&!bkC.ok) warn.push(`Cabo da saída backup: nenhuma secção cumpre as três verificações com este método.`);
+  if(topo==="series"&&R.Ipc>ibk*N+0.5) warn.push(`A potência contratada (${fmt(R.pc,2)} kVA ≈ ${fmt(R.Ipc,1)} A) é maior que a corrente que o inversor deixa passar para a casa (${fmt(N*ibk,1)} A). Limite o disjuntor geral da casa a ${fmt(N*ibk,0)} A ou escolha outra ligação.`);
+  if(R.s5b&&R.cs.rcdG==="30") warn.push(`S5b: o diferencial de entrada do Q.G.E. é de 30 mA. Troque-o por um ${rcd.idn} mA tipo ${rcd.type} (bidireccional, do tipo pedido pelo inversor), que passa a ser o diferencial do lado da rede; o 30 mA fica a jusante da saída BACKUP. Nunca deixe o inversor debaixo de um 30 mA (S3).`);
+  if(R.s5b&&R.cs.rcdG==="300") warn.push(`S5b: o diferencial de entrada existente é de 300 mA mas não é selectivo (S). Troque-o por um tipo S para não disparar ao mesmo tempo que o 30 mA novo.`);
+  if(R.s5b&&!rcdBk) warn.push(`S5b sem o diferencial de 30 mA novo a jusante do BACKUP: em ilha a casa fica sem nenhum diferencial (o de entrada fica do lado da rede). É obrigatório para os circuitos de tomadas.`);
+  if(R.s5b) warn.push(`S5b: corte a ponte entre o diferencial de entrada e o barramento dos circuitos. O barramento passa a ser alimentado só pelo comutador I-0-II; se a ponte ficar, a saída BACKUP fica em paralelo com a rede.`);
+  if(topo==="grid"&&R.cs.space==="no") warn.push(`Marcou que o Q.G.E. não tem espaço para um circuito antes do diferencial geral. Não ligue o inversor debaixo do diferencial geral${R.cs.rcdG==="30"?" de 30 mA":""} (S3) nem numa tomada (S4): use o quadro FV próprio (S1).`);
+  if(topo==="eps"&&R.cs.box!=="yes") warn.push(`S7 precisa da caixa de backup do fabricante do inversor (comunica com ele e faz a ligação N–PE em ilha). Confirme que existe para este modelo.`);
+  if(bk&&sw==="none") warn.push(`Inversor em série sem comutador de bypass: se o inversor avariar ou estiver em manutenção, ${R.crit?"as cargas prioritárias ficam":"a casa fica"} sem energia. Recomenda-se um comutador I-0-II.`);
+  if(R.crit&&!rcdBk) warn.push(`Quadro de cargas prioritárias sem diferencial de 30 mA: os circuitos com tomadas exigem-no (RTIEBT). Só retire se esses circuitos já tiverem diferenciais de 30 mA próprios que passem com eles para o quadro prioritário.`);
+  if(R.isl&&!opt.npe) warn.push(`Sem ligação N–PE em modo ilha, quando falta a rede o neutro fica isolado da terra e os diferenciais da casa deixam de proteger. Confirme que o inversor ou a caixa de backup o fazem.`);
+  if(R.box) warn.push(`Caixa de backup: o contactor tem de suportar a corrente do disjuntor geral da casa${R.pc?` (${fmt(R.pc,2)} kVA ≈ ${fmt(R.Ipc,0)} A)`:""}. Em ilha, a casa fica limitada à potência do inversor (${fmt(N*inv.pac_kw,1)} kW): convém deslastrar cargas grandes. Siga o esquema do fabricante da caixa.`);
+  if(bk&&N>1) warn.push(`Com ${N} inversores, a saída backup em paralelo exige o kit e o esquema de paralelo do fabricante. O desenho mostra a soma das saídas.`);
+  if(R.rcd.sel&&rcdBk&&rcd.idn<3*rcdBk.idn) warn.push(`Em série, o diferencial do lado da rede devia ter pelo menos 300 mA (3 × os 100 mA da saída backup) para haver selectividade, mas com Re = ${fmt(sy.RA,0)} Ω a terra só permite ${rcd.idn} mA. Melhore a terra para Re ≤ ${fmt(rcd.UL/0.3,0)} Ω.`);
+  if(R.cpNeed&&!R.cprod) warn.push(`Retirou o contador de produção, mas a potência instalada é ${fmt(R.Pinst,2)} kW, superior a 4 kW: a contagem da energia total produzida é obrigatória (${CPROD_LEI}), por telecontagem.`);
+  else if(R.cpNeed) warn.push(`Potência instalada ${fmt(R.Pinst,2)} kW (${N>1?N+" × ":""}${fmt(+inv.pac_kw,2)} kW de inversor), superior a 4 kW: contador de produção obrigatório (${CPROD_LEI}), com telecontagem. Já está no esquema, na lista de material e na memória.${bk?" Em série, veja no cartão do contador onde o colocar.":""}`);
+  else if(R.Pinst>=3.5) warn.push(`Potência instalada ${fmt(R.Pinst,2)} kW: o contador de produção ainda não é obrigatório (só acima de 4 kW de potência de inversor, ${CPROD_LEI}). Se mudar para um inversor maior que 4 kW, passa a ser.`);
+  if(R.iacSrc==="est") warn.push(`A corrente AC máxima do inversor não está no catálogo: usei ${fmt(est,1)} A (estimativa). Ponha o valor da ficha em "I AC máx. do inversor" antes de fechar o disjuntor e o cabo.`);
+  if(rcd.RAmax<sy.RA) warn.push(`A terra medida (${fmt(sy.RA,0)} Ω) é maior que o máximo para ${rcd.idn} mA (${fmt(rcd.RAmax,0)} Ω com UL = ${rcd.UL} V). Melhore o eléctrodo de terra.`);
+  else if(rcd.idn===30&&sy.rcd==="auto") warn.push(`Com Re = ${fmt(sy.RA,0)} Ω só um diferencial de 30 mA cumpre, e pode ter disparos intempestivos. Reforce o eléctrodo para Re ≤ ${fmt(rcd.RAnxt,0)} Ω e use 100 mA.`);
+  $("#sy-warn").innerHTML=warn.map(w=>`<div class="msg">${w}</div>`).join("");
+  const kv=(c,k,v,u,sub)=>`<div class="kv" data-c="${c}" title="Ver o cálculo"><div class="k">${k}</div><div class="v">${v}<small>${u}</small></div><div class="s">${sub}</div></div>`;
+  const Smax=Math.max(...dc.map(d=>d.S));
+  $("#sy-kpi").innerHTML=kv("pv","Gerador",fmt(e.kWp,2),"kWp",`${fmt(e.kWac,1)} kW AC · ${N>1?N+" inversores":"1 inversor"}`)+
+    kv("dc-cable","Cabo DC",fS(Smax),"mm²",`H1Z2Z2-K · ΔU ${fmt(Math.max(...dc.map(d=>d.dUp)),2)} %`)+
+    kv("ac-cable","Cabo AC",esc(ac.r.form),"",`${esc(ac.c.des)} · ΔU ${fmt(ac.r.dUp,2)} %`)+
+    kv("mcb","Disjuntor",ac.c.In,"A",`${ph==1?"1P+N":"3P+N"} curva ${sy.curve}`)+
+    (opt.rcd?kv("rcd","Diferencial",rcd.idn,"mA",`tipo ${rcd.type} · ${rcd.In} A`):kv("rcd","Diferencial","—","","no Q.G.E. a montante"))+
+    kv("spd-dc","Descarregadores",`T${spd.t1?"1+2":"2"}`,"",`DC ${opt.spdDc==="none"?"sem":opt.spdDc==="int"?"no inversor":spd.need?"obrigatório":"recomendado"} · AC ${opt.spdAc?"tipo "+(sy.lps?"1+2":"2"):"sem"}`)+
+    kv("topo","Ligação",R.code,"",(R.code===topoCode(R.rec.topo,R.rec.ser)?"recomendada · ":"")+(R.box?"caixa de backup · casa toda em ilha":bk?`${R.crit?"cargas prioritárias":"backup"} ${fmt(N*ibk,1)} A · ${sw==="man"?"bypass manual":sw==="ats"?"comutador automático":"sem comutador"}`:"sem backup"));
+  const nIn=N*dc.length;
+  const pol=ph==1?"1P+N":"3P+N";
+  const bom=[
+    ["Cabo solar DC",`H1Z2Z2-K 1×${[...new Set(G.map(({d,js})=>fS(d.S)))].join("/")} mm², 1500 V DC, vermelho (+) e preto (−)`,`${fmt(N*dc.reduce((a,d)=>a+2*d.c.s*sy.Ldc,0),0)} m`],
+    ["Conectores",`MC4 compatíveis com os do painel, ${m.vsys_max||1000} V DC`,`${N*dc.reduce((a,d)=>a+2*d.c.s,0)} pares`],
+    ...(dc.some(d=>d.hasF)?[["Fusíveis DC",`gPV 10×38, ${up(Math.max(...G.map(({d,js})=>d.voc)),VDC)} V DC, ${[...new Set(dc.filter(d=>d.hasF&&d.fuse).map(d=>d.fuse+" A"))].join("/")}, nos dois pólos, com porta-fusíveis seccionáveis`,`${N*dc.filter(d=>d.hasF).reduce((a,d)=>a+2*d.c.s,0)}`]]:[]),
+    ...(opt.isoDc==="ext"?[["Seccionador DC",`${Math.max(...G.map(({d,js})=>d.Ue))} V DC, ≥ ${fmt(Math.max(...G.map(({d,js})=>d.Ie)),1)} A por MPPT, DC-PV2, corte omnipolar`,`${nIn} MPPT`]]:[]),
+    ...(opt.spdDc==="ext"?[["Descarregador DC",`${spd.t1?"Tipo 1+2, Iimp ≥ 12,5 kA":"Tipo 2, In ≥ 5 kA"}, Ucpv ≥ ${Math.max(...G.map(({d,js})=>d.Ucpv))} V, Iscpv ≥ ${fmt(Math.max(...G.map(({d,js})=>d.Ie)),1)} A, Up ≤ 4 kV`,`${nIn*(spd.two?2:1)}${spd.need?"":" (recomendado)"}`]]:[]),
+    ...(R.hasDcBox?[["Quadro DC",`Classe II, IP65, ${Math.max(...dc.map(d=>d.Ue))} V DC, com bornes e barra PE`,`${N}`]]:[]),
+    ...(R.bat&&opt.batP?[["Protecção DC da bateria",`Fusível ou disjuntor DC e seccionador, calibre e tensão indicados pelo fabricante da bateria${inv.battery?" ("+inv.battery+")":""}`,"1"]]:[]),
+    ["Cabo AC",`${ac.c.des} ${ac.r.form} ${ac.c.mat==="Cu"?"Cu":"Al"}, método ${methLabel(sy.met)}${R.s5b?", circuito do Q.G.E. (após o diferencial de entrada) → porta GRID":topo==="series"?", rede → porta GRID":topo==="crit"?", circuito do Q.G.E. → porta GRID":R.pre?", inversor → quadro FV":topo==="grid"?", inversor → Q.G.E. (circuito próprio)":""}`,`${fmt(N*sy.Lac,0)} m`],
+    ["Disjuntor",`${pol} ${ac.c.In} A curva ${sy.curve}, poder de corte ≥ 6 kA`,`${N}`],
+    ...(opt.rcd?[[R.s5b?"Diferencial de entrada do Q.G.E.":"Diferencial",`${rcd.poles} ${rcd.In} A, ${rcd.idn} mA, tipo ${rcd.type}${R.s5b?(R.cs.rcdG==="30"||R.cs.rcdG==="300"?", bidireccional (substitui o existente)":R.cs.rcdG==="300S"?", bidireccional (o existente serve se for deste tipo e calibre)":", bidireccional"):topo==="grid"||topo==="crit"?", no Q.G.E. a montante do diferencial geral":""}`,`${N}`]]:[]),
+    ...(R.pre?[["Quadro FV",`Classe II, ${ph==1?"monofásico":"trifásico"}, com bornes, barra PE e espaço para disjuntor, diferencial${opt.spdAc?" e descarregador":""}; junto ao Q.G.E.`,"1"],["Derivação na entrada",`Bornes de derivação ${ph==1?"2P":"4P"} (ou interruptor geral próprio) a jusante do equipamento de contagem e a montante do Q.G.E., cabo igual ou superior ao cabo AC`,"1"]]:[]),
+    ...(fd?[["Cabo Quadro FV → Q.G.E.",`${fd.c.des} ${fd.r.form}`,`${fmt(sy.Lf,0)} m`],["Disjuntor geral FV",`${pol} ${fd.c.In} A`,"1"]]:[]),
+    ...(opt.spdAc?[["Descarregador AC",`${sy.lps?"Tipo 1+2, Iimp ≥ 12,5 kA":"Tipo 2, In ≥ 5 kA (Imax 20–40 kA)"}, Uc ≥ 275 V, ligação ${ph==1?"1+1":"3+1"} (TT), Up ≤ 1,5 kV`,`${spd.acTwo?2:1}`]]:[]),
+    ...(R.cprod?[["Contador de produção",`Contador de energia ${ph==1?"monofásico":"trifásico"} bidireccional, ligação directa ≥ ${fd?fd.c.In:ac.c.In} A, classe B (MID) ou melhor, apto para telecontagem (comunicação GSM/PLC) compatível com o sistema da E-REDES (Portaria 231/2013), na saída AC ${N>1?"do conjunto dos inversores":"do inversor"}, a jusante das protecções; contagem da produção total (${R.cpNeed?"obrigatório, potência instalada "+fmt(R.Pinst,2)+" kW > 4 kW, ":""}${CPROD_LEI}). Confirme com a E-REDES o modelo aceite`,"1"]]:[]),
+    ...(meter?[["Medidor de energia",`Smart meter ${ph==1?"monofásico":"trifásico"} compatível com o inversor (directo ou com TI), comunicação RS485, no ponto de ligação à rede`,"1"]]:[]),
+    ...(bk?[["Cabo da saída backup",`${bkC.c.des} ${bkC.r.form}, porta ${topo==="eps"?"EPS":"BACKUP"} → ${R.s5b?"comutador e barramento dos circuitos do Q.G.E.":topo==="series"?"Q.G.E. da casa":"quadro de cargas prioritárias"}`,`${fmt(syLbk(),0)} m`],
+      ["Disjuntor da saída backup",`${pol} ${bkC.c.In} A curva ${sy.curve}`,"1"],
+      ...(rcdBk?[[R.crit?"Diferencial do quadro prioritário":R.s5b?"Diferencial 30 mA novo (a jusante do BACKUP)":"Diferencial da saída backup",`${rcdBk.poles} ${rcdBk.In} A, ${rcdBk.idn} mA, tipo ${rcdBk.type}${R.crit?" (ou um por grupo de circuitos, como no Q.G.E.)":""}`,"1"]]:[]),
+      ...(sw!=="none"?[[sw==="ats"?"Comutador automático":"Comutador de bypass",sw==="ats"?`Caixa de backup / comutador automático rede–inversor ${ph==1?"2P":"4P"} ≥ ${Math.max(bkC.c.In,ac.c.In)} A (o do fabricante, se existir)`:`Comutador manual I-0-II ${ph==1?"2P":"4P"} ≥ ${Math.max(bkC.c.In,ac.c.In)} A, com encravamento (nunca liga rede e saída backup em paralelo)`,"1"]]:[])]:[]),
+    ...(R.box?[["Caixa de backup",`Do fabricante do inversor (ex.: Fox ESS Backup Box), ${ph==1?"monofásica":"trifásica"}, contactor ≥ disjuntor geral da casa${R.pc?` (${fmt(R.Ipc,0)} A)`:""}, com ligação N–PE em ilha${meter?" e TI/medidor":""}`,"1"]]:[]),
+    ...(opt.newE?[["Eléctrodo de terra",`Vareta de aço cobreado ≥ 2 m (ou chapa/fita), ligador e caixa de visita, para RA ≤ ${fmt(rcd.RAmax,0)} Ω`,"1"]]:[]),
+    ["Ligação equipotencial",`Cobre verde-amarelo ${pe} mm² às estruturas e molduras dos painéis`,"—"],
+    ["Condutor de protecção AC",`${ac.r.pe?fS(ac.r.pe):fS(ac.c.S)} mm² (incluído no cabo AC)`,"—"]];
+  sysRender.bom=bom;
+  $("#sy-bom").innerHTML=bom.map(r=>`<tr><td><strong>${r[0]}</strong></td><td>${r[1]}</td><td class="n">${r[2]}</td></tr>`).join("");
+  const card=(kk,ttl,res,body,tag="")=>`<div class="sy-card" data-c="${kk}" id="sy-c-${kk}"><div class="ttl"><strong>${ttl}</strong>${tag}</div><div class="res">${res}</div>${body}</div>`;
+  const ok=v=>v?`<span class="pill ok">✓ Cumpre</span>`:`<span class="pill bad">✕ Não cumpre</span>`;
+  const d0=dc[0];
+  const dcCards=G.map(({d,js})=>card("dc-cable",`Cabo DC · MPPT ${js.join(", ")}`,`H1Z2Z2-K 1×${fS(d.S)} mm²`,
+    `<p class="note">${d.c.s} string${d.c.s>1?"s":""} de ${d.c.ns} módulos. Isc do módulo ${fmt(m.isc,2)} A${R.bk1>1?` × 1,10 por ser bifacial em estrutura elevada (ganho da face traseira) = ${fmt(isc,2)} A`:""}, Impp ${fmt(m.impp,2)} A. Corrente de cálculo 1,25 × Isc (IEC 60364-7-712, 712.433${d.Np>=3?"; com 3 ou mais strings em paralelo soma a corrente inversa das restantes":""}).</p>
+     <div class="eq">I mín. = ${d.needF?`In fusível = ${d.fuse||"?"} A`:`1,25 × ${fmt(isc,2)}${d.Np>=3?` × (${d.Np} − 1)`:""}`} = <span class="r">${fmt(d.Ireq,2)} A</span><br>
+     Iz = ${IZDC[sy.dcInst][d.S]} A (${DCINST[sy.dcInst]}, 60 °C) × ${fmt(kT,2)} (${fmt(sy.tdc,0)} °C)${+sy.fcdc!==1?` × ${fmt(+sy.fcdc,2)} (agrup.)`:""} = <span class="r">${fmt(d.Iz,1)} A</span> ≥ ${fmt(d.Ireq,2)} A<br>
+     ΔU = 2 × L × Impp × ρ / S = 2 × ${fmt(sy.Ldc,0)} × ${fmt(m.impp,2)} × 0,0225 / ${fS(d.S)} = ${fmt(d.dU,2)} V<br>
+     ΔU % = ${fmt(d.dU,2)} / (${d.c.ns} × ${fmt(m.vmpp,2)} V) = <span class="r">${fmt(d.dUp,2)} %</span> ≤ ${fmt(sy.dcDu,1)} %<br>
+     Perdas: ${fmt(d.loss,0)} W (${fmt(d.loss/(d.c.s*d.vmpp*m.impp)*100,2)} % da potência da MPPT)</div>`,ok(d.ok))).join("");
+  const fuseCard=card("fuse","Fusíveis de string",dc.some(d=>d.hasF)?dc.filter(d=>d.hasF).map(d=>`MPPT ${d.j+1}: gPV ${d.fuse||"?"} A`).join(" · "):"Não são necessários",
+    `<p class="note">Só são obrigatórios quando a corrente inversa que as outras strings podem injectar num módulo em defeito excede a que ele suporta (corrente máx. do fusível do módulo, ${m.fuse_max||"–"} A). Com 1 ou 2 strings em paralelo nunca são precisos (IEC 62548, 6.5 / IEC 60364-7-712).</p>
+     <div class="eq">${G.map(({d,js})=>`MPPT ${js.join(", ")}: (${d.Np} − 1) × 1,25 × ${fmt(isc,2)} = ${fmt(d.rev,1)} A ${d.needF?">":"≤"} ${m.fuse_max} A → <span class="r">${d.needF?`fusível ${fmt(d.fLo,1)} ≤ In ≤ ${fmt(d.fHi,1)} A → gPV ${d.fuse||"?"} A`:"sem fusíveis"}</span>`).join("<br>")}</div>
+     ${dc.some(d=>d.needF)?`<p class="note">Fusíveis gPV (IEC 60269-6) nos dois pólos, com tensão estipulada ≥ Voc máx. Alguns inversores já os trazem por entrada (ex. Fronius Tauro).</p>`:""}`);
+  const isoCard=card("isol-dc","Seccionador DC",`${opt.isoDc==="int"?"Integrado no inversor · ":""}${Math.max(...G.map(({d,js})=>d.Ue))} V DC · ≥ ${fmt(Math.max(...G.map(({d,js})=>d.Ie)),1)} A`,
+    `<p class="note">Obrigatório para isolar o inversor em manutenção (IEC 60364-7-712, 712.536.2). Corte em carga, omnipolar, categoria DC-PV2 (IEC 60947-3). A maioria dos inversores de string tem-no integrado: confirme na ficha.</p>
+     <div class="eq">${G.map(({d,js})=>`MPPT ${js.join(", ")}: Ue ≥ Voc(${fmt(pv.tmin,0)} °C) = ${d.c.ns} × ${fmt(t.vocCold,2)} = ${fmt(d.voc,0)} V → <span class="r">${d.Ue} V</span> · Ie ≥ 1,25 × ${fmt(isc,2)} × ${d.Np} = <span class="r">${fmt(d.Ie,1)} A</span>`).join("<br>")}</div>`);
+  const spdDc=card("spd-dc","Descarregador de sobretensões DC",`${opt.spdDc==="int"?"Integrado no inversor · ":opt.spdDc==="none"?"Não incluído · ":""}${spd.t1?"Tipo 1+2":"Tipo 2"} · Ucpv ≥ ${Math.max(...G.map(({d,js})=>d.Ucpv))} V`,
+    `<p class="note">${sy.lps?(spd.t1?"O edifício tem pára-raios e a distância de separação não é garantida: parte da corrente da descarga entra nos cabos, por isso o SPD tem de ser tipo 1+2.":"Com pára-raios e distância de separação garantida, basta tipo 2, mas é obrigatório."):`Sem pára-raios, a necessidade decide-se pelo comprimento dos cabos DC face ao comprimento crítico (IEC 60364-7-712:2017, 712.443).`}</p>
+     <div class="eq">L = ${dc.length} percurso${dc.length>1?"s":""} × ${fmt(sy.Ldc,0)} m = ${fmt(spd.L,0)} m · Lcrit = ${LCRIT[sy.bldg][0]} / Ng = ${LCRIT[sy.bldg][0]} / ${fmt(+sy.Ng,1)} = ${fmt(spd.Lc,0)} m (${LCRIT[sy.bldg][1]})<br>
+     ${sy.lps?"Pára-raios presente → <span class=\"r\">obrigatório</span>":spd.L>=spd.Lc?`L ≥ Lcrit → <span class="r">obrigatório</span>`:`L &lt; Lcrit → <span class="r">não obrigatório, recomendado</span>`}<br>
+     ${G.map(({d,js})=>`MPPT ${js.join(", ")}: Ucpv ≥ máx(Voc frio ${fmt(d.voc,0)} V; 1,2 × ${fmt(d.vocS,0)} V) → <span class="r">${d.Ucpv} V</span> · Iscpv ≥ ${fmt(d.Ie,1)} A`).join("<br>")}<br>
+     ${spd.t1?"Iimp ≥ 12,5 kA por modo":"In ≥ 5 kA (8/20 µs)"} · Up ≤ 0,8 × tensão de choque do inversor (tip. ≤ 4 kV)</div>
+     <p class="note">Junto à entrada DC do inversor, um por MPPT (ou um com várias entradas).${spd.two?` Os cabos têm mais de 10 m: ponha também um SPD junto aos painéis (IEC 61643-32).`:""}</p>`,spd.need?`<span class="pill warn">Obrigatório</span>`:`<span class="pill na">Recomendado</span>`);
+  const acCard=(kk,ttl,C,Ib,how)=>card(kk,ttl,`${esc(C.c.des)} ${C.r.form} · ${C.c.prot} ${C.c.In} A`,
+    `<p class="note">${how}</p>
+     <div class="eq">Ib = <span class="r">${fmt(Ib,1)} A</span> · In = ${C.c.In} A (menor calibre ≥ Ib)<br>
+     I'z = ${fmt(C.r.izUnit,0)} A (${C.c.mat}/${C.c.ins}, método ${methLabel(sy.met)}, ${ph==1?2:3} cond. carregados) × ${fmt(+sy.fc,2)} = <span class="r">${fmt(C.r.Izc,1)} A</span><br>
+     Ib ≤ In ≤ I'z: ${fmt(Ib,1)} ≤ ${C.c.In} ≤ ${fmt(C.r.Izc,1)} ${C.r.c1?"✓":"✕"} · I2 = ${fmt(C.r.I2,1)} ≤ 1,45 × I'z = ${fmt(C.r.lim,1)} ${C.r.c2?"✓":"✕"}<br>
+     ΔU = ${ph==1?2:1} × (ρ × L / S) × Ib = ${ph==1?2:1} × (${C.c.mat==="Cu"?"0,0225":"0,036"} × ${fmt(C.c.L,0)} / ${fS(C.c.S)}) × ${fmt(Ib,1)} = ${fmt(C.r.dU,2)} V = <span class="r">${fmt(C.r.dUp,2)} %</span> ≤ ${fmt(sy.acDu,1)} %</div>`,ok(C.ok));
+  const acc=acCard("ac-cable",R.s5b?"Circuito Q.G.E. → inversor (GRID) e disjuntor":R.pre?"Cabo inversor → quadro FV e disjuntor":topo==="grid"?"Circuito do inversor no Q.G.E. e disjuntor":topo==="series"?"Cabo rede → inversor (GRID) e disjuntor":topo==="crit"?"Circuito Q.G.E. → inversor (GRID) e disjuntor":"Cabo AC e disjuntor",ac,Ig,`${topo==="crit"?`Este circuito sai do Q.G.E., logo a seguir ao interruptor/disjuntor geral, e leva a maior de duas correntes: a que o inversor injecta (${fmt(iac,1)} A) e a que passa para as cargas prioritárias pela saída backup (${fmt(ibk,1)} A). O resto da casa não passa pelo inversor. `:""}${topo==="series"?`Em série, este cabo leva a maior de duas correntes: a que o inversor injecta (${fmt(iac,1)} A) e a que passa da rede para a casa pela saída backup (${fmt(R.ibkG,1)} A${R.ibkG<ibk-0.05?`: o inversor deixa passar ${fmt(ibk,1)} A, mas o disjuntor geral da casa (${fmt(R.pc,2)} kVA) limita a ${fmt(R.Ipc,1)} A`:R.pc?"":"; indique a potência contratada no separador 4 para limitar ao disjuntor geral da casa"}). `:""}Corrente de serviço do inversor = corrente AC máxima (${R.iacSrc==="user"?"valor indicado por si":R.iacSrc==="cat"?`valor da ficha técnica do fabricante: ${esc(inv.iac_src||"")}`:`estimada: ${fmt(inv.pac_kw,1)} kW / (${ph==1?"230 V":"3 × 230 V"}) × 1,1 = ${fmt(est,1)} A; confirme na ficha`}). Mesmo método do separador Canalizações, com a fórmula RTIEBT da queda de tensão. A queda AC deve ficar baixa (1 a 1,5 %) para o inversor não desligar por sobretensão (EN 50549-1, 1,1 Un).`);
+  const mcbCard=card("mcb","Disjuntor do inversor",`${ph==1?"1P+N":"3P+N"} ${ac.c.In} A curva ${sy.curve} · ≥ 6 kA`,
+    `<p class="note">Protege o cabo contra sobrecargas e curtos-circuitos (RTIEBT 433 e 434). Em regime TT corta também o neutro. O inversor não tem picos de arranque, por isso a curva B ou C serve; siga o calibre máximo indicado no manual do inversor. Poder de corte ≥ corrente de curto-circuito presumida no quadro (6 kA é o habitual em BT).</p>
+     <div class="eq">In ≥ Ib = ${fmt(Ig,1)} A → <span class="r">${ac.c.In} A</span> · In ≤ I'z = ${fmt(ac.r.Izc,1)} A</div>`);
+  const rcdCard=!opt.rcd?card("rcd","Diferencial","Não incluído no quadro FV",`<p class="note">Retirou o diferencial do circuito do inversor. A protecção contra contactos indirectos fica a cargo do diferencial a montante no Q.G.E., que tem de cobrir este circuito, ser selectivo com os outros e cumprir Re × IΔn ≤ UL (Re máx. ${fmt(rcd.RAmax,0)} Ω para ${rcd.idn} mA). Tipo A só se o fabricante declarar que o inversor não injecta correntes contínuas de defeito.</p>`):card("rcd","Diferencial",`${rcd.poles} ${rcd.In} A · ${rcd.idn} mA · tipo ${rcd.type}`,
+    `<p class="note">${rcd.type.startsWith("B")?"Tipo B porque o manual do inversor o exige: o inversor pode injectar correntes de defeito contínuas no lado AC.":`A IEC 60364-7-712 (712.531.3.5) pede tipo B, excepto quando o fabricante declara que o inversor não injecta correntes de defeito contínuas. Os inversores sem transformador do catálogo têm monitorização interna de corrente residual (RCMU, IEC 62109-2) e os fabricantes aceitam tipo A. Se o manual pedir tipo B, assinale a opção.`}</p>
+     <div class="eq">Calibre ≥ disjuntor: ${ac.c.In} A → <span class="r">${rcd.In} A</span><br>
+     TT (RTIEBT 413.1.4): UL ≥ Re × IΔ ⇒ ${rcd.UL} ≥ ${fmt(sy.RA,0)} × IΔ ⇒ IΔ ≤ ${rcd.UL} / ${fmt(sy.RA,0)} = <span class="r">${fmt(rcd.Imax/1000,3)} A</span> (UL = ${rcd.UL} V, inversor ${rcd.UL==25?"no exterior ou em local húmido":"no interior, local seco"})<br>
+     IΔn ${sy.rcd==="auto"?`= maior calibre normalizado (30 / 100 / 300 mA) que cumpre`:"escolhido por si"} → <span class="r">${rcd.idn} mA</span> ${rcd.idn<=rcd.Imax+1e-9?"✓":"✕"}<br>
+     Re máx. para ${rcd.idn} mA: ${rcd.UL} / ${fmt(rcd.idn/1000,3)} = ${fmt(rcd.RAmax,0)} Ω${rcd.nxt?` · para subir a ${rcd.nxt} mA: Re ≤ ${rcd.UL} / ${fmt(rcd.nxt/1000,1)} = <span class="r">${fmt(rcd.RAnxt,0)} Ω</span> (reforçar o eléctrodo de terra)`:""}</div>
+     <p class="note">Quanto menos sensível o diferencial, menos disparos intempestivos: os painéis têm capacidade para a terra e o inversor tem fugas permanentes que crescem com a potência e a humidade. Por isso escolhe-se o maior IΔn que a terra permite e, se só 30 mA cumprir, convém reforçar o eléctrodo. O circuito do inversor é fixo, sem tomadas, por isso as RTIEBT não obrigam a 30 mA; muitos fabricantes (SMA, Fronius, Huawei…) indicam 100 mA ou mais.</p>
+     ${R.crit&&R.rcd.sel?`<p class="note"><strong>Cargas prioritárias:</strong> este diferencial fica no circuito do inversor, no Q.G.E., logo a seguir ao geral, e nunca debaixo de um diferencial de 30 mA instantâneo (dispararia com as fugas do inversor e dos painéis e com defeitos nas cargas prioritárias). A cadeia é ${rcd.idn} mA S → inversor → saída backup → 30 mA do quadro prioritário${rcd.idn>=100?", com selectividade total":""}. Protege o cabo até ao inversor e o próprio inversor. Se o Q.G.E. tiver um diferencial geral a montante, tem de ser selectivo (S) e de IΔn maior.</p>`:""}${R.rcd.sel&&!rcdBk&&!R.crit?`<p class="note"><strong>Em série:</strong> a cadeia é este diferencial (${rcd.idn} mA S) → inversor → saída backup → Q.G.E. da casa, com os seus diferenciais de 30 mA. Com rede, um defeito na casa passa por este diferencial e pelo de 30 mA: como este é tipo S e ${rcd.idn>=100?"pelo menos 3× menos sensível":"de sensibilidade próxima"}, abre só o de 30 mA${rcd.idn>=100?" (selectividade total)":""}. Este protege o cabo da rede e o inversor. Em ilha, os 30 mA da casa continuam a funcionar graças à ligação N–PE. O troço saída backup → Q.G.E. fica sem diferencial, por isso tem de ser classe II (cabo em tubo isolante, quadro classe II), como a entrada normal contador → Q.G.E.</p>`:""}${R.rcd.sel&&rcdBk&&!R.crit?`<p class="note"><strong>Em série:</strong> a cadeia é este diferencial (${rcd.idn} mA S) → inversor → saída backup (${rcdBk.idn} mA S) → diferenciais de 30 mA da casa. O da saída backup protege o cabo backup e a casa com e sem rede; este protege o cabo da rede e o inversor. Os dois tipo S ficam selectivos com os 30 mA da casa; entre eles a selectividade é parcial (escalonamento ${fmt(rcd.idn/rcdBk.idn,0)}×), o que é aceitável numa moradia. Para selectividade total, use aqui um relé diferencial com temporização regulável.</p>`:""}<p class="note">Confirme no manual a sensibilidade mínima pedida pelo fabricante. Se houver um diferencial a montante no Q.G.E., esse deve ser selectivo (tipo S).</p>`,ok(rcd.RAmax>=sy.RA));
+  const spdAc=!opt.spdAc?card("spd-ac","Descarregador de sobretensões AC","Não incluído no quadro FV",`<p class="note">Retirou o descarregador AC. Só faz sentido se já existir um no Q.G.E. a menos de 10 m do inversor${sy.lps?"; com pára-raios tem de ser tipo 1+2 na origem da instalação":""}.</p>`):card("spd-ac","Descarregador de sobretensões AC",`${sy.lps?"Tipo 1+2":"Tipo 2"} · Uc ≥ 275 V · ${ph==1?"1+1":"3+1"}`,
+    `<p class="note">No quadro onde liga o inversor (RTIEBT 443 e 534). Em TT usa-se a ligação ${ph==1?"1+1 (L–N e N–PE)":"3+1 (L–N e N–PE)"}. ${sy.lps?"Com pára-raios, tipo 1+2 no Q.G.E.":"Sem pára-raios, tipo 2."}</p>
+     <div class="eq">Uc ≥ 1,1 × U0 = 1,1 × 230 = 253 V → <span class="r">275 V</span><br>${sy.lps?"Iimp ≥ 12,5 kA (10/350 µs) por pólo":"In ≥ 5 kA (8/20 µs), Imax 20–40 kA"} · Up ≤ 1,5 kV<br>
+     Inversor a ${fmt(sy.Lac,0)} m do quadro → ${spd.acTwo?`<span class="r">mais de 10 m: outro SPD tipo 2 junto ao inversor</span>`:"um só SPD chega"}</div>
+     <p class="note">Proteja o SPD com o fusível ou disjuntor de reserva indicado pelo fabricante.</p>`);
+  const earthCard=card("grid","Terras e equipotencialidade",`Molduras ${pe} mm² Cu · RA ≤ ${fmt(rcd.RAmax,0)} Ω`,
+    `<p class="note">As estruturas e molduras dos painéis ligam-se à terra da instalação com condutor de cobre de pelo menos ${pe} mm²${sy.lps?" (16 mm² porque há pára-raios)":" (6 mm²; 16 mm² se houver pára-raios)"} (IEC 60364-7-712, 712.54). Os condutores DC e de terra devem seguir juntos para reduzir a área de laço. O condutor de protecção AC vai no cabo: ${ac.r.pe?fS(ac.r.pe):fS(ac.c.S)} mm².</p>`);
+  const fdCard=fd?acCard("feeder","Quadro FV → Q.G.E.",fd,N*Ig,`${N} inversores × ${fmt(Ig,1)} A = ${fmt(N*Ig,1)} A. A queda de tensão deste troço soma à do inversor → quadro FV (total ${fmt(R.duT,2)} %, limite ${fmt(sy.acDu,1)} %). Cada inversor tem o seu disjuntor e diferencial no quadro FV; este cabo alimenta o quadro FV a partir do Q.G.E.`):"";
+  const invCard=card("inv","Inversor",`${N>1?N+" × ":""}${esc(invName(inv))}`,`<p class="note">${inv.mppt} MPPT, ${fmt(inv.pac_kw,1)} kW AC, ${ph==1?"monofásico":"trifásico"}, Vmáx DC ${inv.vdc_max} V. A configuração das strings vem do separador Fotovoltaico.</p>`);
+  const pvCard=card("pv","Gerador fotovoltaico",`${e.n} × ${m.pmax} W = ${fmt(e.kWp,2)} kWp`,`<div class="eq">${G.map(({d,js})=>`MPPT ${js.join(", ")}: ${d.c.s} × ${d.c.ns} módulos · Voc frio ${fmt(d.voc,0)} V · Vmpp ${fmt(d.vmpp,0)} V · Isc ${fmt(d.c.s*m.isc,1)} A`).join("<br>")}</div>`);
+  const batCard=pv.bat&&inv.hybrid?card("bat","Bateria",esc(inv.battery||"Conforme fabricante"),`<p class="note">O cabo e a protecção DC da bateria (fusível ou disjuntor DC e seccionador) são os indicados pelo fabricante da bateria, que os fornece muitas vezes integrados.</p>`):"";
+  const topoTxt={grid:`O inversor liga em paralelo com a rede por um circuito próprio do Q.G.E., tirado a seguir ao corte geral e antes do diferencial geral, com disjuntor e diferencial próprios${N>1?" (através do quadro FV)":""}. Assim o inversor nunca fica debaixo dos 30 mA da casa, que não veem a fuga capacitiva do gerador FV. Quando falta a rede o inversor desliga (anti-ilha, EN 50549-1) e a casa fica sem energia.`,
+    pre:`O inversor liga a um quadro FV próprio, alimentado por uma derivação na entrada da instalação, a jusante do equipamento de contagem e a montante do Q.G.E. O Q.G.E. fica como está. Boa solução quando o Q.G.E. está cheio, é antigo ou não tem espaço antes do diferencial geral. O troço da derivação até ao quadro FV é curto e fica protegido pelo aparelho a montante (DCP / disjuntor de entrada). Quando falta a rede o inversor desliga (anti-ilha) e a casa fica sem energia.`,
+    eps:`Caixa de backup (tipo Fox ESS Backup Box) entre a rede e a instalação. Com rede, a casa e o inversor ficam ligados à rede como num sistema normal. Quando a rede falha, o contactor da caixa abre e separa a instalação da rede; o inversor passa a funcionar em ilha pela mesma ligação e continua a alimentar a casa toda, a partir dos painéis${R.bat?" e da bateria":""}. Quando a rede volta, a caixa volta a fechar. Em ilha, as cargas ficam limitadas à potência do inversor.`,
+    crit:`O inversor fica em série só com uma parte da casa: um circuito próprio do Q.G.E. (a seguir ao geral) alimenta a porta GRID, e a saída BACKUP alimenta um quadro de cargas prioritárias com os circuitos escolhidos (frigorífico, iluminação, tomadas de serviço…). O resto da casa continua directo na rede. Com rede, as cargas prioritárias recebem através do relé interno do inversor (até à corrente de passagem); sem rede, o inversor isola-se e alimenta só esse quadro, a partir dos painéis${R.bat?" e da bateria":""}. A potência contratada da casa não fica limitada pelo inversor. Os circuitos que passam para o quadro prioritário levam o seu próprio neutro: não podem partilhar o barramento de neutro do Q.G.E.`,
+    series:R.s5b?`Variante S5b, tudo dentro do Q.G.E.: a seguir ao corte geral, o diferencial de entrada (300 mA tipo S) e um disjuntor alimentam a porta GRID; a saída BACKUP volta ao Q.G.E. pelo comutador I-0-II e por um diferencial de 30 mA novo, que alimenta o barramento de todos os circuitos. A ponte entre o diferencial de entrada e o barramento é cortada. Com rede, a casa recebe através do relé interno do inversor (até à corrente de passagem); sem rede, o inversor isola-se e alimenta a casa toda a partir dos painéis${R.bat?" e da bateria":""}, e o 30 mA novo é o único diferencial que protege a casa. As cargas ficam limitadas à corrente de passagem e, em ilha, à potência do inversor.`:`O inversor fica em série entre a rede e a casa (S5): a rede entra, por um quadro de protecção próprio, na porta GRID e todo o Q.G.E. da casa é alimentado pela saída BACKUP. Com rede, a energia passa pelo relé interno do inversor (até à corrente de passagem); sem rede, o inversor isola-se da rede e alimenta a casa toda a partir dos painéis e da bateria. As cargas da casa ficam limitadas à corrente de passagem e, em ilha, à potência do inversor.`}[topo];
+  const recTxt=`<p class="note">${R.code===topoCode(R.rec.topo,R.rec.ser)?"<strong>É a ligação recomendada</strong> para a situação da casa indicada":`<strong>A recomendada para a situação da casa seria ${topoCode(R.rec.topo,R.rec.ser)}</strong> (${TOPO[R.rec.topo]})`}: ${R.rec.why.join("; ")}.${sy.topo==="auto"||!sy.topo?" Escolhida automaticamente; pode mudar no painel da esquerda.":""}</p>`;
+  const topoCard=card("topo","Tipo de ligação",topoName(R),`<p class="note">${topoTxt}</p>${R.isl?`<p class="note">Em regime TT, em modo ilha o neutro da saída backup tem de ser ligado à terra (ligação N–PE), senão os diferenciais não funcionam: ${opt.npe?"o inversor (relé N–PE interno) ou a caixa de backup fazem essa ligação só enquanto estão isolados da rede; confirme no manual":"<strong>marcou que não há ligação N–PE</strong>; confirme a solução do fabricante"}. ${R.box?"O contactor da caixa garante que a casa nunca fica ligada à rede enquanto o inversor está em ilha.":"A rede e a saída backup nunca podem ficar ligadas em paralelo"}${sw==="man"?": o comutador I-0-II tem posição 0 e encravamento":""}.</p>`:""}${recTxt}`);
+  const bkCard=bk?acCard("bk",R.s5b?"Saída backup → barramento do Q.G.E.":topo==="series"?"Saída backup → Q.G.E. da casa":"Saída backup → quadro de cargas prioritárias",bkC,N*R.ibkG,`Corrente = corrente máxima da saída backup / de passagem do inversor (${(sy.ibk||{})[invName(inv)]?"valor indicado por si":+inv.ibk_max?`${fmt(ibk,1)} A, da ficha do fabricante`:`não indicada: usei a corrente AC do inversor, ${fmt(iac,1)} A; ponha o valor da ficha`})${N>1?` × ${N} inversores`:""}${R.ibkG<ibk-0.05?`, limitada a ${fmt(R.Ipc,1)} A pelo disjuntor geral da casa (${fmt(R.pc,2)} kVA)`:""}. O disjuntor QB protege este cabo${topo==="series"?" e limita o que a casa pode pedir; o disjuntor geral da casa deve ser igual ou menor":" e limita o que as cargas prioritárias podem pedir"}.${topo==="series"&&!R.s5b&&!rcdBk?" Sem diferencial próprio: este troço até à entrada do Q.G.E. tem de ser executado em classe II (cabo em tubo isolante ou de dupla isolação, quadro classe II). Se passar em caminho de cabos metálico ou chegar a um quadro metálico, ponha o diferencial da saída backup (opção à esquerda).":""}`):"";
+  const rcdBkCard=rcdBk?card("rcd-bk",R.crit?"Diferencial do quadro prioritário":R.s5b?"Diferencial 30 mA novo (a jusante do BACKUP)":"Diferencial da saída backup",`${rcdBk.poles} ${rcdBk.In} A · ${rcdBk.idn} mA · tipo ${rcdBk.type}`,`<p class="note">${R.s5b?`Na S5b o diferencial de entrada passa para o lado da rede (porta GRID), por isso os circuitos da casa precisam de um 30 mA tipo A novo, a jusante da saída BACKUP${sw!=="none"?" e do comutador, para proteger nas duas posições (rede directa e inversor)":""}, antes do barramento (RTIEBT 415.1). Em ilha é o único diferencial que protege a casa, e funciona porque o neutro é ligado à terra pela ligação N–PE. Com rede fica selectivo com o ${rcd.idn} mA S de entrada. Se a casa tinha vários 30 mA por grupo de circuitos, mantêm-se e este pode ser dispensado só se todos os circuitos ficarem debaixo deles.`:rcdBk.sel?`Fica a montante dos diferenciais de 30 mA que já existem no Q.G.E. da casa, por isso deve ser selectivo (tipo S) e de sensibilidade maior. Protege o cabo da saída backup e, com a ligação N–PE em ilha, continua a funcionar sem rede.`:`O quadro de cargas prioritárias alimenta circuitos finais com tomadas, que deixam de estar debaixo dos diferenciais do Q.G.E., por isso leva os seus próprios 30 mA tipo A (RTIEBT 415.1), um ou mais por grupo de circuitos como no Q.G.E. Com rede, ficam selectivos com o ${rcd.idn} mA S do circuito do inversor; em ilha funcionam porque o neutro é ligado à terra pela ligação N–PE. Os neutros destes circuitos ficam separados dos do Q.G.E.`}</p><div class="eq">Calibre ≥ disjuntor QB: ${bkC.c.In} A → <span class="r">${rcdBk.In} A</span></div>`):"";
+  const swCard=bk?card("sw",sw==="ats"?"Comutador automático":sw==="man"?"Comutador de bypass":"Sem comutador",sw==="none"?"Não incluído":`${ph==1?"2P":"4P"} ≥ ${Math.max(bkC.c.In,ac.c.In)} A`,`<p class="note">${sw==="man"?`Comutador manual I-0-II, com corte de todos os condutores incluindo o neutro. Na posição I as cargas${topo==="series"?" da casa":" prioritárias"} recebem directamente da rede (inversor fora, para manutenção ou avaria); na II recebem pela saída backup. A posição 0 garante que a rede e a saída backup nunca ficam ligadas entre si.`:sw==="ats"?`Comutador automático (caixa de backup): com rede, as cargas críticas recebem da rede; quando a rede falha, passa para a saída EPS. Use a caixa do fabricante se existir, com encravamento eléctrico e mecânico.`:`Sem comutador, as cargas ${topo==="series"?"da casa":"prioritárias"} dependem sempre do inversor.`}</p>`):"";
+  const boxCard=R.box?card("bkbox","Caixa de backup",`${ph==1?"Monofásica":"Trifásica"} · ≥ ${R.pc?fmt(R.Ipc,0)+" A":"disjuntor geral"}`,`<p class="note">Fica entre o contador E-REDES e o Q.G.E. da casa. Use a caixa do fabricante do inversor (por exemplo Fox ESS Backup Box), que comunica com o inversor e faz a separação da rede e a ligação N–PE em ilha. O contactor deve ter calibre igual ou superior ao disjuntor geral da instalação.</p>`):"";
+  const cprodCard=R.cprod||R.cpNeed?card("cprod","Contador de produção (totalizador)",R.cprod?`${ph==1?"Monofásico":"Trifásico"} · telecontagem${R.cpNeed?" · obrigatório":""}`:"Retirado (obrigatório!)",`<p class="note"><strong>Regra:</strong> é obrigatória a contagem da energia total produzida pela UPAC quando a instalação está ligada à RESP e a potência instalada é <strong>superior a 4 kW</strong> (${CPROD_LEI}); com 4,00 kW certos ainda não é. A potência instalada é a potência nominal de saída dos inversores (art. 3.º, al. fff)), não a potência de pico dos painéis: aqui ${N>1?N+" × ":""}${fmt(+inv.pac_kw,2)} kW = <strong>${fmt(R.Pinst,2)} kW</strong>${R.e&&R.e.kWp?` (gerador ${fmt(R.e.kWp,2)} kWp)`:""}. Conta também com injecção zero, desde que a instalação esteja ligada à rede.</p>
+    <div class="eq">${fmt(R.Pinst,2)} kW ${R.cpNeed?"&gt;":"≤"} 4 kW → <span class="r">${R.cpNeed?"obrigatório":"não obrigatório"}</span></div>
+    <p class="note">A contagem é feita por telecontagem, com os requisitos da Portaria n.º 231/2013 (contador compatível com o sistema do operador de rede); a instalação e os encargos do contador totalizador são do autoconsumidor. Fica na saída AC ${N>1?"do conjunto dos inversores, a jusante do disjuntor geral do quadro FV":"do inversor, a jusante do disjuntor e do diferencial"}, de modo a contar toda a energia produzida.${bk?` <strong>Em série:</strong> pela porta GRID também passa o consumo da casa (energia da rede que atravessa o inversor), por isso um contador só nessa linha não conta apenas a produção. Combine com a E-REDES o ponto de contagem (por exemplo, contador bidireccional na porta GRID mais contagem na saída BACKUP) antes de submeter.`:""} É independente do medidor (smart meter) do inversor.</p>`):"";
+  const meterCard=meter?card("meter","Medidor de energia (smart meter)",`${ph==1?"Monofásico":"Trifásico"} · RS485`,`<p class="note">No ponto de ligação à rede, a jusante do contador E-REDES${R.pre?" e a montante da derivação para o quadro FV (mede a casa toda)":topo==="series"?" e a montante da porta GRID":topo==="crit"?" e a montante do Q.G.E. (mede a casa toda), não na porta GRID nem no circuito do inversor":""}. Mede a energia trocada com a rede para o inversor gerir a bateria${R.inj?"":" e limitar a injecção a zero"}. Use o modelo indicado pelo fabricante do inversor; com TI se a corrente o exigir.</p>`):"";
+  $("#sy-how").innerHTML=`<h2>Como cheguei aqui</h2>
+    <h3>Lado DC</h3><div class="sy-grid">${pvCard}${dcCards}${fuseCard}${isoCard}${spdDc}${batCard}</div>
+    <h3>Lado AC</h3><div class="sy-grid">${topoCard}${invCard}${acc}${mcbCard}${rcdCard}${spdAc}${fdCard}${cprodCard}${boxCard}${meterCard}${earthCard}</div>
+    ${bk?`<h3>Saída backup</h3><div class="sy-grid">${bkCard}${rcdBkCard}${swCard}</div>`:""}
+    <p class="src">Regras: RTIEBT (Portaria 949-A/2006), secção 712 e partes 4 e 5; IEC 60364-7-712:2017; IEC 62548; EN 50618 (cabo solar); IEC 61643-31/-32 e CLC/TS 50539-12 (descarregadores). Os valores são de pré-dimensionamento: confirme sempre nas fichas e manuais dos equipamentos.</p>`;
+  if(sy.on) syMark(sy.on,false);
+}
+// estado dos controlos do tipo de ligação e dos elementos opcionais
+function syOptUI(R){
+  const {topo,bk,inv,iac,sw}=R, n=invName(inv);
+  $("#sy-topo").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===topo)));
+  const rc=R.rec, rcode=topoCode(rc.topo,rc.ser), cs=R.cs, auto=!sy.topo||sy.topo==="auto";
+  $("#sy-topo").querySelectorAll("button").forEach(b=>{ const st=b.querySelector("strong"); st.querySelector("em")?.remove(); if(b.dataset.v===rc.topo) st.insertAdjacentHTML("beforeend","<em>✓ recomendada</em>"); });
+  $("#sy-ser-cd").textContent=topo==="series"?R.code:"S5b";
+  $("#sy-ser-w").hidden=topo!=="series"; $("#sy-ser").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===R.ser)));
+  for(const k of ["bk","space","box"]) $("#sy-cs-"+k).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===cs[k])));
+  $("#sy-cs-rcdG").value=cs.rcdG; let pc=""; try{ pc=docS.i.pc||"" }catch(e){} if(document.activeElement!==$("#sy-cs-pc")) $("#sy-cs-pc").value=pc;
+  $("#sy-cs-bk-n").textContent=cs.bk==="auto"?(rc.want==="all"?"auto = casa toda, porque há bateria":"auto = sem backup, porque não há bateria"):"";
+  $("#sy-cs-box-w").hidden=!(R.bat&&rc.want==="all");
+  $("#sy-rec").innerHTML=`<strong class="t">Recomendada: ${rcode} · ${TOPO[rc.topo]}${rc.topo==="series"?(rc.ser==="qfv"?" (quadro à parte)":" (no Q.G.E.)"):""}</strong><ul>${rc.why.map(w=>`<li>${w}</li>`).join("")}</ul>`+
+    (auto?`<span class="note">Em uso (escolha automática).</span>`:R.code===rcode?`<span class="note">Em uso.</span> <a href="#" id="sy-topo-auto">Seguir sempre a recomendação</a>`:`<a href="#" id="sy-topo-auto">Usar a recomendada</a> <span class="note">(em uso: ${R.code}, escolhida por si)</span>`)+
+    `<p class="x">A evitar: S3, inversor debaixo do diferencial geral (só admissível com 300 mA S); S4, inversor numa tomada (não admissível). <a href="${SYREF}" target="_blank" rel="noopener">Ver as 8 hipóteses com unifilares</a>.</p>`;
+  $("#sy-topo-n").innerHTML="";
+  $("#sy-bk-w").hidden=!bk; document.querySelectorAll(".sy-bko").forEach(x=>x.hidden=!bk); document.querySelectorAll(".sy-isl").forEach(x=>x.hidden=!R.isl);
+  $("#sy-Lac-l").textContent=R.s5b||topo==="crit"?"Q.G.E. → inversor, porta GRID (m)":topo==="series"?"Quadro → inversor, porta GRID (m)":R.pre?"Inversor → quadro FV (m)":topo==="grid"?"Inversor → Q.G.E. (m)":"Inversor → quadro (m)";
+  $("#sy-Lf-w").querySelector("span").textContent=R.pre?"Quadro FV → derivação na entrada (m)":"Quadro FV → Q.G.E. (m)";
+  $("#sy-Lbk-l").textContent=R.s5b?"Saída backup → Q.G.E., comutador (m)":topo==="series"?"Saída backup → Q.G.E. da casa (m)":"Saída backup → quadro de cargas prioritárias (m)";
+  $("#sy-Lbk").value=+sy.Lbk>0?sy.Lbk:""; $("#sy-Lbk").placeholder=fmt(+sy.Lac,0);
+  $("#sy-Lbk-n").textContent=+sy.Lbk>0?"comprimento próprio (apague para igualar)":`vazio = igual ao cabo rede → inversor (${fmt(+sy.Lac,0)} m)`;
+  const ibkC=+inv.ibk_max||0; $("#sy-ibk").placeholder=fmt(ibkC||iac,1); $("#sy-ibk").value=(sy.ibk||{})[n]||"";
+  $("#sy-ibk-n").textContent=(sy.ibk||{})[n]?"valor seu":ibkC?`vazio = ${fmt(ibkC,1)} A, da ficha do fabricante`:`vazio = ${fmt(iac,1)} A (I AC); veja na ficha`;
+  for(const k of ["isoDc","spdDc","fuse","meter","cprod","sw"]) $("#sy-o-"+k).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(String(syO(k))===b.dataset.v)));
+  for(const k of ["spdPv","batP","rcd","spdAc","rcdBk","npe","earth","newE"]) $("#sy-o-"+k).checked=!!syO(k==="rcdBk"?rcdBkKey():k);
+  $("#sy-o-rcdBk-l").textContent=topo==="crit"?"Diferenciais 30 mA no quadro de cargas prioritárias":R.s5b?"Diferencial 30 mA novo a jusante do BACKUP (no Q.G.E.)":"Diferencial na saída backup (só se o troço até ao Q.G.E. não for classe II)";
+  $("#sy-o-spdPv-w").hidden=!(sy.Ldc>10&&syO("spdDc")==="ext"); $("#sy-o-batP-w").hidden=!R.bat;
+}
+// esquema ampliado em ecrã inteiro, com zoom
+let syZ={id:null,k:1};
+function syZoomDraw(){ const b=$("#sy-z-b"), src=$("#"+syZ.id); if(!src) return; b.innerHTML=src.innerHTML; const v=b.querySelector("svg"); if(!v) return;
+  const vb=v.viewBox.baseVal, fit=Math.min((b.clientWidth-24)/vb.width,(b.clientHeight-24)/vb.height);
+  v.style.width=Math.round(vb.width*fit*syZ.k)+"px"; v.style.height="auto"; }
+function syZoomOpen(id){ syZ={id,k:1}; $("#sy-z-t").textContent=$("#"+id).closest(".panel").querySelector("h2").textContent; const d=$("#sy-zoom"); if(d.showModal) d.showModal(); else d.setAttribute("open",""); syDetPlace(); syZoomDraw(); if(sy.on) syMark(sy.on,false); }
+document.getElementById("sy-zoom").addEventListener("close",()=>syDetPlace());
+window.addEventListener("resize",()=>{ if($("#sy-zoom").open) syZoomDraw(); });
+function syMark(k,open){ sy.on=k;
+  document.querySelectorAll("#sy-svg [data-k],#sy-dcbox [data-k],#sy-acbox [data-k],#sy-z-b [data-k]").forEach(x=>x.classList.toggle("on",x.dataset.k===k));
+  document.querySelectorAll("#sy-how .sy-card").forEach(x=>x.classList.toggle("on",x.dataset.c===k));
+  if(open) syDetOpen(k); else if(!$("#sy-det").hidden) syDetFill(); }
+// painel lateral (ou em baixo, em ecrãs estreitos) com o cartão do cálculo, para não perder o esquema de vista
+function syDetKeys(){ return [...new Set([...document.querySelectorAll("#sy-how .sy-card")].map(c=>c.dataset.c))]; }
+function syDetFill(){ const k=sy.on, cs=[...document.querySelectorAll(`#sy-how .sy-card[data-c="${k}"]`)], b=$("#sy-det-b");
+  if(!cs.length){ syDetClose(); return }
+  $("#sy-det-t").textContent=cs[0].querySelector(".ttl strong").textContent.replace(/ · MPPT.*$/,"");
+  b.innerHTML=cs.map(c=>{ const x=c.cloneNode(true); x.removeAttribute("id"); x.classList.remove("on"); return x.outerHTML }).join("")+
+    `<p class="sy-det-hint">Toque noutro elemento do esquema para mudar o cálculo. Todos os cálculos estão também em «Como cheguei aqui».</p>`;
+  b.scrollTop=0; const ks=syDetKeys(), i=ks.indexOf(k); $("#sy-det-prev").disabled=i<=0; $("#sy-det-next").disabled=i<0||i>=ks.length-1; }
+function syDetPlace(){ const d=$("#sy-det"), z=$("#sy-zoom"), inZ=z.open, on=!d.hidden;
+  if(inZ&&d.parentElement!==z) z.appendChild(d); else if(!inZ&&d.parentElement===z) z.after(d);
+  document.body.classList.toggle("sy-det-on",on&&!inZ); z.classList.toggle("det-on",on&&inZ); if(inZ) syZoomDraw(); }
+function syDetOpen(k){ const d=$("#sy-det"); d.hidden=false; syDetFill(); if(!d.hidden) syDetPlace(); }
+function syDetClose(){ $("#sy-det").hidden=true; syDetPlace(); }
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#sy-det").hidden&&!$("#sy-zoom").open) syDetClose(); });
+function syInit(){
+  $("#sy-met").innerHTML=METHODS.map(x=>`<option value="${x[0]}">${x[1]} · ${x[2]}</option>`).join("");
+  for(const k of ["Ldc","dcDu","tdc","fcdc","dcMin","Lac","acDu","met","fc","Lf","rcd","RA","Ng","bldg","proj","UL"]) $("#sy-"+k).value=sy[k]??SY0[k];
+  for(const k of ["rcdB","lps","sep"]) $("#sy-"+k).checked=sy[k];
+  for(const k of ["dcInst","mat","ins","curve"]) $("#sy-"+k).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(sy[k])===b.dataset.v));
+}
+const syNum=["UL","Ldc","dcDu","tdc","fcdc","dcMin","Lac","acDu","fc","Lf","RA","Ng","Lbk"];
+document.addEventListener("change",e=>{ const id=e.target.id; if(!id.startsWith("sy-")) return; const k=id.slice(3);
+  if(k==="iac"){ const v=+e.target.value; const n=invName(pv.edit.inv); if(v>0) sy.iac[n]=v; else delete sy.iac[n]; }
+  else if(k==="ibk"){ const v=+e.target.value; const n=invName(pv.edit.inv); sy.ibk={...(sy.ibk||{})}; if(v>0) sy.ibk[n]=v; else delete sy.ibk[n]; }
+  else if(k==="cs-pc"){ try{ docS.i.pc=e.target.value; docSave(false); const d=$("#doc-i-pc"); if(d) d.value=e.target.value; }catch(err){} }
+  else if(k.startsWith("cs-")) sy.cs={...(sy.cs||{}),[k.slice(3)]:e.target.value};
+  else if(k.startsWith("o-")) sy.opt={...(sy.opt||{}),[k==="o-rcdBk"?rcdBkKey():k.slice(2)]:e.target.checked};
+  else if(["rcdB","lps","sep"].includes(k)) sy[k]=e.target.checked;
+  else if(syNum.includes(k)) sy[k]=+e.target.value||0; else sy[k]=e.target.value;
+  sySave(); sysRender(); });
+document.addEventListener("click",e=>{
+  const zb=e.target.closest("[data-zoom]"); if(zb){ syZoomOpen(zb.dataset.zoom); return }
+  if(e.target.id==="sy-z-x"){ $("#sy-zoom").close(); return }
+  if(e.target.id==="sy-z-in"||e.target.id==="sy-z-out"||e.target.id==="sy-z-fit"){ syZ.k=e.target.id==="sy-z-fit"?1:Math.min(6,Math.max(0.5,syZ.k*(e.target.id==="sy-z-in"?1.4:1/1.4))); syZoomDraw(); return }
+  const tb=e.target.closest("#sy-topo button"); if(tb){ sy.topo=tb.dataset.v; sySave(); sysRender(); return }
+  if(e.target.id==="sy-topo-auto"){ e.preventDefault(); sy.topo="auto"; sySave(); sysRender(); return }
+  const cb=e.target.closest("#sy-cs .seg button"); if(cb){ sy.cs={...(sy.cs||{}),[cb.parentElement.id.slice(6)]:cb.dataset.v}; sySave(); sysRender(); return }
+  const sb=e.target.closest("#sy-ser button"); if(sb){ sy.ser=sb.dataset.v; if(!sy.topo||sy.topo==="auto") sy.topo="series"; sySave(); sysRender(); return }
+  const ob=e.target.closest("#view-sys .sy-opt .seg button"); if(ob){ sy.opt={...(sy.opt||{}),[ob.parentElement.id.slice(5)]:ob.dataset.v}; sySave(); sysRender(); return }
+  const b=e.target.closest("#view-sys .seg button"); if(b){ const k=b.parentElement.id.slice(3); sy[k]=b.dataset.v; b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b)); sySave(); sysRender(); return }
+  if(e.target.id==="sy-det-x"){ syDetClose(); return }
+  if(e.target.id==="sy-det-prev"||e.target.id==="sy-det-next"){ const ks=syDetKeys(), i=ks.indexOf(sy.on)+(e.target.id==="sy-det-next"?1:-1); if(ks[i]) syMark(ks[i],true); return }
+  if(e.target.closest("#sy-det")) return;
+  const g=e.target.closest("#sy-svg [data-k],#sy-dcbox [data-k],#sy-acbox [data-k],#sy-z-b [data-k],#sy-kpi .kv"); if(g){ syMark(g.dataset.k||g.dataset.c,true);
+    // em ecrãs estreitos o painel fica em baixo: sobe a página se tapar o elemento tocado
+    if(!$("#sy-zoom").open&&innerWidth<1000){ const r=g.getBoundingClientRect(), top=innerHeight-$("#sy-det").offsetHeight; if(r.bottom>top-8) scrollBy({top:r.bottom-top+40}); }
+    return }
+  if(e.target.id==="sy-tocalc"){ sysToCalc(); return }
+  if(e.target.id==="pv-next"){ showTab("sys"); window.scrollTo({top:0}); return }
+  const c=e.target.closest("#sy-how .sy-card"); if(c){ syMark(c.dataset.c,false); return }
+  if(e.target.id==="sy-pdf"){ sysPdf(); return }
+  if(e.target.id==="sy-go"){ e.preventDefault(); showTab("pv"); return }
+  if(e.target.id==="sy-copy"){ const txt=[["Elemento","Especificação","Qtd."],...(sysRender.bom||[])].map(r=>r.join("\t")).join("\n");
+    navigator.clipboard.writeText(txt).then(()=>toast("Lista copiada. Cole no Excel."),()=>toast("Não foi possível copiar neste navegador.")); return }
+});
+// fecha o painel do cálculo ao sair do separador
+{ const base=showTab; showTab=function(k){ if(k!=="sys"&&!$("#sy-det").hidden) syDetClose(); base(k); }; }
+// redesenha sempre que a configuração FV muda
+{ const base=renderPvDetail; renderPvDetail=function(){ base(); sysRender(); }; }
+/* ---------- esquema do quadro DC (bipolar: + e − desenhados em separado) ---------- */
+function sysDcBox(R){
+  const {dc,N,spd}=R, P=64, top=58, bot=448;
+  const L=(x1,y1,x2,y2,c="")=>`<line class="l ${c}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  const T=(x,y,s,c="",a="start")=>`<text class="${c}" x="${x}" y="${y}" text-anchor="${a}">${s}</text>`;
+  const dot=(x,y,c="var(--ink)")=>`<circle cx="${x}" cy="${y}" r="3" fill="${c}"/>`;
+  const term=(x,y)=>`<circle class="bx" cx="${x}" cy="${y}" r="4.5"/>`;
+  const g=(k,s)=>`<g data-k="${k}">${s}</g>`;
+  let s="", x=40;
+  const blocks=dc.map(d=>{ const w=Math.max(d.c.s,1)*P+150; const b={d,x,w}; x+=w+24; return b; });
+  const W=Math.max(x+16,560), yPE=420;
+  blocks.forEach(({d,x:bx,w},bi)=>{ const j=d.j+1, n=d.c.s;
+    const xp=k=>bx+20+k*P, xm=k=>bx+44+k*P, p0=xp(0), m0=xm(0), sx=bx+n*P+40;
+    for(let k=0;k<n;k++){
+      s+=T(xp(k)+12,22,`S${j}.${k+1}`,"m","middle")+L(xp(k),28,xp(k),66,"dc")+L(xm(k),28,xm(k),66)+T(xp(k)-4,40,"+","mo","end")+T(xm(k)+4,40,"−","mo");
+      s+=term(xp(k),70)+term(xm(k),70);
+      s+=L(xp(k),75,xp(k),160,"dc")+L(xm(k),75,xm(k),178);
+      if(d.hasF) s+=g("fuse",[xp(k),xm(k)].map(xx=>`<rect class="bx" x="${xx-6}" y="${104}" width="12" height="26"/>`+L(xx,104,xx,130,xx===xp(k)?"dc":"")).join("")+T(xm(k)+10,121,`F${j}.${k+1}`,"m"));
+    }
+    if(n>1){ s+=L(p0,160,xp(n-1),160,"dc")+L(m0,178,xm(n-1),178); for(let k=0;k<n;k++) s+=dot(xp(k),160,"var(--accent)")+dot(xm(k),178); }
+    s+=T(p0-9,74,`X${j}`,"m","end")+T(p0-9,378,`X${j}`,"m","end");
+    // condutores principais da MPPT
+    s+=L(p0,160,p0,370,"dc")+L(m0,178,m0,370);
+    // descarregador DC em Y (+/PE, −/PE)
+    if(R.opt.spdDc==="ext") s+=g("spd-dc",dot(p0,212,"var(--accent)")+dot(m0,236)+L(p0,212,sx,212,"dc")+L(m0,236,sx,236)+`<rect class="bx" x="${sx}" y="196" width="56" height="58" rx="3"/>`+
+      `<path class="l" d="M${sx+14} 212 h8 M${sx+14} 236 h8 M${sx+22} 212 L${sx+34} 224 L${sx+22} 236 M${sx+34} 224 h8"/>`+
+      T(sx+28,190,`FV${j}`,"m","middle")+T(sx+62,214,`T${spd.t1?"1+2":"2"}`,"m")+T(sx+62,230,`${d.Ucpv} V`,"m")+L(sx+42,224,sx+50,224)+L(sx+50,224,sx+50,yPE,"pe"));
+    // seccionador 2P
+    if(R.opt.isoDc==="ext") s+=g("isol-dc",`<rect x="${p0-8}" y="282" width="${m0-p0+16}" height="32" fill="var(--bg)"/>`+L(p0,282,p0,286,"dc")+L(p0,286,p0-12,308,"dc")+L(p0,312,p0,316,"dc")+L(m0,282,m0,286)+L(m0,286,m0-12,308)+L(m0,312,m0,316)+
+      `<line class="l" x1="${p0-6}" y1="297" x2="${m0-6}" y2="297" stroke-dasharray="3 3"/>`+T(m0+12,294,`Q${j}`,"m")+T(m0+12,308,`${d.Ue} V · ${fmt(d.Ie,0)} A`,"m"));
+    s+=term(p0,374)+term(m0,374)+L(p0,379,p0,470,"dc")+L(m0,379,m0,470)+T((p0+m0)/2,488,`→ MPPT ${j}${N>1?" (cada inversor)":""}`,"m","middle");
+    s+=T(p0-6,400,"+","mo","end")+T(m0+6,400,"−","mo");
+  });
+  s+=g("grid",L(24,yPE,W-60,yPE,"pe")+T(28,yPE-6,"Barra PE","m")+L(W-60,yPE,W-60,yPE+14,"pe")+L(W-69,yPE+14,W-51,yPE+14,"pe")+L(W-66,yPE+18,W-54,yPE+18,"pe")+L(W-63,yPE+22,W-57,yPE+22,"pe")+T(W-60,yPE+38,`${R.pe} mm² Cu`,"m","middle"));
+  s+=`<rect x="16" y="${top-8}" width="${W-32}" height="${bot-top}" fill="none" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="8 5" rx="6"/>`+
+     T(W-24,514,`Quadro DC${N>1?` · × ${N} (um por inversor)`:""} · Classe II · IP65 · ${Math.max(...dc.map(d=>d.Ue))} V DC`,"m","end");
+  return `<svg viewBox="0 0 ${W} 524" style="min-width:0;max-width:${W}px;margin:0 auto" role="img" aria-label="Esquema do quadro DC">${s}</svg>`;
+}
+
+/* ---------- esquema do quadro AC (multifilar: fases, neutro e PE em separado) ---------- */
+function sysAcBox(R){
+  const {N,ph,ac,fd,rcd,topo,bk,bkC,rcdBk,sw,opt}=R, nc=ph==1?2:4, names=ph==1?["L","N"]:["L1","L2","L3","N"], D=22, multi=N>1;
+  const L=(x1,y1,x2,y2,c="")=>`<line class="l ${c}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  const T=(x,y,s,c="",a="start")=>`<text class="${c}" x="${x}" y="${y}" text-anchor="${a}">${s}</text>`;
+  const dot=(x,y,c="var(--ink)")=>`<circle cx="${x}" cy="${y}" r="3" fill="${c}"/>`;
+  const term=(x,y)=>`<circle class="bx" cx="${x}" cy="${y}" r="4.5"/>`;
+  const g=(k,s)=>`<g data-k="${k}">${s}</g>`;
+  const cls=i=>names[i]==="N"?"nn":"";
+  // aparelho multipolar: corte em todos os condutores, ligação mecânica a tracejado, × nas fases (disjuntor)
+  const poles=(xs,y,cross)=>`<rect x="${xs[0]-14}" y="${y-14}" width="${xs[xs.length-1]-xs[0]+28}" height="28" fill="var(--bg)"/>`+
+    xs.map((x,i)=>L(x,y-14,x,y-10,cls(i))+L(x,y-10,x-10,y+8,cls(i))+L(x,y+10,x,y+14,cls(i))+(cross&&names[i]!=="N"?L(x-4,y-14,x+4,y-6)+L(x-4,y-6,x+4,y-14):"")).join("")+
+    `<line class="l" x1="${xs[0]-5}" y1="${y-1}" x2="${xs[xs.length-1]-5}" y2="${y-1}" stroke-dasharray="3 3"/>`;
+  const torus=(xs,y)=>`<ellipse class="l" cx="${(xs[0]+xs[nc-1])/2-4}" cy="${y+22}" rx="${(xs[nc-1]-xs[0])/2+14}" ry="6"/>`;
+  const spdBox=(xs,y0,sx,tag,yPE)=>xs.map((x,i)=>dot(x,y0+i*10,i===nc-1?"var(--muted)":"var(--ink)")+L(x,y0+i*10,sx,y0+i*10,cls(i))).join("")+
+    `<rect class="bx" x="${sx}" y="${y0-12}" width="54" height="${nc*10+24}" rx="3"/>`+T(sx+27,y0-18,tag,"m","middle")+
+    `<path class="l" d="M${sx+14} ${y0} v${(nc-1)*10} M${sx+14} ${y0+(nc-1)*5} h12 l6 -6 m-6 6 l6 6"/>`+T(sx+60,y0+4,`T${sy.lps?"1+2":"2"}`,"m")+T(sx+60,y0+18,"Uc 275 V","m")+L(sx+44,y0+(nc-1)*5,sx+44,yPE,"pe");
+  let s=""; const bw=nc*D+150, gx=40+(multi?N*bw:0);
+  const yIn=70, yQ=multi?140:210, yID=multi?220:290, yBus=290, yS=multi?330:120, yQ0=430, yOut=multi?510:370, yPE=multi?480:340, H=yOut+78;
+  const xsOf=bx=>names.map((_,i)=>bx+24+i*D);
+  const bxB=multi?gx+nc*D+150:40+bw, xsB=xsOf(bxB), xpeB=xsB[nc-1]+D, xR=xpeB+80;
+  const W=bk?xR+(sw!=="none"?120:20):Math.max(gx+nc*D+250,520);
+  const outTxt=R.s5b?"→ dif. de entrada":topo==="series"?"→ contador / rede":R.pre?"→ derivação na entrada":topo==="grid"||topo==="crit"?"→ Q.G.E., a jusante do corte geral":"→ Q.G.E.";
+  for(let k=0;k<N;k++){ const bx=40+k*bw, xs=xsOf(bx), xpe=xs[nc-1]+D;
+    s+=T((xs[0]+xpe)/2,16,`Inversor ${N>1?k+1:""}${bk?" · GRID":""}`.replace("  "," ").trim(),"m","middle");
+    xs.forEach((x,i)=>{ s+=T(x,38,names[i],"mo","middle")+L(x,44,x,yIn-5,cls(i))+term(x,yIn); });
+    s+=T(xpe,38,"PE","mo","middle")+L(xpe,44,xpe,yIn-5,"pe")+term(xpe,yIn)+L(xpe,yIn+5,xpe,yPE,"pe")+dot(xpe,yPE,"var(--ok)");
+    s+=T(xs[0]-10,yIn+4,`X${k+1}`,"m","end");
+    xs.forEach((x,i)=>s+=L(x,yIn+5,x,multi?yBus+i*9:yOut-5,cls(i)));
+    if(!multi&&opt.spdAc) s+=g("spd-ac",spdBox(xs,yS,xpe+30,"FV1",yPE));
+    s+=g("mcb",poles(xs,yQ,true)+T(xpe+12,yQ-2,`Q${k+1}`,"m")+T(xpe+12,yQ+12,`${ph==1?"1P+N":"3P+N"} ${ac.c.In} A ${sy.curve}`,"m"));
+    if(opt.rcd) s+=g("rcd",poles(xs,yID,false)+torus(xs,yID)+T(xpe+12,yID-2,`ID${k+1}`,"m")+T(xpe+12,yID+12,`${rcd.poles} ${rcd.In} A`,"m")+T(xpe+12,yID+26,`${rcd.idn} mA tipo ${rcd.type}`,"m"));
+    if(!multi){ xs.forEach((x,i)=>s+=term(x,yOut)); s+=L(xpe,yPE,xpe,yOut-5,"pe")+term(xpe,yOut);
+      xs.forEach((x,i)=>s+=L(x,yOut+5,x,yOut+30,cls(i))); s+=L(xpe,yOut+5,xpe,yOut+30,"pe")+T((xs[0]+xpe)/2,yOut+46,`${outTxt} · ${esc(ac.c.des)} ${ac.r.form}`,"m","middle"); }
+  }
+  let xPEend;
+  if(multi){ const xs=xsOf(gx), xpe=xs[nc-1]+D;
+    s+=g("feeder",names.map((n,i)=>{ const y=yBus+i*9; return L(40+24+i*D,y,xs[i],y,cls(i))+Array.from({length:N},(_,k)=>dot(40+k*bw+24+i*D,y,i===nc-1?"var(--muted)":"var(--ink)")).join("")+L(xs[i],y,xs[i],yOut-5,cls(i)); }).join("")+
+      T(gx-10,yBus-8,"Barramento","m","end"));
+    if(opt.spdAc) s+=g("spd-ac",spdBox(xs,yS,xpe+30,"FV1",yPE));
+    s+=g("feeder",poles(xs,yQ0,true)+T(xpe+12,yQ0-2,"Q0 geral","m")+T(xpe+12,yQ0+12,`${ph==1?"1P+N":"3P+N"} ${fd.c.In} A`,"m"));
+    xs.forEach(x=>s+=term(x,yOut)); s+=L(xpe,yPE,xpe,yOut-5,"pe")+dot(xpe,yPE,"var(--ok)")+term(xpe,yOut);
+    xs.forEach((x,i)=>s+=L(x,yOut+5,x,yOut+30,cls(i))); s+=L(xpe,yOut+5,xpe,yOut+30,"pe")+T((xs[0]+xpe)/2,yOut+46,`${outTxt} · ${esc(fd.c.des)} ${fd.r.form}`,"m","middle");
+    xPEend=xpe+74;
+  } else xPEend=xsOf(40)[nc-1]+D+74;
+  // coluna da saída backup / EPS
+  if(bk){ const xs=xsB, xpe=xpeB, yQb=multi?140:130, y2=multi?220:200, y3=multi?330:280, yIDb=R.rcdAfter?y3:y2, ySw=R.rcdAfter?y2:y3; // S5b/S6: o 30 mA fica a jusante do comutador
+    s+=T((xs[0]+xpe)/2,16,topo==="eps"?"Saída EPS":"Saída BACKUP","m","middle");
+    xs.forEach((x,i)=>{ s+=T(x,38,names[i],"mo","middle")+L(x,44,x,yIn-5,cls(i))+term(x,yIn)+L(x,yIn+5,x,yOut-5,cls(i))+term(x,yOut)+L(x,yOut+5,x,yOut+30,cls(i)); });
+    s+=T(xpe,38,"PE","mo","middle")+L(xpe,44,xpe,yIn-5,"pe")+term(xpe,yIn)+L(xpe,yIn+5,xpe,yOut-5,"pe")+dot(xpe,yPE,"var(--ok)")+term(xpe,yOut)+L(xpe,yOut+5,xpe,yOut+30,"pe");
+    s+=T(xs[0]-10,yIn+4,"XB","m","end");
+    s+=g("bk",poles(xs,yQb,true)+T(xpe+12,yQb-2,"QB","m")+T(xpe+12,yQb+12,`${ph==1?"1P+N":"3P+N"} ${bkC.c.In} A ${sy.curve}`,"m"));
+    if(rcdBk) s+=g("rcd-bk",poles(xs,yIDb,false)+torus(xs,yIDb)+T(xpe+12,yIDb-2,"IDB","m")+T(xpe+12,yIDb+12,`${rcdBk.poles} ${rcdBk.In} A`,"m")+T(xpe+12,yIDb+26,`${rcdBk.idn} mA ${rcdBk.sel?"tipo A-S":"tipo A"}`,"m"));
+    if(sw!=="none"){ const x0=xs[0]-14, x1=xs[nc-1]+14, h=nc==2?36:48;
+      s+=g("sw",`<rect class="bx" x="${x0}" y="${ySw-h/2}" width="${x1-x0}" height="${h}" rx="3"/>`+T((x0+x1)/2,ySw+4,sw==="ats"?"ATS":"I-0-II","mo","middle")+
+        xs.map((x,i)=>{ const y=ySw-h/2+8+i*((h-16)/(nc-1)); return L(x1,y,xR-5,y,cls(i))+term(xR,y)+T(xR+10,y+4,names[i],"m"); }).join("")+
+        T(xR,ySw-h/2-12,"XR ← rede","m","middle")+T(xR,ySw+h/2+16,"(bypass)","m","middle")+T(x0-6,ySw-h/2-4,sw==="ats"?"KA":"SC","m","end"));
+    }
+    s+=T((xs[0]+xpe)/2,yOut+46,`→ ${R.s5b?"barramento dos circuitos":topo==="series"?"Q.G.E. da casa":"quadro de cargas prioritárias"} · ${esc(bkC.c.des)} ${bkC.r.form}`,"m","middle");
+    xPEend=xpe+40;
+  }
+  s+=L(multi?40:xsOf(40)[nc-1]+D,yPE,xPEend,yPE,"pe")+g("grid",multi?T(46,yPE-6,"Barra PE","m"):T(xPEend+8,yPE+4,"Barra PE","m"));
+  s+=`<rect x="16" y="52" width="${W-32}" height="${yOut-30}" fill="none" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="8 5" rx="6"/>`+T(W-24,H-4,`${R.pre||multi?"Quadro AC fotovoltaico":R.s5b?"Aparelhos novos no Q.G.E. (S5b)":topo==="grid"||topo==="crit"?`Circuito do inversor no Q.G.E. (${R.code})`:topo==="series"?"Quadro de protecção AC (S5)":"Quadro AC fotovoltaico"}${multi?` · ${N} inversores`:""}${R.isl?` · ${topo==="series"||topo==="crit"?"inversor em série":"com caixa de backup"}`:""} · ${ph==1?"230 V":"400 V"} · regime TT`,"m","end");
+  return `<svg viewBox="0 0 ${W} ${H}" style="min-width:0;max-width:${W}px;margin:0 auto" role="img" aria-label="Esquema do quadro AC">${s}</svg>`;
+}
+
+/* ---------- exportação para PDF (páginas desenhadas em canvas, PDF montado aqui, sem bibliotecas) ---------- */
+const PDFCOL={ink:"#18232b",muted:"#5d6b75",accent:"#b5612a","accent-soft":"#f6e6da",panel:"#ffffff",bg:"#ffffff",ok:"#1e7a4c",line:"#d9e0e4",soft:"#e9eef1"};
+const PDFCSS=`.l{stroke:#18232b;stroke-width:1.6;fill:none}.dc{stroke:#b5612a}.pe{stroke:#1e7a4c}.nn{stroke:#5d6b75}.bx{fill:#fff;stroke:#18232b;stroke-width:1.6}.pvc{fill:#f6e6da;stroke:#b5612a;stroke-width:1.6}.hit{fill:none;stroke:none}
+text{fill:#18232b;font-family:Arial,Helvetica,sans-serif;font-size:12px}text.m{fill:#5d6b75;font-size:11px}text.mo{font-family:"Courier New",monospace;font-size:11.5px}text.h{font-weight:bold;font-size:14px}`;
+const svgPrint=svg=>svg.replace("<svg ",`<svg xmlns="http://www.w3.org/2000/svg" `).replace(/(<svg[^>]*>)/,`$1<style>${PDFCSS}</style><rect width="100%" height="100%" fill="#fff"/>`).replace(/var\(--([a-z-]+)\)/g,(m,k)=>PDFCOL[k]||"#000");
+const svgImg=svg=>new Promise((ok,ko)=>{const i=new Image(); i.onload=()=>ok(i); i.onerror=ko; i.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svgPrint(svg));});
+const PW=2339, PH=1654, MM=PW/297;
+function pdfSheet(R,title,n,tot){
+  const c=document.createElement("canvas"); c.width=PW; c.height=PH; const x=c.getContext("2d");
+  x.fillStyle="#fff"; x.fillRect(0,0,PW,PH); x.strokeStyle=PDFCOL.ink; x.lineWidth=3; x.strokeRect(10*MM,10*MM,277*MM,190*MM);
+  x.fillStyle=PDFCOL.ink; x.font=`bold ${Math.round(5.6*MM)}px Arial`; x.fillText(title,15*MM,20*MM);
+  x.font=`${Math.round(3.3*MM)}px Arial`; x.fillStyle=PDFCOL.muted;
+  x.fillText(`${R.N>1?R.N+" × ":""}${invName(R.inv)} · ${R.e.n} × ${modName(R.m)} · ${fmt(R.e.kWp,2)} kWp · ${fmt(R.e.kWac,1)} kW AC · ${topoName(R)}`,15*MM,26*MM);
+  // legenda (carimbo)
+  const bx=167*MM, by=172*MM, bw=120*MM, bh=28*MM, rows=[["Projecto",sy.proj||"Instalação fotovoltaica"],["Desenho",title],["Local",`${pvLocShort()} · ${R.ph==1?"monofásica 230 V":"trifásica 400 V"} · regime TT${R.isl?" · "+(R.topo==="series"?"inversor em série":"caixa de backup"):""}`],["Data",new Date().toLocaleDateString("pt-PT")+`   ·   Folha ${n}/${tot}`]];
+  x.lineWidth=2.5; x.strokeRect(bx,by,bw,bh); x.lineWidth=1.2;
+  rows.forEach((r,i)=>{ const y=by+i*bh/4; if(i) {x.beginPath(); x.moveTo(bx,y); x.lineTo(bx+bw,y); x.stroke();}
+    x.fillStyle=PDFCOL.muted; x.font=`${Math.round(2.6*MM)}px Arial`; x.fillText(r[0],bx+2*MM,y+4.6*MM);
+    x.fillStyle=PDFCOL.ink; x.font=`${i<2?"bold ":""}${Math.round(3*MM)}px Arial`; x.fillText(String(r[1]).slice(0,60),bx+20*MM,y+4.8*MM); });
+  x.beginPath(); x.moveTo(bx+18*MM,by); x.lineTo(bx+18*MM,by+bh); x.stroke();
+  x.fillStyle=PDFCOL.muted; x.font=`${Math.round(2.4*MM)}px Arial`;
+  x.fillText("Pré-dimensionamento segundo as RTIEBT (secção 712) e a IEC 60364-7-712. Confirmar nas fichas e manuais dos equipamentos.",15*MM,196*MM);
+  return {c,x};
+}
+async function pdfDrawing(R,svg,title,n,tot,notes=[]){
+  const {c,x}=pdfSheet(R,title,n,tot), img=await svgImg(svg);
+  const ax=15*MM, ay=32*MM, aw=267*MM, ah=(notes.length?120:136)*MM, sc=Math.min(aw/img.width,ah/img.height);
+  x.drawImage(img,ax+(aw-img.width*sc)/2,ay,img.width*sc,img.height*sc);
+  x.fillStyle=PDFCOL.ink; x.font=`${Math.round(2.8*MM)}px Arial`; notes.forEach((t,i)=>x.fillText(t,15*MM,(158+i*4.6)*MM));
+  return c;
+}
+function pdfTable(R,title,n,tot,head,rows,cols){
+  const {c,x}=pdfSheet(R,title,n,tot); let y=36*MM; const lh=4.6*MM, f=Math.round(3*MM);
+  const wrap=(t,w)=>{ const out=[]; let line=""; for(const wd of String(t).split(" ")){ const tt=line?line+" "+wd:wd; if(x.measureText(tt).width>w&&line){out.push(line); line=wd} else line=tt } out.push(line); return out; };
+  const row=(cells,bold)=>{ x.font=`${bold?"bold ":""}${f}px Arial`; let cx=15*MM; const ls=cells.map((t,i)=>wrap(t,cols[i]*MM-3*MM)); const h=Math.max(...ls.map(l=>l.length))*lh+2*MM;
+    if(y+h>168*MM) return false;
+    x.fillStyle=bold?PDFCOL.muted:PDFCOL.ink; ls.forEach((l,i)=>{ l.forEach((t,k)=>x.fillText(t,cx,y+(k+1)*lh-1*MM)); cx+=cols[i]*MM; });
+    y+=h; x.strokeStyle=PDFCOL.line; x.lineWidth=1.5; x.beginPath(); x.moveTo(15*MM,y-1*MM); x.lineTo((15+cols.reduce((a,b)=>a+b,0))*MM,y-1*MM); x.stroke(); return true; };
+  row(head,true); for(const r of rows) if(!row(r,false)) break;
+  return c;
+}
+const b64=s=>Uint8Array.from(atob(s),ch=>ch.charCodeAt(0));
+function makePdf(canvases){
+  const enc=new TextEncoder(), parts=[], off=[]; let len=0;
+  const push=v=>{const b=typeof v==="string"?enc.encode(v):v; parts.push(b); len+=b.length;};
+  const obj=(i,f)=>{off[i]=len; push(`${i} 0 obj\n`); f(); push("\nendobj\n");};
+  const pg=canvases.map(c=>({w:c.width,h:c.height,jpg:b64(c.toDataURL("image/jpeg",0.9).split(",")[1])}));
+  push("%PDF-1.4\n");
+  obj(1,()=>push("<< /Type /Catalog /Pages 2 0 R >>"));
+  obj(2,()=>push(`<< /Type /Pages /Count ${pg.length} /Kids [${pg.map((_,i)=>`${3+3*i} 0 R`).join(" ")}] >>`));
+  pg.forEach((p,i)=>{ const a=3+3*i, [pw,ph]=p.w>p.h?["841.89","595.28"]:["595.28","841.89"], cs=`q ${pw} 0 0 ${ph} 0 0 cm /Im${i} Do Q`; // A4 ao baixo (desenhos) ou ao alto (texto)
+    obj(a,()=>push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pw} ${ph}] /Resources << /XObject << /Im${i} ${a+2} 0 R >> >> /Contents ${a+1} 0 R >>`));
+    obj(a+1,()=>push(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`));
+    obj(a+2,()=>{push(`<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpg.length} >>\nstream\n`); push(p.jpg); push("\nendstream");}); });
+  const tot=3+3*pg.length, xr=len;
+  push(`xref\n0 ${tot}\n0000000000 65535 f \n`+off.slice(1).map(o=>String(o).padStart(10,"0")+" 00000 n \n").join("")+`trailer\n<< /Size ${tot} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF\n`);
+  return new Blob(parts,{type:"application/pdf"});
+}
+// envia os circuitos AC do FV para a tabela do separador Canalizações (substitui os enviados antes)
+function sysToCalc(){ const R=sysCalc(); if(!R) return;
+  state.circuits=state.circuits.filter(c=>!c.fv);
+  const mk=(C,desc)=>{ const id=Math.max(0,...state.circuits.map(c=>c.id))+1; state.circuits.push({...C.c,id,desc,fv:true,ex:false}); return id; };
+  const id=mk(R.ac,`FV: ${R.N>1?R.N+" × ":""}${R.inv.model}${R.N>1?" (cada)":""}`); if(R.fd) mk(R.fd,"FV: quadro FV → Q.G.E.");
+  state.sel=id; render(); showTab("calc"); window.scrollTo({top:0}); toast("Circuitos AC do FV enviados para Canalizações."); }
+let SYDL=null;
+// textos para a memória descritiva (doc_part), conforme o tipo de ligação e os elementos escolhidos
+function syDoc(R){
+  const {N,ph,ac,rcd,spd,dc,m,topo,bk,bkC,rcdBk,sw,meter,opt,ibk}=R, fx=(v,d=1)=>fmt(v,d), lst=a=>{a=a.filter(Boolean); return a.length>1?a.slice(0,-1).join(", ")+" e "+a[a.length-1]:a[0]}, ao=t=>String(t).replace("selectivo","seletivo"), pol=ph==1?"1P+N":"3P+N", cada=N>1?", um por inversor":"";
+  const anyF=dc.some(d=>d.hasF);
+  const desc=(topo==="crit"
+    ?`O inversor híbrido liga em série com uma parte da instalação de utilização (cargas prioritárias): um circuito próprio do quadro geral (Q.G.E.), a jusante do aparelho geral, com ${lst(["disjuntor",opt.rcd&&(rcd.sel?"diferencial seletivo":"diferencial"),opt.spdAc&&"descarregador de sobretensões"])}, alimenta a porta de rede (GRID) do inversor, e a saída de socorro (BACKUP) alimenta um quadro de cargas prioritárias com os circuitos escolhidos. Os restantes circuitos continuam alimentados diretamente pela rede. Com a rede presente, as cargas prioritárias são alimentadas através do inversor até ${fx(N*ibk,1)} A; na falta da rede, o inversor separa-se da RESP e alimenta apenas o quadro de cargas prioritárias em modo isolado, a partir do gerador fotovoltaico${R.bat?" e da bateria":""}. Os circuitos transferidos para o quadro de cargas prioritárias levam o respetivo condutor neutro, separado do barramento de neutro do Q.G.E.${sw==="man"?" Um comutador manual I-0-II, com posição de corte e encravamento, permite alimentar o quadro de cargas prioritárias diretamente do Q.G.E. (by-pass ao inversor) para manutenção ou avaria.":sw==="ats"?" Um comutador automático com encravamento permite alimentar o quadro de cargas prioritárias diretamente do Q.G.E.":""}`
+    :R.s5b
+    ?`O inversor híbrido liga em série com a instalação de utilização, dentro do quadro geral (Q.G.E.): a jusante do aparelho geral, o diferencial de entrada${opt.rcd?` (${rcd.idn} mA, tipo ${ao(rcd.type)})`:""} e um disjuntor${opt.spdAc?", com descarregador de sobretensões,":""} alimentam a porta de rede (GRID) do inversor; a saída de socorro (BACKUP) regressa ao Q.G.E.${sw!=="none"?" através de um comutador "+(sw==="man"?"manual I-0-II":"automático"):""}${rcdBk?" e de um diferencial de 30 mA":""}, que alimenta o barramento de todos os circuitos da instalação. É eliminada a ligação direta entre o diferencial de entrada e esse barramento, para que a rede e a saída de socorro nunca fiquem em paralelo. Com a rede presente, a energia passa através do inversor até ${fx(N*ibk,1)} A; na falta da rede, o inversor separa-se da RESP e alimenta a instalação em modo isolado a partir do gerador fotovoltaico${R.bat?" e da bateria":""}.${sw==="man"?" Na posição I do comutador o barramento é alimentado diretamente da rede (by-pass ao inversor), para manutenção ou avaria.":""}`
+    :topo==="series"
+    ?`O inversor híbrido liga em série entre a rede e a instalação de utilização: a alimentação da rede, a jusante do equipamento de contagem, liga à porta de rede (GRID) do inversor através de um quadro fotovoltaico com ${lst(["disjuntor",opt.rcd&&"diferencial",opt.spdAc&&"descarregador de sobretensões"])}, e o quadro geral (Q.G.E.) da instalação de utilização passa a ser alimentado pela saída de socorro (BACKUP) do inversor. Com a rede presente, a energia passa através do inversor até ${fx(N*ibk,1)} A; na falta da rede, o inversor separa-se da RESP e alimenta a instalação em modo isolado a partir do gerador fotovoltaico${R.bat?" e da bateria":""}.${sw==="man"?" Um comutador manual I-0-II, com posição de corte e encravamento, permite alimentar o Q.G.E. diretamente da rede (by-pass ao inversor) para manutenção ou avaria.":sw==="ats"?" Um comutador automático com encravamento permite alimentar o Q.G.E. diretamente da rede.":""}`
+    :topo==="eps"
+    ?`Do lado AC, ${N>1?"cada inversor liga":"o inversor liga"} a um quadro fotovoltaico com ${lst(["disjuntor",opt.rcd&&"diferencial",opt.spdAc&&"descarregador de sobretensões"])}${N>1?", com disjuntor geral a alimentar o quadro a partir do Q.G.E.":""}, e daí ao quadro geral (Q.G.E.) da instalação de utilização. Entre o equipamento de contagem e o Q.G.E. é instalada uma caixa de backup do fabricante do inversor: na falta da rede, o seu contactor abre e separa a instalação da RESP, e o inversor passa a alimentar toda a instalação em modo isolado a partir do gerador fotovoltaico${R.bat?" e da bateria":""}; quando a rede regressa, a caixa volta a ligar a instalação à rede.`
+    :R.pre
+    ?`Do lado AC, ${N>1?"cada inversor liga":"o inversor liga"} a um quadro fotovoltaico próprio com ${lst(["disjuntor",opt.rcd&&"diferencial",opt.spdAc&&"descarregador de sobretensões"])}${N>1?", com disjuntor geral":""}, alimentado por uma derivação da entrada da instalação, a jusante do equipamento de contagem e a montante do quadro geral (Q.G.E.), que se mantém inalterado. Na falta da rede o inversor desliga (proteção anti-ilha).`
+    :`Do lado AC, ${N>1?"cada inversor liga a um quadro fotovoltaico com "+lst(["disjuntor",opt.rcd&&"diferencial",opt.spdAc&&"descarregador de sobretensões"])+", com disjuntor geral, alimentado por":"o inversor liga a"} um circuito próprio do quadro geral (Q.G.E.) da instalação de utilização, a jusante do aparelho geral e a montante do diferencial geral${N>1?"":", com "+lst(["disjuntor",opt.rcd&&"diferencial",opt.spdAc&&"descarregador de sobretensões"])}, de modo que o inversor não fica a jusante dos diferenciais de 30 mA dos circuitos de utilização. Na falta da rede o inversor desliga (proteção anti-ilha).`)
+    +` Do lado DC, cada entrada do inversor tem seccionamento em carga${opt.isoDc==="int"?" (integrado no inversor)":""}${opt.spdDc==="none"?"":` e proteção contra sobretensões${opt.spdDc==="int"?" (integrada no inversor)":""}`}.${meter?" Um medidor de energia no ponto de ligação à rede comunica com o inversor (RS485) para a gestão da energia"+(R.inj?"":" e a limitação da injeção")+".":""} O regime de neutro é TT.`;
+  const dcUl=[anyF?`Fusíveis gPV (IEC 60269-6) nos dois polos de cada string: ${[...new Set(dc.filter(d=>d.hasF&&d.fuse).map(d=>d.fuse+" A"))].join(" / ")}, ${up(Math.max(...dc.map(d=>d.voc)),VDC)} V DC.`:`Sem fusíveis de string: a corrente inversa que as outras strings podem injetar (${fx(Math.max(...dc.map(d=>d.rev)),1)} A) não excede a corrente máxima do fusível do módulo (${m.fuse_max||"—"} A).`,
+    `Seccionador DC com corte em carga, omnipolar, categoria DC-PV2 (IEC 60947-3), ${Math.max(...dc.map(d=>d.Ue))} V DC e ≥ ${fx(Math.max(...dc.map(d=>d.Ie)),1)} A por entrada${opt.isoDc==="int"?", integrado no inversor":", em quadro DC próprio"}.`,
+    opt.spdDc==="none"?(spd.need?null:`Sem descarregadores de sobretensões DC: comprimento dos cabos L = ${fx(spd.L,0)} m inferior ao comprimento crítico Lcrit = ${fx(spd.Lc,0)} m (Ng = ${fx(+sy.Ng,1)}).`)
+      :`Descarregadores de sobretensões DC ${spd.t1?"tipo 1+2":"tipo 2"}, Ucpv ≥ ${Math.max(...dc.map(d=>d.Ucpv))} V, Iscpv ≥ ${fx(Math.max(...dc.map(d=>d.Ie)),1)} A, Up ≤ 4 kV, ${opt.spdDc==="int"?"integrados no inversor":"junto ao inversor"}${spd.two?" e junto ao gerador (cabos com mais de 10 m)":""}. ${sy.lps?"O edifício tem sistema de proteção contra descargas atmosféricas.":`Comprimento dos cabos L = ${fx(spd.L,0)} m face ao comprimento crítico Lcrit = ${fx(spd.Lc,0)} m (Ng = ${fx(+sy.Ng,1)}): ${spd.need?"proteção obrigatória":"proteção recomendada"}.`}`,
+    ...(R.bat&&opt.batP?["Proteção e seccionamento DC da bateria (fusível ou disjuntor DC e seccionador) com o calibre e a tensão indicados pelo fabricante da bateria."]:[])];
+  const acUl=[`Disjuntor ${pol} de ${ac.c.In} A, curva ${sy.curve}, poder de corte ≥ 6 kA${cada} (proteção contra sobrecargas e curtos-circuitos, RTIEBT 433 e 434).`,
+    opt.rcd?`${R.s5b?"Diferencial de entrada do Q.G.E., do lado da rede, ":"Diferencial "}${rcd.poles} de ${rcd.In} A, ${rcd.idn} mA, tipo ${ao(rcd.type)}${R.s5b?", bidirecional":""}${rcd.type.startsWith("A")?" (o inversor não injeta correntes de defeito contínuas, conforme a declaração do fabricante)":""}.`
+      :`Proteção diferencial assegurada pelo diferencial a montante, no Q.G.E., seletivo e com sensibilidade compatível com a resistência de terra.`,
+    opt.spdAc?`Descarregador de sobretensões AC ${sy.lps?"tipo 1+2":"tipo 2"}, Uc ≥ 275 V, ligação ${ph==1?"1+1":"3+1"}, Up ≤ 1,5 kV, com a proteção de reserva indicada pelo fabricante${spd.acTwo?"; outro descarregador tipo 2 junto ao inversor (mais de 10 m do quadro)":""}.`:null,
+    R.fd?`Disjuntor geral do quadro FV ${pol} de ${R.fd.c.In} A.`:null,
+    R.cprod?`Contador de produção (totalizador) ${ph==1?"monofásico":"trifásico"}, bidirecional, na saída AC ${N>1?"do conjunto dos inversores, a jusante do disjuntor geral do quadro fotovoltaico":"do inversor, a jusante das respetivas proteções"}, para a contagem da energia total produzida pela UPAC${R.cpNeed?`, obrigatória por a potência instalada (${fx(R.Pinst,2)} kW) ser superior a 4 kW (artigo 95.º, n.º 1, do Decreto-Lei n.º 15/2022)`:""}, com telecontagem conforme a Portaria n.º 231/2013.`:null,
+    meter?`Medidor de energia ${ph==1?"monofásico":"trifásico"} no ponto de ligação à rede${topo==="series"?", a montante da porta GRID do inversor":topo==="crit"?", a jusante do equipamento de contagem e a montante do Q.G.E., de modo a medir toda a instalação":""}, com comunicação RS485 ao inversor.`:null,
+    ...(R.box?[`Caixa de backup ${ph==1?"monofásica":"trifásica"} entre o equipamento de contagem e o Q.G.E., com contactor de calibre não inferior ao disjuntor geral da instalação, que separa a instalação da RESP na falta de tensão da rede.`,
+      opt.npe?`Em modo isolado, o neutro da instalação é ligado à terra pela caixa de backup (ligação N–PE), para que os diferenciais continuem a funcionar em regime TT; esta ligação é desfeita quando a rede regressa.`:null]:[]),
+    ...(bk?[`Saída ${topo==="eps"?"EPS":"BACKUP"}: disjuntor ${pol} de ${bkC.c.In} A, curva ${sy.curve}${rcdBk?(R.s5b?`; no Q.G.E., a jusante da saída de socorro${sw!=="none"?" e do comutador":""}, diferencial ${rcdBk.poles} de ${rcdBk.In} A, ${rcdBk.idn} mA, tipo ${ao(rcdBk.type)}, que protege todos os circuitos da instalação de utilização, incluindo em modo isolado`:R.crit?`; no quadro de cargas prioritárias, diferencial(is) ${rcdBk.poles} de ${rcdBk.In} A, ${rcdBk.idn} mA, tipo ${ao(rcdBk.type)}, para proteção dos circuitos finais`:`, e diferencial ${rcdBk.poles} de ${rcdBk.In} A, ${rcdBk.idn} mA, tipo ${ao(rcdBk.type)}`):""}.${topo==="series"&&!R.s5b&&!rcdBk?" O troço entre a saída de socorro e o Q.G.E. é executado em classe II (cabo em tubo isolante, quadro classe II), tal como a entrada da instalação; a proteção contra contactos indiretos dos circuitos da instalação de utilização é assegurada pelos diferenciais existentes no Q.G.E., que se mantêm ativos em modo isolado através da ligação N–PE.":""}`,
+      sw==="man"?`Comutador manual I-0-II ${ph==1?"bipolar":"tetrapolar"}, com posição de corte e encravamento, que impede a ligação em paralelo da rede com a saída de socorro do inversor.`:sw==="ats"?`Comutador automático (caixa de backup) ${ph==1?"bipolar":"tetrapolar"}, com encravamento elétrico e mecânico entre a rede e a saída de socorro.`:null,
+      opt.npe?`Em modo isolado, o neutro da saída de socorro é ligado à terra (ligação N–PE pelo relé do inversor ou da caixa de backup), para que os diferenciais continuem a funcionar em regime TT; esta ligação é desfeita quando a rede regressa.`:null]:[])];
+  const acRows=bk?[{n:R.s5b?"Saída BACKUP → barramento do Q.G.E.":topo==="series"?"Saída BACKUP → Q.G.E.":"Saída BACKUP → quadro de cargas prioritárias",C:bkC,Ib:N*R.ibkG,L:syLbk()}]:[];
+  const lig=R.s5b?`A UPAC liga ao Q.G.E. da instalação de utilização, a jusante do equipamento de contagem e do aparelho geral, a seguir ao diferencial de entrada; os circuitos da instalação passam a ser alimentados pela saída de socorro do inversor. A corrente de passagem do inversor (${fx(N*ibk,1)} A) limita a potência disponível para a instalação, devendo o disjuntor geral ser compatível com esse valor.`
+    :R.pre?`A UPAC liga à instalação de utilização através de um quadro fotovoltaico próprio, alimentado por derivação a jusante do equipamento de contagem e a montante do Q.G.E.`
+    :topo==="grid"?`A UPAC liga ao Q.G.E. da instalação de utilização, a jusante do equipamento de contagem e do aparelho geral, num circuito próprio a montante do diferencial geral.`
+    :topo==="crit"?`A UPAC liga ao Q.G.E. da instalação de utilização, a jusante do equipamento de contagem e do aparelho geral, através de um circuito próprio que alimenta a porta de rede do inversor; a saída de socorro do inversor alimenta o quadro de cargas prioritárias. A corrente de passagem do inversor (${fx(N*ibk,1)} A) limita apenas as cargas prioritárias.`
+    :topo==="series"?`A UPAC liga à rede a montante do Q.G.E. da instalação de utilização, a jusante do equipamento de contagem; o Q.G.E. é alimentado pela saída de socorro do inversor. A corrente de passagem do inversor (${fx(N*ibk,1)} A) limita a potência disponível para a instalação, devendo o disjuntor geral do Q.G.E. ser compatível com esse valor.`
+    :topo==="eps"?`A UPAC liga ao Q.G.E. da instalação de utilização; entre o equipamento de contagem e o Q.G.E. fica a caixa de backup, que separa a instalação da rede quando esta falha.`
+    :`A UPAC liga ao Q.G.E. da instalação de utilização, a jusante do equipamento de contagem.`;
+  return {desc,dcUl,acUl,acRows,lig,sheets:sysSheets(R),acName:R.s5b?"Q.G.E. → inversor (GRID)":topo==="series"?"Rede → inversor (GRID)":topo==="crit"?"Q.G.E. → inversor (GRID)":R.pre?"Inversor → quadro FV":topo==="grid"?"Inversor → Q.G.E.":null,fdName:R.pre?"Quadro FV → derivação na entrada":"Quadro FV → Q.G.E."};
+}
+// folhas de desenho (também usadas no PDF do processo DGEG); o quadro DC só sai se tiver aparelhos fora do inversor
+const sysSheets=R=>["Esquema unifilar",...(R.hasDcBox?["Esquema do quadro DC"]:[]),"Esquema do quadro AC","Lista de material","Resumo do dimensionamento"];
+async function sysPdfPages(R,n0=0,tot){ sysRender.lazy=false; sysRender(); tot=tot||sysSheets(R).length;
+    const res=[...document.querySelectorAll("#sy-how .sy-card")].map(c=>[c.querySelector(".ttl strong").textContent,c.querySelector(".res").textContent]);
+    const o=R.opt, anyF=R.dc.some(d=>d.hasF);
+    const notes=[anyF?"Fusíveis gPV nos dois pólos de cada string.":"Sem fusíveis de string: no máximo 2 strings em paralelo, ou corrente inversa abaixo do limite do módulo.",
+      o.isoDc==="ext"?"Seccionador com corte em carga, omnipolar, categoria DC-PV2 (IEC 60947-3).":"Seccionador DC: o integrado no inversor (corte em carga, IEC 60947-3, declarado na ficha).",
+      o.spdDc==="int"?"Descarregador DC: o integrado no inversor. Afixar no quadro: «Atenção: partes activas DC podem continuar sob tensão depois de seccionadas».":"Afixar no quadro: «Atenção: partes activas DC podem continuar sob tensão depois de seccionadas» (IEC 60364-7-712, 712.514)."];
+    const notesAc=[`${o.rcd?"Um disjuntor e um diferencial":"Um disjuntor"} por inversor${R.N>1?"; disjuntor geral Q0 a alimentar o quadro FV a partir do Q.G.E.":""}. Regime TT: corte também do neutro.${o.rcd?"":" Diferencial a montante no Q.G.E."}`,
+      R.isl?`${R.s5b?"Inversor em série no Q.G.E. (S5b): diferencial de entrada 300 mA S → porta GRID; saída BACKUP → comutador → 30 mA novo → barramento dos circuitos (ponte do diferencial de entrada ao barramento cortada).":R.topo==="crit"?"Inversor em série com cargas prioritárias: circuito do Q.G.E. → porta GRID, saída BACKUP → quadro de cargas prioritárias (neutros separados do Q.G.E.).":R.topo==="series"?"Inversor em série: rede → porta GRID, saída BACKUP → Q.G.E. da casa.":"Caixa de backup entre o contador e o Q.G.E.: abre quando falta a rede e o inversor alimenta a casa em ilha."}${R.sw==="man"?" Comutador I-0-II com encravamento (rede e saída backup nunca em paralelo).":R.sw==="ats"?" Comutador automático com encravamento.":""}${o.npe?" Ligação N–PE em modo ilha pelo inversor ou pela caixa de backup.":""}`
+        :(o.spdAc?"Descarregador AC com a protecção de reserva (fusível ou disjuntor) indicada pelo fabricante.":"Sem descarregador AC no quadro FV: usa o do Q.G.E."),
+      R.cprod?`Contador de produção (totalizador) a jusante ${R.N>1?"de Q0":"das protecções do inversor"}, com telecontagem${R.cpNeed?": obrigatório, potência instalada "+fmt(R.Pinst,2)+" kW > 4 kW ("+CPROD_LEI+")":""}.`:null,
+      "Afixar no Q.G.E. e junto ao contador o aviso de dupla alimentação: instalação com produção própria (IEC 60364-7-712, 712.514)."].filter(Boolean);
+    const out=[]; let i=n0;
+    out.push(await pdfDrawing(R,sysSvg(R),"Esquema unifilar",++i,tot));
+    if(R.hasDcBox) out.push(await pdfDrawing(R,sysDcBox(R),"Esquema do quadro DC",++i,tot,notes));
+    out.push(await pdfDrawing(R,sysAcBox(R),"Esquema do quadro AC",++i,tot,notesAc));
+    out.push(pdfTable(R,"Lista de material",++i,tot,["Elemento","Especificação","Qtd."],sysRender.bom,[55,182,30]));
+    out.push(pdfTable(R,"Resumo do dimensionamento",++i,tot,["Elemento","Resultado"],res,[80,187]));
+    return out;
+}
+async function sysPdf(){
+  const R=sysCalc(); if(!R||!SYDL) return; const btn=$("#sy-pdf"); btn.disabled=true; btn.textContent="A preparar…";
+  try{
+    const pages=await sysPdfPages(R);
+    const name=(sy.proj||"instalacao-fv").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^\w]+/g,"-").replace(/^-|-$/g,"").toLowerCase();
+    await SYDL.save({filename:`${name}-unifilar.pdf`,data:makePdf(pages)}); toast("PDF guardado.");
+  }catch(err){ if(err?.code!=="declined") toast(err?.code==="unavailable"?"Não é possível guardar ficheiros nesta vista.":"Não consegui gerar o PDF."); }
+  finally{ btn.disabled=false; btn.textContent="Exportar PDF"; }
+}
+window.claude?.use?.("downloads").then(d=>{ SYDL=d; $("#sy-pdf").hidden=!d; $("#sy-pdf-n").hidden=!!d; }).catch(()=>{});
+syInit(); sysRender();
+</script>

@@ -1,0 +1,430 @@
+<title>Cálculo de Canalizações</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+<style>
+/* Layout: quadro (tabela-resumo dos circuitos) em cima, editor do circuito seleccionado em baixo: entradas à esquerda, resultados à direita */
+:root{
+  --bg:#f3f5f6; --panel:#ffffff; --ink:#18232b; --muted:#5d6b75; --line:#d9e0e4; --soft:#e9eef1;
+  --accent:#b5612a; --accent-ink:#ffffff; --accent-soft:#f6e6da;
+  --ok:#1e7a4c; --ok-soft:#dcf1e5; --bad:#b3261e; --bad-soft:#fbe1de; --warn:#94650a; --warn-soft:#fbf0d4;
+  --f-display:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11171b; --panel:#182127; --ink:#e4eaee; --muted:#93a2ad; --line:#2a363e; --soft:#1f2a31;
+  --accent:#e08a4f; --accent-ink:#1a1006; --accent-soft:#3a2617;
+  --ok:#5fd09a; --ok-soft:#173a29; --bad:#ff8a80; --bad-soft:#47201d; --warn:#f0c062; --warn-soft:#3d3015; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11171b; --panel:#182127; --ink:#e4eaee; --muted:#93a2ad; --line:#2a363e; --soft:#1f2a31;
+  --accent:#e08a4f; --accent-ink:#1a1006; --accent-soft:#3a2617;
+  --ok:#5fd09a; --ok-soft:#173a29; --bad:#ff8a80; --bad-soft:#47201d; --warn:#f0c062; --warn-soft:#3d3015; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45}
+.wrap{max-width:1180px;width:100%;box-sizing:border-box;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+/* PC: a app ocupa a largura da janela (até 2400 px) em vez de ficar numa coluna de 1180 px */
+@media (min-width:1240px){.wrap{max-width:2400px;padding-left:max(28px,2vw);padding-right:max(28px,2vw)}}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:.01em}
+h1{font-size:30px;font-weight:700}
+h2{font-size:20px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.num,td.n,.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+header p{margin:4px 0 0;color:var(--muted);max-width:62ch}
+.tabs{display:flex;gap:4px;background:var(--soft);padding:4px;border-radius:8px}
+.tabs button{border:0;background:transparent;color:var(--muted);padding:7px 14px;border-radius:6px;font:inherit;font-weight:500;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:12px 16px}
+.bar label{display:flex;gap:8px;align-items:center;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:7px 12px;border-radius:7px;font:inherit;font-weight:500;cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{border-color:transparent;color:var(--muted)}
+.btn.danger{color:var(--bad)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.spacer{flex:1}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{font-weight:600;color:var(--muted);text-align:left;font-size:12px;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--soft);white-space:nowrap}
+td.n,th.n{text-align:right}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--soft)}
+tbody tr.sel{background:var(--accent-soft)}
+tbody tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.na{background:var(--soft);color:var(--muted)}
+.tag{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--warn);background:var(--warn-soft);padding:1px 6px;border-radius:4px;margin-left:6px}
+.editor{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:0}
+@media (max-width:860px){.editor{grid-template-columns:1fr}}
+.inputs{padding:16px;display:flex;flex-direction:column;gap:18px;border-right:1px solid var(--line)}
+@media (max-width:860px){.inputs{border-right:0;border-bottom:1px solid var(--line)}}
+.edhead{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.edhead input{font-family:var(--f-display);font-size:22px;font-weight:600;border:0;border-bottom:1px dashed var(--line);background:transparent;color:var(--ink);padding:2px 0;flex:1;min-width:0}
+fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 12px}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f>span{font-size:12px;color:var(--muted);font-weight:500}
+.f small{font-size:11.5px;color:var(--muted)}
+input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px;width:100%;min-width:0}
+input[type=number]{font-family:var(--f-mono)}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:2px;gap:2px}
+.seg button{flex:1;border:0;background:transparent;color:var(--muted);font:inherit;padding:5px 6px;border-radius:4px;cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);font-weight:600;box-shadow:0 0 0 1px var(--line)}
+.results{padding:16px;display:flex;flex-direction:column;gap:16px;background:var(--soft);border-radius:0 10px 10px 0}
+@media (max-width:860px){.results{border-radius:0 0 10px 10px}}
+.big{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.kv{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.kv .k{font-size:12px;color:var(--muted)}
+.kv .v{font-family:var(--f-mono);font-size:20px;font-weight:500}
+.kv .v small{font-size:12px;color:var(--muted);margin-left:3px}
+.kv .s{font-size:11.5px;color:var(--muted)}
+.check{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.check .mark{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:700}
+.check.ok .mark{background:var(--ok-soft);color:var(--ok)}
+.check.bad .mark{background:var(--bad-soft);color:var(--bad)}
+.check.na .mark{background:var(--soft);color:var(--muted)}
+.check .t{font-weight:600}
+.check .d{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.formation{font-family:var(--f-mono);font-size:15px;background:var(--panel);border:1px dashed var(--accent);border-radius:8px;padding:10px 12px}
+.note{font-size:12.5px;color:var(--muted);margin:0}
+.msg{font-size:13px;padding:8px 10px;border-radius:6px;background:var(--warn-soft);color:var(--warn)}
+.ref{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.ref .panel{padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.ref table td,.ref table th{padding:5px 8px}
+.ref tbody tr{cursor:default}
+details summary{cursor:pointer;color:var(--muted);font-weight:500}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-weight:500}
+@media (prefers-reduced-motion:no-preference){.kv,.check{transition:background .2s}}
+</style>
+
+<div class="wrap">
+  <div class="panel bar prj-bar" id="prj-bar">
+    <label class="f prj-name"><span>Projecto</span><input id="prj-name" placeholder="Nome do projecto (ex.: Moradia Silva, Leiria)"></label>
+    <span class="note" id="prj-st"></span>
+    <span class="spacer"></span>
+    <button class="btn" id="prj-new">Novo</button>
+    <label class="btn" for="prj-open">Abrir…</label><input id="prj-open" type="file" accept=".json,application/json" hidden>
+    <button class="btn pri" id="prj-save">Guardar projecto</button>
+  </div>
+  <header>
+    <div>
+      <h1>Cálculo de Canalizações</h1>
+      <p>Dimensionamento de cabos alimentadores segundo as RTIEBT: corrente de serviço, corrente admissível, protecção contra sobrecargas e queda de tensão. As mesmas regras e tabelas da folha <span class="mono">Calculo_Canaliz.xls</span>.</p>
+    </div>
+    <div class="tabs" role="tablist">
+      <button id="tab-pv" role="tab" aria-selected="false">1 · Fotovoltaico</button>
+      <button id="tab-sys" role="tab" aria-selected="false">2 · Unifilar e protecções</button>
+      <button id="tab-prod" role="tab" aria-selected="false">3 · Produção e poupança</button>
+      <button id="tab-doc" role="tab" aria-selected="false">4 · Processo DGEG</button>
+      <button id="tab-calc" role="tab" aria-selected="true">Canalizações</button>
+      <button id="tab-ref" role="tab" aria-selected="false">Tabelas</button>
+    </div>
+  </header>
+
+  <section id="view-calc" style="display:flex;flex-direction:column;gap:18px">
+    <div class="panel bar">
+      <label for="g-qd">Quadro <input id="g-qd" style="width:120px"></label>
+      <label for="g-du">ΔU máx. <input id="g-du" type="number" step="0.5" min="0" style="width:72px"> %</label>
+      <label for="g-mode">Queda de tensão
+        <select id="g-mode" style="width:auto">
+          <option value="excel">Fórmula da folha original</option>
+          <option value="rtiebt">Fórmula RTIEBT (corrigida)</option>
+        </select>
+      </label>
+      <span class="spacer"></span>
+      <button class="btn" id="b-copy">Copiar tabela para Excel</button>
+      <button class="btn pri" id="b-add">+ Circuito</button>
+    </div>
+
+    <div class="panel tbl">
+      <table>
+        <thead><tr>
+          <th>N.º</th><th>Circuito</th><th class="n">P (kW)</th><th class="n">U (V)</th><th class="n">Ib (A)</th><th>Protecção</th><th>Cabo</th><th>Mét.</th><th class="n">I'z (A)</th><th class="n">L (m)</th><th class="n">ΔU (%)</th><th>Ib≤In≤I'z</th><th>I2≤1,45I'z</th><th>ΔU</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+
+    <div class="panel editor" id="editor"></div>
+  </section>
+
+  <section id="view-ref" hidden>
+    <div class="ref" id="refs"></div>
+  </section>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ---- funcionamento fora do claude.ai (domínio próprio ou ficheiro local, com ou sem internet) ----
+   Descargas: no claude.ai usa a capacidade "downloads"; fora dele descarrega directamente pelo browser.
+   Excel: a biblioteca SheetJS só é carregada quando se importa um .xlsx/.xls (primeiro xlsx.full.min.js
+   na mesma pasta da app, se existir; senão do cdnjs). CSV lê-se sempre sem biblioteca, mesmo offline. */
+const LOCAL_DL={save:async({filename,data})=>{ const ext=(filename.split(".").pop()||"").toLowerCase();
+  const type={pdf:"application/pdf",json:"application/json",docx:"application/vnd.openxmlformats-officedocument.wordprocessingml.document",csv:"text/csv"}[ext]||"application/octet-stream";
+  const url=URL.createObjectURL(data instanceof Blob?data:new Blob([data],{type})), a=document.createElement("a");
+  a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),60000); }};
+function fvDownloads(){ return window.claude?.use ? window.claude.use("downloads").then(d=>d||null,()=>null) : Promise.resolve(LOCAL_DL); }
+let XLSXP=null;
+function xlsxLoad(){ if(window.XLSX) return Promise.resolve(window.XLSX); if(XLSXP) return XLSXP;
+  const tryS=src=>new Promise((ok,ko)=>{ const s=document.createElement("script"); s.src=src; s.onload=()=>window.XLSX?ok(window.XLSX):ko(); s.onerror=()=>{s.remove();ko()}; document.head.appendChild(s); });
+  XLSXP=(location.protocol==="blob:"||location.hostname.endsWith("claude.ai")||location.hostname.endsWith("claudeusercontent.com")?Promise.reject():tryS("xlsx.full.min.js"))
+    .catch(()=>tryS("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js")).catch(()=>{ XLSXP=null; throw new Error("sem-xlsx"); });
+  return XLSXP; }
+function csvRows(t){ t=t.replace(/^﻿/,""); const first=t.split(/\r?\n/,1)[0]||"";
+  const sep=[";","\t",","].map(c=>[c,first.split(c).length]).sort((a,b)=>b[1]-a[1])[0][0];
+  const rows=[]; let row=[], f="", q=false;
+  for(let i=0;i<t.length;i++){ const c=t[i];
+    if(q){ if(c==='"'){ if(t[i+1]==='"'){f+='"';i++} else q=false } else f+=c; continue }
+    if(c==='"') q=true; else if(c===sep){ row.push(f); f="" } else if(c==="\n"||c==="\r"){ if(c==="\r"&&t[i+1]==="\n") i++; row.push(f); rows.push(row); row=[]; f="" } else f+=c; }
+  if(f!==""||row.length){ row.push(f); rows.push(row) }
+  return rows.map(r=>r.map(v=>{ v=v.trim(); return /^-?\d+([.,]\d+)?$/.test(v)?+v.replace(",","."):v })); }
+/* devolve uma lista de folhas, cada uma uma lista de linhas; CSV sem biblioteca, Excel com SheetJS */
+async function readSheets(file,buf,raw){
+  if(/\.(csv|txt)$/i.test(file.name)){ let t; try{ t=new TextDecoder("utf-8",{fatal:true}).decode(buf) }catch(_){ t=new TextDecoder("windows-1252").decode(buf) } return [csvRows(t)]; }
+  const X=await xlsxLoad(); const wb=X.read(new Uint8Array(buf),{type:"array",raw:false});
+  return wb.SheetNames.map(n=>X.utils.sheet_to_json(wb.Sheets[n],{header:1,raw})); }
+function xlsxOffMsg(){ toast("Para ler ficheiros Excel é preciso internet. Sem internet, guarde o ficheiro como CSV e importe-o."); }
+</script>
+<script>
+/*DATA*/
+const SECTIONS=[1.5,2.5,4,6,10,16,25,35,50,70,95,120,150,185,240,300,400,500,630];
+const METHODS=[
+  ["A","A","Condutores isolados em conduta embebida em parede termicamente isolante"],
+  ["A2","A2","Cabo multicondutor em conduta embebida em parede termicamente isolante"],
+  ["B","B","Condutores isolados em conduta à vista ou embebida em parede"],
+  ["B2","B2","Cabo multicondutor em conduta à vista ou embebida em parede"],
+  ["C","C","Cabos fixados directamente sobre parede ou embebidos"],
+  ["D","D","Cabos enterrados"],
+  ["E","E","Cabo multicondutor ao ar livre (ex.: caminho de cabos perfurado)"],
+  ["F2","F (2 cond.)","Cabos monocondutores ao ar livre, 2 condutores carregados"],
+  ["Ftri","F (em triângulo)","Monocondutores ao ar livre, 3 condutores em triângulo"],
+  ["Festeira","F (esteira s/ afast.)","Monocondutores ao ar livre, em esteira sem afastamento"],
+  ["Ghor","G (afast. horizontal)","Monocondutores ao ar livre, afastados na horizontal"],
+  ["Gvert","G (afast. vertical)","Monocondutores ao ar livre, afastados na vertical"]];
+const PROTS=[["D (M)","Disjuntor modular","M"],["D (O)","Disjuntor (outro)","O"],["DF (M)","Disjuntor diferencial modular","M"],["DF (O)","Disjuntor diferencial (outro)","O"],["F","Fusível","F"]];
+const fmt=(v,d=1)=>v==null||!isFinite(v)?"–":v.toLocaleString("pt-PT",{minimumFractionDigits:d,maximumFractionDigits:d});
+const fS=s=>String(s).replace(".",",");
+const methLabel=m=>(METHODS.find(x=>x[0]===m)||[,m])[1];
+
+const EXAMPLES=[
+  {id:1,desc:"Inversor FV trifásico",ex:true,P:10,cos:1,U:400,prot:"D (M)",In:20,mat:"Cu",ins:"XLPE",cond:5,n:1,S:6,met:"C",fc:1,L:25,des:"XV"},
+  {id:2,desc:"Bomba de calor",ex:true,P:3.5,cos:0.9,U:230,prot:"DF (M)",In:20,mat:"Cu",ins:"PVC",cond:3,n:1,S:2.5,met:"B2",fc:1,L:18,des:"VV"},
+  {id:3,desc:"Alimentação quadro parcial",ex:true,P:40,cos:0.9,U:400,prot:"D (O)",In:80,mat:"Cu",ins:"XLPE",cond:1,n:3,S:25,met:"Ftri",fc:0.9,L:60,des:"XV"}];
+let state={qd:"Q.G.E.",du:3,mode:"excel",sel:1,circuits:EXAMPLES};
+try{const s=JSON.parse(localStorage.getItem("canaliz-v1"));if(s&&Array.isArray(s.circuits))state=s}catch(e){}
+const save=()=>{try{localStorage.setItem("canaliz-v1",JSON.stringify(state))}catch(e){}};
+
+/* ---- Cálculo (mesmas regras da folha) ---- */
+function izTable(c){ // valor de tabela por cabo; null se não existir
+  const t=IZ[c.mat]?.[c.ins]?.[c.met]; if(!t) return null;
+  const col=c.cond<3?"2":"3"; // folha: N.º condutores < 3 → 2 condutores carregados
+  const v=t[col]?.[String(c.S)]; return v==null?null:v;
+}
+function I2of(c){
+  const k=(PROTS.find(p=>p[0]===c.prot)||[])[2]; const l=PROT[k]; if(!l||!c.In) return null;
+  let r=null; for(const [In,i2] of l){ if(In<=c.In) r=i2; } return r; // PROCV aproximado, como na folha
+}
+function calc(c,g=state){
+  const r={};
+  const cos=+c.cos, U=+c.U;
+  r.Ib = cos>0 ? (U===230 ? c.P*1000/(230*cos) : c.P*1000/(Math.sqrt(3)*400*cos)) : null;
+  const t=izTable(c); r.izUnit=t;
+  const mult = c.cond==1 ? Math.trunc(c.n/3) : c.n; // monocondutores: grupos de 3 cabos
+  r.mult=mult;
+  r.Iz = t==null?null:t*mult;
+  r.Izc = r.Iz==null?null:r.Iz*(+c.fc||0);
+  r.I2 = I2of(c);
+  r.lim = r.Izc==null?null:1.45*r.Izc;
+  const sin=Math.sin(Math.acos(Math.min(1,Math.max(0,cos))));
+  if(r.Ib!=null && c.S && c.L){
+    if(g.mode==="excel"){
+      const gam=c.mat==="Cu"?56:36, k=U===230?2:1;
+      r.dU = (k*r.Ib/gam*c.L*cos)/(c.n*c.S) + 0.08*c.L*sin;
+      r.dUp = 100*r.dU/U;
+    }else{
+      const rho=c.mat==="Cu"?0.0225:0.036, lam=0.00008, b=U===230?2:1;
+      const par = c.cond==1 ? Math.max(1,Math.trunc(c.n/(U===230?2:3))) : c.n;
+      r.dU = b*(rho*c.L/(c.S*par)*cos + lam*c.L/par*sin)*r.Ib;
+      r.dUp = 100*r.dU/230;
+    }
+  }
+  r.c1 = (r.Ib==null||!c.In||r.Izc==null)?null : (r.Ib<=c.In && c.In<=r.Izc);
+  r.c2 = (r.I2==null||r.lim==null)?null : (r.I2<=r.lim);
+  r.c3 = r.dUp==null?null : r.dUp<=g.du;
+  // condutor de protecção (Quadro da folha, secções > 16 mm²)
+  r.pe=null; if(c.S>16){ let v=null; for(const [s,,p] of PE){ if(s<=c.S) v=p; } r.pe=v; }
+  r.form = formation(c,r);
+  return r;
+}
+function formation(c,r){
+  if(c.cond==1){ const pe=r.pe?` + 1G${fS(r.pe)} (PE)`:""; return `${c.n} × (1x${fS(c.S)})${pe}`; }
+  if(c.S<=16) return `${c.cond}G${fS(c.S)}`;
+  if(c.cond==5) return `${c.cond}x${fS(c.S)}`;
+  return `${c.cond}x${fS(c.S)}` + (r.pe?` + ${fS(r.pe)} (PE)`:"");
+}
+function autoSize(c){
+  const ib=calc(c).Ib; if(ib==null) return "Indique a potência e o cos φ primeiro.";
+  const k=(PROTS.find(p=>p[0]===c.prot)||[])[2]; const list=PROT[k].map(x=>x[0]);
+  let In=c.In; if(!In||In<ib) In=list.find(x=>x>=ib);
+  for(const S of SECTIONS){
+    const t={...c,In,S}; const r=calc(t);
+    if(r.Izc==null) continue;
+    if(r.c1 && r.c2 && (r.c3!==false)) { c.In=In; c.S=S; return null; }
+  }
+  return "Não encontrei secção que cumpra todas as verificações com este método e número de cabos. Experimente mais cabos em paralelo.";
+}
+
+/* ---- Interface ---- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const pill=(v,okT="Cumpre",badT="Não cumpre")=>v==null?`<span class="pill na">—</span>`:v?`<span class="pill ok">✓ ${okT}</span>`:`<span class="pill bad">✕ ${badT}</span>`;
+const cur=()=>state.circuits.find(c=>c.id===state.sel)||state.circuits[0];
+
+function renderRows(){
+  $("#rows").innerHTML=state.circuits.map((c,i)=>{const r=calc(c);return `<tr data-id="${c.id}" class="${c.id===cur()?.id?"sel":""}">
+    <td class="n">${i+1}</td><td>${esc(c.desc)||"<span style='color:var(--muted)'>Sem nome</span>"}${c.ex?'<span class="tag">exemplo</span>':""}</td>
+    <td class="n">${fmt(c.P,2)}</td><td class="n">${c.U}</td><td class="n">${fmt(r.Ib)}</td>
+    <td>${c.prot} ${c.In||"–"} A</td><td class="mono">${esc(c.des)} ${r.form}</td><td>${methLabel(c.met)}</td>
+    <td class="n">${fmt(r.Izc)}</td><td class="n">${fmt(c.L,0)}</td><td class="n">${fmt(r.dUp,2)}</td>
+    <td>${pill(r.c1,"OK","Falha")}</td><td>${pill(r.c2,"OK","Falha")}</td><td>${pill(r.c3,"OK","Excede")}</td></tr>`}).join("")
+    || `<tr><td colspan="14" style="color:var(--muted)">Sem circuitos. Use “+ Circuito” para começar.</td></tr>`;
+}
+function seg(id,opts,val){return `<div class="seg" id="${id}">${opts.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${String(v)===String(val)}">${l}</button>`).join("")}</div>`}
+function renderEditor(){
+  const c=cur(); const ed=$("#editor");
+  if(!c){ed.innerHTML=`<div style="padding:16px;color:var(--muted)">Adicione um circuito para ver o cálculo.</div>`;return}
+  const k=(PROTS.find(p=>p[0]===c.prot)||[])[2];
+  const meth=METHODS.find(m=>m[0]===c.met);
+  ed.innerHTML=`<div class="inputs">
+    <div class="edhead"><input id="e-desc" value="${esc(c.desc)}" placeholder="Descrição do circuito" aria-label="Descrição do circuito">
+      <button class="btn ghost" id="b-dup">Duplicar</button><button class="btn ghost danger" id="b-del">Apagar</button></div>
+    <fieldset><h3>1 · Carga</h3><div class="grid">
+      <label class="f"><span>Potência (kW)</span><input id="e-P" type="number" step="0.1" min="0" value="${c.P}"></label>
+      <label class="f"><span>cos φ</span><input id="e-cos" type="number" step="0.01" min="0" max="1" value="${c.cos}"></label>
+      <div class="f"><span>Tensão</span>${seg("e-U",[[230,"230 V mono"],[400,"400 V tri"]],c.U)}</div>
+    </div></fieldset>
+    <fieldset><h3>2 · Protecção</h3><div class="grid">
+      <label class="f"><span>Tipo de aparelho</span><select id="e-prot">${PROTS.map(p=>`<option value="${p[0]}" ${p[0]===c.prot?"selected":""}>${p[0]} · ${p[1]}</option>`).join("")}</select></label>
+      <label class="f"><span>In – corrente estipulada (A)</span><select id="e-In"><option value="">—</option>${PROT[k].map(([v])=>`<option ${v==c.In?"selected":""}>${v}</option>`).join("")}</select></label>
+    </div></fieldset>
+    <fieldset><h3>3 · Cabo</h3><div class="grid">
+      <div class="f"><span>Material da alma</span>${seg("e-mat",[["Cu","Cobre"],["Al","Alumínio"]],c.mat)}</div>
+      <div class="f"><span>Isolamento</span>${seg("e-ins",[["PVC","PVC (V)"],["XLPE","XLPE (X)"]],c.ins)}</div>
+      <label class="f"><span>Condutores por cabo</span><select id="e-cond">${[[1,"1 · monocondutor"],[2,"2"],[3,"3"],[4,"4"],[5,"5"]].map(([v,l])=>`<option value="${v}" ${v==c.cond?"selected":""}>${l}</option>`).join("")}</select></label>
+      <label class="f"><span>N.º de cabos</span><input id="e-n" type="number" min="1" step="1" value="${c.n}">${c.cond==1?`<small>Monocondutores: conte todos (3 por circuito)</small>`:`<small>Cabos em paralelo</small>`}</label>
+      <label class="f"><span>Secção S (mm²)</span><select id="e-S">${SECTIONS.map(s=>`<option value="${s}" ${s==c.S?"selected":""}>${fS(s)}</option>`).join("")}</select></label>
+      <label class="f"><span>Designação</span><input id="e-des" list="dl-des" value="${esc(c.des)}" placeholder="ex.: XV"></label>
+    </div></fieldset>
+    <fieldset><h3>4 · Instalação</h3><div class="grid">
+      <label class="f" style="grid-column:1/-1"><span>Método de referência (Quadro 52H)</span><select id="e-met">${METHODS.map(m=>`<option value="${m[0]}" ${m[0]===c.met?"selected":""}>${m[1]} · ${m[2]}</option>`).join("")}</select></label>
+      <label class="f"><span>Factor de correcção F.c.</span><input id="e-fc" type="number" step="0.01" min="0" value="${c.fc}"><small>Temperatura, agrupamento…</small></label>
+      <label class="f"><span>Comprimento L (m)</span><input id="e-L" type="number" step="1" min="0" value="${c.L}"></label>
+    </div></fieldset>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn pri" id="b-auto">Dimensionar automaticamente</button><span class="note">Escolhe o menor In ≥ Ib e a menor secção que cumpre as três verificações.</span></div>
+    <div id="automsg"></div>
+  </div>
+  <div class="results" id="res"></div>`;
+  renderResults();
+}
+function renderResults(){
+  const c=cur(); if(!c) return; const r=calc(c);
+  let warn="";
+  if(r.izUnit==null) warn=`<div class="msg">Não há corrente admissível tabelada para ${c.mat}/${c.ins}, ${fS(c.S)} mm², método ${methLabel(c.met)}${c.met==="F2"&&c.cond>=3?" (este método só se aplica a cabos com menos de 3 condutores)":""}. Escolha outra secção ou método.</div>`;
+  else if(r.mult===0) warn=`<div class="msg">Com cabos monocondutores a folha conta grupos de 3 cabos. Indique pelo menos 3 cabos.</div>`;
+  $("#res").innerHTML=`<h3>Resultados</h3>${warn}
+  <div class="big">
+    <div class="kv"><div class="k">Ib · corrente de serviço</div><div class="v">${fmt(r.Ib)}<small>A</small></div><div class="s">${c.U==230?"P / (230·cos φ)":"P / (√3·400·cos φ)"}</div></div>
+    <div class="kv"><div class="k">In · protecção</div><div class="v">${c.In||"–"}<small>A</small></div><div class="s">${c.prot}</div></div>
+    <div class="kv"><div class="k">Iz · admissível</div><div class="v">${fmt(r.Iz)}<small>A</small></div><div class="s">${r.izUnit==null?"—":`${fmt(r.izUnit)} A × ${r.mult}${["Ftri","Festeira","Ghor","Gvert"].includes(c.met)?"":` (${c.cond<3?2:3} cond. carregados)`}`}</div></div>
+    <div class="kv"><div class="k">I'z · corrigida</div><div class="v">${fmt(r.Izc)}<small>A</small></div><div class="s">Iz × F.c. ${fmt(+c.fc,2)}</div></div>
+    <div class="kv"><div class="k">I2 · funcionamento</div><div class="v">${fmt(r.I2,2)}<small>A</small></div><div class="s">1,45 × I'z = ${fmt(r.lim,2)} A</div></div>
+    <div class="kv"><div class="k">ΔU · queda de tensão</div><div class="v">${fmt(r.dUp,2)}<small>%</small></div><div class="s">${fmt(r.dU,2)} V em ${fmt(c.L,0)} m</div></div>
+  </div>
+  <div class="check ${r.c1==null?"na":r.c1?"ok":"bad"}"><div class="mark">${r.c1==null?"–":r.c1?"✓":"✕"}</div><div><div class="t">Ib ≤ In ≤ I'z</div><div class="d">${fmt(r.Ib)} ≤ ${c.In||"–"} ≤ ${fmt(r.Izc)}</div>${r.c1===false?`<div class="note">${r.Ib>c.In?"A protecção é inferior à corrente de serviço: aumente In.":"A protecção excede a corrente admissível do cabo: aumente a secção ou reduza In."}</div>`:""}</div></div>
+  <div class="check ${r.c2==null?"na":r.c2?"ok":"bad"}"><div class="mark">${r.c2==null?"–":r.c2?"✓":"✕"}</div><div><div class="t">I2 ≤ 1,45 × I'z</div><div class="d">${fmt(r.I2,2)} ≤ ${fmt(r.lim,2)}</div>${r.c2===false?`<div class="note">Protecção contra sobrecargas insuficiente: aumente a secção.</div>`:""}</div></div>
+  <div class="check ${r.c3==null?"na":r.c3?"ok":"bad"}"><div class="mark">${r.c3==null?"–":r.c3?"✓":"✕"}</div><div><div class="t">ΔU ≤ ${fmt(state.du,1)} %</div><div class="d">${fmt(r.dUp,2)} % · ${state.mode==="excel"?"fórmula da folha":"fórmula RTIEBT"}</div>${r.c3===false?`<div class="note">Queda de tensão excessiva: aumente a secção ou reduza o comprimento.</div>`:""}</div></div>
+  <div><h3 style="margin-bottom:6px">Formação do cabo</h3><div class="formation">${esc(c.des)} ${r.form}</div>
+  <p class="note" style="margin-top:6px">Acima de 16 mm² o condutor de protecção segue a tabela de secções da folha (Art.º 615.º).</p></div>`;
+}
+function render(){renderRows();renderEditor();save()}
+function upd(){renderRows();renderResults();save()}
+
+document.addEventListener("input",e=>{
+  const c=cur(); if(!c) return; const id=e.target.id; if(!id.startsWith("e-")) return;
+  const key=id.slice(2), v=e.target.value;
+  const numeric=["P","cos","n","fc","L","S","In","cond"];
+  c[key]= numeric.includes(key) ? (v===""?"":+v) : v;
+  if(c.ex){c.ex=false}
+  if(key==="cond"||key==="prot"){ if(key==="prot"){const k=(PROTS.find(p=>p[0]===c.prot)||[])[2]; if(!PROT[k].some(x=>x[0]==c.In)) c.In="";} renderEditor(); }
+  upd();
+});
+document.addEventListener("click",e=>{
+  const b=e.target.closest("#editor .seg button");
+  if(b){const c=cur(); const key=b.parentElement.id.slice(2); const v=b.dataset.v; c[key]=key==="U"?+v:v; c.ex=false;
+    b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b)); upd(); return}
+  const tr=e.target.closest("#rows tr[data-id]"); if(tr){state.sel=+tr.dataset.id; render(); $("#editor").scrollIntoView({behavior:"smooth",block:"start"}); return}
+  if(e.target.id==="b-add"){const id=Math.max(0,...state.circuits.map(c=>c.id))+1; state.circuits.push({id,desc:"Novo circuito",P:5,cos:0.9,U:230,prot:"D (M)",In:"",mat:"Cu",ins:"XLPE",cond:3,n:1,S:2.5,met:"C",fc:1,L:20,des:"XV"}); state.sel=id; render(); return}
+  if(e.target.id==="b-dup"){const c=cur(); const id=Math.max(...state.circuits.map(c=>c.id))+1; state.circuits.push({...c,id,desc:c.desc+" (cópia)",ex:false}); state.sel=id; render(); return}
+  if(e.target.id==="b-del"){
+    if(e.target.dataset.confirm){state.circuits=state.circuits.filter(c=>c.id!==state.sel); state.sel=state.circuits[0]?.id; render()}
+    else{e.target.dataset.confirm=1; e.target.textContent="Confirmar apagar"; setTimeout(()=>{if(e.target.isConnected){delete e.target.dataset.confirm;e.target.textContent="Apagar"}},3000)} return}
+  if(e.target.id==="b-auto"){const c=cur(); const m=autoSize(c); c.ex=false; render(); $("#automsg").innerHTML=m?`<div class="msg">${m}</div>`:`<p class="note" style="color:var(--ok)">Dimensionado: In ${c.In} A, S ${fS(c.S)} mm².</p>`; return}
+  if(e.target.id==="b-copy"){copyTable(); return}
+  if(["tab-calc","tab-pv","tab-sys","tab-prod","tab-doc","tab-ref"].includes(e.target.id)){showTab(e.target.id.slice(4)); return}
+});
+$("#g-qd").value=state.qd; $("#g-du").value=state.du; $("#g-mode").value=state.mode;
+$("#g-qd").addEventListener("input",e=>{state.qd=e.target.value;save()});
+$("#g-du").addEventListener("input",e=>{state.du=+e.target.value||0;upd()});
+$("#g-mode").addEventListener("change",e=>{state.mode=e.target.value;upd()});
+
+const HEAD={calc:["Cálculo de Canalizações","Dimensionamento de cabos alimentadores segundo as RTIEBT: corrente de serviço, corrente admissível, protecção contra sobrecargas e queda de tensão. As mesmas regras e tabelas da folha <span class=\"mono\">Calculo_Canaliz.xls</span>."],
+  pv:["Dimensionamento Fotovoltaico","Indique a potência e o local. A app procura a melhor combinação de painéis e inversores, verifica Voc, Vmpp, Isc e Impp contra os limites do inversor às temperaturas do local e mostra cada passo do cálculo."],
+  sys:["Unifilar e Protecções","Esquema unifilar da configuração escolhida no separador Fotovoltaico, com cabos DC e AC, fusíveis, seccionador, disjuntor, diferencial e descarregadores de sobretensões, segundo as RTIEBT e a IEC 60364-7-712. Cada valor mostra como foi calculado."],
+  prod:["Produção e Poupança","Produção mensal para a orientação e a inclinação do telhado, autoconsumo face ao perfil de consumo, dimensionamento da bateria e retorno do investimento. Pode importar o ficheiro do PVGIS e o diagrama de consumos da E-REDES."],
+  doc:["Processo DGEG","Memória descritiva, termo de responsabilidade e dados para o portal do autoconsumo, gerados a partir dos cálculos dos outros separadores. Saem em Word, para editar, e em PDF, junto com o unifilar, os quadros e a lista de material."],
+  ref:["Tabelas de Referência","Correntes admissíveis, aparelhos de protecção, secções e coeficientes usados nos cálculos."]};
+function showTab(k){["calc","pv","sys","prod","doc","ref"].forEach(x=>{$("#view-"+x).hidden=x!==k; $("#tab-"+x).setAttribute("aria-selected",x===k)}); if(k==="sys"&&typeof sysRender==="function") sysRender(); if(k==="prod"&&typeof prRender==="function") prRender(); if(k==="doc"&&typeof docRender==="function") docRender(); $("header h1").textContent=HEAD[k][0]; $("header p").innerHTML=HEAD[k][1]; try{localStorage.setItem("tab",k)}catch(e){}}
+function toast(t){const el=$("#toast"); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true,2200)}
+function copyTable(){
+  const h=["N.º","Descrição","Pot. (kW)","cos φ","Tensão (V)","Ib (A)","Prot.","In (A)","Cabo","Mét. ref.","Iz (A)","F.c.","I'z (A)","I2 (A)","1,45 I'z","L (m)","ΔU (V)","ΔU (%)","Ib≤In≤I'z","I2≤1,45I'z"];
+  const n=(v,d=2)=>v==null?"":v.toLocaleString("pt-PT",{maximumFractionDigits:d,useGrouping:false});
+  const rows=state.circuits.map((c,i)=>{const r=calc(c);return [i+1,c.desc,n(c.P),n(c.cos),c.U,n(r.Ib),c.prot,c.In,`${c.des} ${r.form}`,methLabel(c.met),n(r.Iz),n(+c.fc),n(r.Izc),n(r.I2),n(r.lim),c.L,n(r.dU),n(r.dUp),r.c1==null?"":r.c1?"√":"X",r.c2==null?"":r.c2?"√":"X"]});
+  const txt=[[state.qd],h,...rows].map(r=>r.join("\t")).join("\n");
+  navigator.clipboard.writeText(txt).then(()=>toast("Tabela copiada. Cole no Excel."),()=>toast("Não foi possível copiar neste navegador."));
+}
+
+/* ---- Tabelas de referência ---- */
+function renderRefs(){
+  const mats=[["Cu","PVC"],["Cu","XLPE"],["Al","PVC"],["Al","XLPE"]];
+  const izSel=`<div class="panel" style="grid-column:1/-1"><h2>Correntes admissíveis Iz (A)</h2>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><label class="f" style="width:auto"><span>Alma / isolamento</span><select id="r-mi">${mats.map(([m,i])=>`<option value="${m}|${i}">${m==="Cu"?"Cobre":"Alumínio"} · ${i}</option>`).join("")}</select></label>
+    <label class="f" style="width:auto"><span>Condutores carregados</span><select id="r-cc"><option value="2">2</option><option value="3">3</option></select></label></div>
+    <div class="tbl" id="r-iz"></div><p class="note">Quadros 52-C1 a 52-C4, 52-C9 a 52-C14 e 52-C30 das RTIEBT, como na folha “Tab_Cabos”, com as gralhas da folha corrigidas (Cu/PVC B2 95 mm²; método D 6 e 16 mm² em cobre; Al/PVC C 4 mm²; Al/XLPE D 300 mm²).</p></div>`;
+  const prot=`<div class="panel"><h2>Corrente convencional I2 (A)</h2><div class="tbl"><table><thead><tr><th class="n">In</th><th class="n">Disj. modular</th><th class="n">Disj. outro</th><th class="n">Fusível</th></tr></thead><tbody>
+    ${PROT.M.map(([In,a],i)=>`<tr><td class="n">${In}</td><td class="n">${fmt(a,2)}</td><td class="n">${fmt(PROT.O[i][1],2)}</td><td class="n">${PROT.F[i]?fmt(PROT.F[i][1],2):"–"}</td></tr>`).join("")}</tbody></table></div></div>`;
+  const pe=`<div class="panel"><h2>Secções nominais (mm²)</h2><div class="tbl"><table><thead><tr><th class="n">Fase</th><th class="n">Neutro<br>Art.º 179.º</th><th class="n">Protecção<br>Art.º 615.º</th></tr></thead><tbody>
+    ${PE.map(r=>`<tr>${r.map(v=>`<td class="n">${fS(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;
+  const sim=`<div class="panel"><h2>Coeficientes de simultaneidade</h2><p class="note">Quadro 803A: n.º de instalações a jusante.</p><table><thead><tr><th>Instalações</th><th class="n">C.S.</th></tr></thead><tbody>
+    ${SIMUL.map(([a,b])=>`<tr><td>${a.replace("³","≥")}</td><td class="n">${b}</td></tr>`).join("")}</tbody></table>
+    <h2 style="margin-top:8px">Condutor de protecção</h2><p class="note">S ≥ √(I²·t) / k (secção 543.1, quadros 54B a 54E).</p>
+    <div class="grid"><label class="f"><span>I defeito (A)</span><input id="p-I" type="number" value="3000"></label><label class="f"><span>t (s)</span><input id="p-t" type="number" step="0.01" value="0.1"></label>
+    <label class="f"><span>k</span><select id="p-k"><option value="115">115 · Cu/PVC</option><option value="143">143 · Cu/XLPE</option><option value="76">76 · Al/PVC</option><option value="94">94 · Al/XLPE</option></select></label></div>
+    <div class="formation" id="p-out"></div><p class="note">Valores de k para condutores incorporados no cabo (quadro 54C). Confirme no quadro aplicável.</p></div>`;
+  $("#refs").innerHTML=izSel+prot+pe+sim;
+  const drawIz=()=>{const [m,i]=$("#r-mi").value.split("|"); const cc=$("#r-cc").value; const T=IZ[m][i];
+    const secs=SECTIONS.filter(s=>METHODS.some(([k])=>T[k]?.[cc]?.[String(s)]!=null));
+    $("#r-iz").innerHTML=`<table><thead><tr><th class="n">S</th>${METHODS.map(x=>`<th class="n">${x[1]}</th>`).join("")}</tr></thead><tbody>${secs.map(s=>`<tr><td class="n">${fS(s)}</td>${METHODS.map(([k])=>{const v=T[k]?.[cc]?.[String(s)];return `<td class="n">${v==null?"–":fmt(v,v%1?1:0)}</td>`}).join("")}</tr>`).join("")}</tbody></table>`};
+  const drawPe=()=>{const I=+$("#p-I").value,t=+$("#p-t").value,k=+$("#p-k").value; const S=Math.sqrt(I*I*t)/k; const n=SECTIONS.find(x=>x>=S); $("#p-out").textContent=`S ≥ ${fmt(S,2)} mm²  →  ${n?fS(n)+" mm²":"—"}`};
+  ["#r-mi","#r-cc"].forEach(s=>$(s).addEventListener("change",drawIz)); ["#p-I","#p-t","#p-k"].forEach(s=>$(s).addEventListener("input",drawPe));
+  drawIz(); drawPe();
+}
+document.body.insertAdjacentHTML("beforeend",`<datalist id="dl-des">${["XV","VV","LXV","LVV","XZ1","H07V-U","H07V-R","H07V-K","H05VV-F","H07RN-F"].map(x=>`<option value="${x}">`).join("")}</datalist>`);
+renderRefs(); render();
+try{const t=localStorage.getItem("tab"); showTab(t&&HEAD[t]?t:"pv")}catch(e){showTab("pv")}
+</script>

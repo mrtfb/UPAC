@@ -1,0 +1,1 @@
+Versão v36 (2026-11-04): inversores Fox H1-G2 e Solis S6-EH1P(3-10)K-L-PLUS(21A) pelas fichas PDF (fichas/), aviso de ficha a confirmar e correcção pela ficha (PDF + Claude). Reconstruir: python3 build.py dentro desta pasta.
