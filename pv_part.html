@@ -82,7 +82,7 @@
           <label class="f"><span>T. mínima (°C)</span><input id="pv-tmin" type="number" step="1"></label>
           <label class="f"><span>T. máxima (°C)</span><input id="pv-tmax" type="number" step="1"></label>
         </div>
-        <label class="f"><span>Produção específica (kWh/kWp·ano)</span><input id="pv-yield" type="number" step="10"><small>Valor aproximado. Para um local exacto use o <a href="https://re.jrc.ec.europa.eu/pvg_tools/pt/" target="_blank" rel="noopener">PVGIS</a>.</small></label>
+        <label class="f"><span>Produção específica (kWh/kWp·ano)</span><input id="pv-yield" type="number" step="10"><small id="pv-yield-n"></small></label>
       </fieldset>
       <fieldset><h3>3 · Espaço e montagem</h3>
         <label class="f"><span>Área disponível (m²)</span><input id="pv-area" type="number" min="0" step="5"><small>0 = sem limite</small></label>
@@ -488,7 +488,12 @@ function pvInit(){
   locNote(); dgegStatus(); pvRun();
 }
 function locNote(){ $("#pv-map-clr").hidden=pv.lat==null;
-  $("#pv-loc-n").innerHTML=pv.lat!=null?`Local escolhido no mapa: <strong>${esc(pv.place||pv.loc)}</strong> · ${fco(pv.lat)}, ${fco(pv.lon)}${pv.alt!=null?` · cerca de ${Math.round(pv.alt)} m de altitude`:""}. Temperaturas e produção calculadas para este ponto.`:"Valores de referência da capital de distrito. Para um ponto exacto, escolha no mapa."; }
+  $("#pv-loc-n").innerHTML=pv.lat!=null?`Local escolhido no mapa: <strong>${esc(pv.place||pv.loc)}</strong> · ${fco(pv.lat)}, ${fco(pv.lon)}${pv.alt!=null?` · cerca de ${Math.round(pv.alt)} m de altitude`:""}. Temperaturas e produção calculadas para este ponto.`:"Valores de referência da capital de distrito. Para um ponto exacto, escolha no mapa.";
+  const pvl=`<a href="https://re.jrc.ec.europa.eu/pvg_tools/pt/" target="_blank" rel="noopener">PVGIS</a>`;
+  $("#pv-yield-n").innerHTML=pv.ysrc==="user"?`Valor seu. Escolher outra vez no mapa repõe o do ${pvl}.`:
+    pv.lat!=null&&pv.ysrc==="live"?`Do ${pvl} para este ponto exacto (inclinação óptima, 14 % de perdas).`:
+    pv.lat!=null&&pv.ysrc==="grid"?`Do ${pvl} para este ponto (grelha de ~5 km, inclinação óptima, 14 % de perdas).`:
+    pv.lat!=null?"Estimativa para o ponto, entre capitais de distrito.":`Do ${pvl} na capital de distrito (inclinação óptima, 14 % de perdas). No mapa obtém o valor do local.`; }
 function dgegStatus(){ DGM.clear();
   const n2=INVERTERS.filter(i=>dgegMatch(i).lvl===2).length, n1=INVERTERS.filter(i=>dgegMatch(i).lvl===1).length;
   const head=DGEG_IMP?`Lista DGEG importada de “${esc(DGEG_IMP.name)}” (${DGEG_IMP.keys.length} códigos). <a href="#" id="pv-dgeg-reset">Repor a lista incluída</a>.`:`Lista DGEG incluída: ${DGEG_LIST.length} inversores da <a href="${DGEG_INFO.url}" target="_blank" rel="noopener">bolsa de equipamentos certificados do SERUP</a>, descarregada em ${DGEG_INFO.fetched}.`;
@@ -593,8 +598,8 @@ document.addEventListener("click",e=>{
 const pvNum={"pv-P":"P","pv-rmin":"rmin","pv-rmax":"rmax","pv-tmin":"tmin","pv-tmax":"tmax","pv-yield":"yld","pv-area":"area"};
 document.addEventListener("change",e=>{
   const id=e.target.id;
-  if(pvNum[id]){pv[pvNum[id]]=+e.target.value||0; pvRun(); return}
-  if(id==="pv-loc"){pv.loc=e.target.value; [pv.tmin,pv.tmax,pv.yld]=LOCS[pv.loc]; pv.lat=pv.lon=pv.alt=null; pv.place=""; locNote(); if(typeof pr!=="undefined"){pr.lat=pr.lon=null; prSave();} $("#pv-tmin").value=pv.tmin;$("#pv-tmax").value=pv.tmax;$("#pv-yield").value=pv.yld; pvRun(); return}
+  if(pvNum[id]){pv[pvNum[id]]=+e.target.value||0; if(id==="pv-yield"){ pv.ysrc="user"; locNote(); } pvRun(); return}
+  if(id==="pv-loc"){pv.loc=e.target.value; [pv.tmin,pv.tmax,pv.yld]=LOCS[pv.loc]; pv.lat=pv.lon=pv.alt=null; pv.place=""; pv.ysrc=""; locNote(); if(typeof pr!=="undefined"){pr.lat=pr.lon=null; prSave();} $("#pv-tmin").value=pv.tmin;$("#pv-tmax").value=pv.tmax;$("#pv-yield").value=pv.yld; pvRun(); return}
   if(id==="pv-mount"){pv.mount=e.target.value;pvRun();return}
   if(id==="pv-mod"){pv.mod=e.target.value;modConfUI();pvRun();return}
   if(id==="pv-brand"){pv.brand=e.target.value;pvRun();return}
@@ -675,7 +680,7 @@ document.addEventListener("click",e=>{
   if(e.target.id==="mc-save"){mcSave();return}
   { const b=e.target.closest("[data-mcc]"); if(b){ const m=findMod(b.dataset.mcc); if(m){ mcFill(m); const d=$("#pv-mcust"); d.open=true; d.scrollIntoView({block:"nearest",behavior:"smooth"}); } return } }
   if(e.target.id==="mc-copy"){const m=findMod(pv.mod)||pv.edit?.m; if(m) mcFill(m); else toast("Escolha primeiro um painel."); return}
-  if(e.target.id==="pv-map-clr"){pv.lat=pv.lon=pv.alt=null; pv.place=""; [pv.tmin,pv.tmax,pv.yld]=LOCS[pv.loc]; $("#pv-tmin").value=pv.tmin;$("#pv-tmax").value=pv.tmax;$("#pv-yield").value=pv.yld;
+  if(e.target.id==="pv-map-clr"){pv.lat=pv.lon=pv.alt=null; pv.place=""; pv.ysrc=""; [pv.tmin,pv.tmax,pv.yld]=LOCS[pv.loc]; $("#pv-tmin").value=pv.tmin;$("#pv-tmax").value=pv.tmax;$("#pv-yield").value=pv.yld;
     if(typeof pr!=="undefined"){pr.lat=pr.lon=null; prSave();} locNote(); pvRun(); toast(`Valores de ${pv.loc} repostos.`); return}
   const d=e.target.closest("[data-mdel]"); if(d){const k=d.dataset.mdel; MCUSTOM=MCUSTOM.filter(x=>modName(x)!==k); const ix=MODULES.findIndex(m=>m.custom&&modName(m)===k); if(ix>=0) MODULES.splice(ix,1);
     try{localStorage.setItem(MCUST_KEY,JSON.stringify(MCUSTOM))}catch(_){} if(pv.mod===k) pv.mod="*"; modUI(); pvRun(); toast(`${k} apagado.`);}
