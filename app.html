@@ -223,7 +223,7 @@ const save=()=>{try{localStorage.setItem("canaliz-v1",JSON.stringify(state))}cat
 /* ---- Cálculo (mesmas regras da folha) ---- */
 function izTable(c){ // valor de tabela por cabo; null se não existir
   const t=IZ[c.mat]?.[c.ins]?.[c.met]; if(!t) return null;
-  const col=c.cond<3?"2":"3"; // folha: N.º condutores < 3 → 2 condutores carregados
+  const col=c.lc?String(c.lc):c.cond<3?"2":"3"; // folha: N.º condutores < 3 → 2 condutores carregados; lc = condutores carregados indicados (circuitos FV monofásicos 3G: 2)
   const v=t[col]?.[String(c.S)]; return v==null?null:v;
 }
 function I2of(c){
@@ -341,7 +341,7 @@ function renderResults(){
   <div class="big">
     <div class="kv"><div class="k">Ib · corrente de serviço</div><div class="v">${fmt(r.Ib)}<small>A</small></div><div class="s">${c.U==230?"P / (230·cos φ)":"P / (√3·400·cos φ)"}</div></div>
     <div class="kv"><div class="k">In · protecção</div><div class="v">${c.In||"–"}<small>A</small></div><div class="s">${c.prot}</div></div>
-    <div class="kv"><div class="k">Iz · admissível</div><div class="v">${fmt(r.Iz)}<small>A</small></div><div class="s">${r.izUnit==null?"—":`${fmt(r.izUnit)} A × ${r.mult}${["Ftri","Festeira","Ghor","Gvert"].includes(c.met)?"":` (${c.cond<3?2:3} cond. carregados)`}`}</div></div>
+    <div class="kv"><div class="k">Iz · admissível</div><div class="v">${fmt(r.Iz)}<small>A</small></div><div class="s">${r.izUnit==null?"—":`${fmt(r.izUnit)} A × ${r.mult}${["Ftri","Festeira","Ghor","Gvert"].includes(c.met)?"":` (${c.lc||(c.cond<3?2:3)} cond. carregados)`}`}</div></div>
     <div class="kv"><div class="k">I'z · corrigida</div><div class="v">${fmt(r.Izc)}<small>A</small></div><div class="s">Iz × F.c. ${fmt(+c.fc,2)}</div></div>
     <div class="kv"><div class="k">I2 · funcionamento</div><div class="v">${fmt(r.I2,2)}<small>A</small></div><div class="s">1,45 × I'z = ${fmt(r.lim,2)} A</div></div>
     <div class="kv"><div class="k">ΔU · queda de tensão</div><div class="v">${fmt(r.dUp,2)}<small>%</small></div><div class="s">${fmt(r.dU,2)} V em ${fmt(c.L,0)} m</div></div>
@@ -361,12 +361,13 @@ document.addEventListener("input",e=>{
   const numeric=["P","cos","n","fc","L","S","In","cond"];
   c[key]= numeric.includes(key) ? (v===""?"":+v) : v;
   if(c.ex){c.ex=false}
+  if(key==="cond") delete c.lc; // o n.º de condutores carregados vindo do separador Unifilar deixa de valer
   if(key==="cond"||key==="prot"){ if(key==="prot"){const k=(PROTS.find(p=>p[0]===c.prot)||[])[2]; if(!PROT[k].some(x=>x[0]==c.In)) c.In="";} renderEditor(); }
   upd();
 });
 document.addEventListener("click",e=>{
   const b=e.target.closest("#editor .seg button");
-  if(b){const c=cur(); const key=b.parentElement.id.slice(2); const v=b.dataset.v; c[key]=key==="U"?+v:v; c.ex=false;
+  if(b){const c=cur(); const key=b.parentElement.id.slice(2); const v=b.dataset.v; c[key]=key==="U"?+v:v; c.ex=false; if(key==="U") delete c.lc;
     b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b)); upd(); return}
   const tr=e.target.closest("#rows tr[data-id]"); if(tr){state.sel=+tr.dataset.id; render(); $("#editor").scrollIntoView({behavior:"smooth",block:"start"}); return}
   if(e.target.id==="b-add"){const id=Math.max(0,...state.circuits.map(c=>c.id))+1; state.circuits.push({id,desc:"Novo circuito",P:5,cos:0.9,U:230,prot:"D (M)",In:"",mat:"Cu",ins:"XLPE",cond:3,n:1,S:2.5,met:"C",fc:1,L:20,des:"XV"}); state.sel=id; render(); return}

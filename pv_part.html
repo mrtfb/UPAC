@@ -360,6 +360,9 @@ function spread(S,caps){
   for(let i=0;i<S;i++){ let j=-1; caps.forEach((c,x)=>{ if(k[x]<c&&(j<0||k[x]<k[j]||(k[x]===k[j]&&c>caps[j]))) j=x; }); k[j]++; }
   return k;
 }
+// n.º de MPPT com strings curtas: Vmpp (STC) abaixo de metade da tensão nominal DC do inversor (ex. 3 × 37 V = 111 V num inversor de 360 V)
+const vShort=inv=>0.5*(inv.v_nom||(inv.mppt_min+inv.mppt_max)/2);
+const shortN=(cfg,m,inv)=>cfg.filter(c=>c.s&&c.ns*m.vmpp<vShort(inv)).length;
 /* melhor configuração de um inversor para um n.º de módulos alvo.
    Preferência: strings todas iguais e todos os MPPT usados; se necessário, um MPPT com comprimento diferente. */
 function bestConfig(m,inv,target,L){
@@ -367,7 +370,8 @@ function bestConfig(m,inv,target,L){
   let best=null;
   const consider=(cfg,alt)=>{ const tot=cfg.reduce((a,c)=>a+c.s*c.ns,0); if(!tot) return;
     const S=cfg.reduce((a,c)=>a+c.s,0), unused=cfg.filter(c=>!c.s).length;
-    const cost=Math.abs(tot-target)+Math.max(0,Math.min(S,cfg.length)-(cfg.length-unused))*1.5+unused*0.6+(alt?1:0)+S*0.01;
+    // strings curtas (tensão baixa): mais corrente e mais cabo para a mesma potência; é preferível juntar os módulos numa string e deixar um MPPT livre
+    const cost=Math.abs(tot-target)+Math.max(0,Math.min(S,cfg.length)-(cfg.length-unused))*1.5+unused*0.6+shortN(cfg,m,inv)+(alt?1:0)+S*0.01;
     if(!best||cost<best.cost) best={tot,cfg,cost}; };
   for(let ns=L.nsMin;ns<=L.nsMax;ns++){
     for(const S of new Set([Math.max(1,Math.floor(target/ns)),Math.max(1,Math.ceil(target/ns))])){
@@ -424,7 +428,7 @@ function search(g=pv){
         const e=evaluate(m,inv,N,b.cfg,g); if(e.hard&&!pick) continue;
         const goal=g.unit==="kWp"?g.P:tKWp;
         const unused=b.cfg.filter(c=>!c.s).length; // MPPT sem strings
-        const score=Math.abs(e.kWp-goal)/goal*100*3 + Math.abs(e.ratio-1.15)*15 + e.soft*6 + unused*2 + e.hard*100 + bigPen(m,g,goal);
+        const score=Math.abs(e.kWp-goal)/goal*100*3 + Math.abs(e.ratio-1.15)*15 + e.soft*6 + unused*2 + shortN(b.cfg,m,inv)*2 + (g.unit==="kWp"?0:Math.abs(e.kWac-g.P)/g.P*100) + e.hard*100 + bigPen(m,g,goal);
         const fit=Math.abs(e.kWp-goal)/goal<=0.1; // só conta como "possível" se ficar a ±10 % da potência pedida
         res.push({m,inv,N,cfg:b.cfg,e,score,rank:fit?N:N+10});
       }

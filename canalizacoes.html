@@ -938,7 +938,7 @@ const save=()=>{try{localStorage.setItem("canaliz-v1",JSON.stringify(state))}cat
 /* ---- Cálculo (mesmas regras da folha) ---- */
 function izTable(c){ // valor de tabela por cabo; null se não existir
   const t=IZ[c.mat]?.[c.ins]?.[c.met]; if(!t) return null;
-  const col=c.cond<3?"2":"3"; // folha: N.º condutores < 3 → 2 condutores carregados
+  const col=c.lc?String(c.lc):c.cond<3?"2":"3"; // folha: N.º condutores < 3 → 2 condutores carregados; lc = condutores carregados indicados (circuitos FV monofásicos 3G: 2)
   const v=t[col]?.[String(c.S)]; return v==null?null:v;
 }
 function I2of(c){
@@ -1056,7 +1056,7 @@ function renderResults(){
   <div class="big">
     <div class="kv"><div class="k">Ib · corrente de serviço</div><div class="v">${fmt(r.Ib)}<small>A</small></div><div class="s">${c.U==230?"P / (230·cos φ)":"P / (√3·400·cos φ)"}</div></div>
     <div class="kv"><div class="k">In · protecção</div><div class="v">${c.In||"–"}<small>A</small></div><div class="s">${c.prot}</div></div>
-    <div class="kv"><div class="k">Iz · admissível</div><div class="v">${fmt(r.Iz)}<small>A</small></div><div class="s">${r.izUnit==null?"—":`${fmt(r.izUnit)} A × ${r.mult}${["Ftri","Festeira","Ghor","Gvert"].includes(c.met)?"":` (${c.cond<3?2:3} cond. carregados)`}`}</div></div>
+    <div class="kv"><div class="k">Iz · admissível</div><div class="v">${fmt(r.Iz)}<small>A</small></div><div class="s">${r.izUnit==null?"—":`${fmt(r.izUnit)} A × ${r.mult}${["Ftri","Festeira","Ghor","Gvert"].includes(c.met)?"":` (${c.lc||(c.cond<3?2:3)} cond. carregados)`}`}</div></div>
     <div class="kv"><div class="k">I'z · corrigida</div><div class="v">${fmt(r.Izc)}<small>A</small></div><div class="s">Iz × F.c. ${fmt(+c.fc,2)}</div></div>
     <div class="kv"><div class="k">I2 · funcionamento</div><div class="v">${fmt(r.I2,2)}<small>A</small></div><div class="s">1,45 × I'z = ${fmt(r.lim,2)} A</div></div>
     <div class="kv"><div class="k">ΔU · queda de tensão</div><div class="v">${fmt(r.dUp,2)}<small>%</small></div><div class="s">${fmt(r.dU,2)} V em ${fmt(c.L,0)} m</div></div>
@@ -1076,12 +1076,13 @@ document.addEventListener("input",e=>{
   const numeric=["P","cos","n","fc","L","S","In","cond"];
   c[key]= numeric.includes(key) ? (v===""?"":+v) : v;
   if(c.ex){c.ex=false}
+  if(key==="cond") delete c.lc; // o n.º de condutores carregados vindo do separador Unifilar deixa de valer
   if(key==="cond"||key==="prot"){ if(key==="prot"){const k=(PROTS.find(p=>p[0]===c.prot)||[])[2]; if(!PROT[k].some(x=>x[0]==c.In)) c.In="";} renderEditor(); }
   upd();
 });
 document.addEventListener("click",e=>{
   const b=e.target.closest("#editor .seg button");
-  if(b){const c=cur(); const key=b.parentElement.id.slice(2); const v=b.dataset.v; c[key]=key==="U"?+v:v; c.ex=false;
+  if(b){const c=cur(); const key=b.parentElement.id.slice(2); const v=b.dataset.v; c[key]=key==="U"?+v:v; c.ex=false; if(key==="U") delete c.lc;
     b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b)); upd(); return}
   const tr=e.target.closest("#rows tr[data-id]"); if(tr){state.sel=+tr.dataset.id; render(); $("#editor").scrollIntoView({behavior:"smooth",block:"start"}); return}
   if(e.target.id==="b-add"){const id=Math.max(0,...state.circuits.map(c=>c.id))+1; state.circuits.push({id,desc:"Novo circuito",P:5,cos:0.9,U:230,prot:"D (M)",In:"",mat:"Cu",ins:"XLPE",cond:3,n:1,S:2.5,met:"C",fc:1,L:20,des:"XV"}); state.sel=id; render(); return}
@@ -1326,6 +1327,9 @@ function spread(S,caps){
   for(let i=0;i<S;i++){ let j=-1; caps.forEach((c,x)=>{ if(k[x]<c&&(j<0||k[x]<k[j]||(k[x]===k[j]&&c>caps[j]))) j=x; }); k[j]++; }
   return k;
 }
+// n.º de MPPT com strings curtas: Vmpp (STC) abaixo de metade da tensão nominal DC do inversor (ex. 3 × 37 V = 111 V num inversor de 360 V)
+const vShort=inv=>0.5*(inv.v_nom||(inv.mppt_min+inv.mppt_max)/2);
+const shortN=(cfg,m,inv)=>cfg.filter(c=>c.s&&c.ns*m.vmpp<vShort(inv)).length;
 /* melhor configuração de um inversor para um n.º de módulos alvo.
    Preferência: strings todas iguais e todos os MPPT usados; se necessário, um MPPT com comprimento diferente. */
 function bestConfig(m,inv,target,L){
@@ -1333,7 +1337,8 @@ function bestConfig(m,inv,target,L){
   let best=null;
   const consider=(cfg,alt)=>{ const tot=cfg.reduce((a,c)=>a+c.s*c.ns,0); if(!tot) return;
     const S=cfg.reduce((a,c)=>a+c.s,0), unused=cfg.filter(c=>!c.s).length;
-    const cost=Math.abs(tot-target)+Math.max(0,Math.min(S,cfg.length)-(cfg.length-unused))*1.5+unused*0.6+(alt?1:0)+S*0.01;
+    // strings curtas (tensão baixa): mais corrente e mais cabo para a mesma potência; é preferível juntar os módulos numa string e deixar um MPPT livre
+    const cost=Math.abs(tot-target)+Math.max(0,Math.min(S,cfg.length)-(cfg.length-unused))*1.5+unused*0.6+shortN(cfg,m,inv)+(alt?1:0)+S*0.01;
     if(!best||cost<best.cost) best={tot,cfg,cost}; };
   for(let ns=L.nsMin;ns<=L.nsMax;ns++){
     for(const S of new Set([Math.max(1,Math.floor(target/ns)),Math.max(1,Math.ceil(target/ns))])){
@@ -1390,7 +1395,7 @@ function search(g=pv){
         const e=evaluate(m,inv,N,b.cfg,g); if(e.hard&&!pick) continue;
         const goal=g.unit==="kWp"?g.P:tKWp;
         const unused=b.cfg.filter(c=>!c.s).length; // MPPT sem strings
-        const score=Math.abs(e.kWp-goal)/goal*100*3 + Math.abs(e.ratio-1.15)*15 + e.soft*6 + unused*2 + e.hard*100 + bigPen(m,g,goal);
+        const score=Math.abs(e.kWp-goal)/goal*100*3 + Math.abs(e.ratio-1.15)*15 + e.soft*6 + unused*2 + shortN(b.cfg,m,inv)*2 + (g.unit==="kWp"?0:Math.abs(e.kWac-g.P)/g.P*100) + e.hard*100 + bigPen(m,g,goal);
         const fit=Math.abs(e.kWp-goal)/goal<=0.1; // só conta como "possível" se ficar a ±10 % da potência pedida
         res.push({m,inv,N,cfg:b.cfg,e,score,rank:fit?N:N+10});
       }
@@ -1702,7 +1707,7 @@ function acCircuit(Ib,L,ph,du=sy.acDu){
   const ins=[...MCB.map(v=>["D (M)",v]),...MCBO.map(v=>["D (O)",v])].filter(([,v])=>v>=Ib);
   let last=null;
   for(const [prot,In] of ins.slice(0,3)) for(const S of SECTIONS.filter(s=>s>=(sy.mat==="Al"?16:2.5))){
-    const c={P,cos:1,U:Un,prot,In,mat:sy.mat,ins:sy.ins,cond:ph==1?3:5,n:1,S,met:sy.met,fc:sy.fc,L,des};
+    const c={P,cos:1,U:Un,prot,In,mat:sy.mat,ins:sy.ins,cond:ph==1?3:5,lc:ph==1?2:3,n:1,S,met:sy.met,fc:sy.fc,L,des}; // monofásico 3G (L+N+PE): 2 condutores carregados
     const r=calc(c,{mode:"rtiebt",du}); if(r.Izc==null) continue; last={c,r,ok:false};
     if(r.c1&&r.c2&&r.c3) return {c,r,ok:true};
   }
@@ -1738,8 +1743,11 @@ function sysCalc(){
   let pc=0; try{ pc=+docS.i.pc||0 }catch(e){}
   const Ipc=pc>0?pc*1000/(ph*230):0, ibkG=Ipc>0&&!crit?Math.min(N*ibk,Ipc)/N:ibk; // com cargas prioritárias o resto da casa não passa pelo inversor
   const Ig=bk?Math.max(iac,ibkG):iac;
-  const ac=acCircuit(Ig,sy.Lac,ph);
-  const fd=N>1?acCircuit(N*Ig,sy.Lf,ph,Math.max(0.2,sy.acDu-(ac.r.dUp||0))):null; // a ΔU limite é a do conjunto inversor → Q.G.E.
+  let ac=acCircuit(Ig,sy.Lac,ph);
+  let fd=N>1?acCircuit(N*Ig,sy.Lf,ph,Math.max(0.2,sy.acDu-(ac.r.dUp||0))):null; // a ΔU limite é a do conjunto inversor → Q.G.E.
+  if(fd&&(ac.r.dUp||0)+(fd.r.dUp||0)>sy.acDu+1e-9){ // o cabo do inversor gastou quase toda a ΔU: reparte-a pelos dois troços, proporcional aos comprimentos
+    const du1=sy.acDu*sy.Lac/((+sy.Lac||0)+(+sy.Lf||0)||1), ac2=acCircuit(Ig,sy.Lac,ph,du1), fd2=acCircuit(N*Ig,sy.Lf,ph,Math.max(0.2,sy.acDu-(ac2.r.dUp||0)));
+    if(ac2.ok&&fd2.ok){ ac=ac2; fd=fd2; } }
   const bkC=bk?acCircuit(N*ibkG,syLbk(),ph):null;
   let inj=true; try{ inj=pr.inj!=="zero" }catch(e){}
   const mo=syO("meter"), meter=mo==="on"||(mo==="auto"&&(!!inv.hybrid||!inj));
@@ -2800,7 +2808,7 @@ function mdBlocks(D){
   const SD=syDoc(R);
   Pp(`${SD.desc}${D.bat?` O sistema inclui armazenamento em bateria com ${fx(P.cap,1)} kWh de capacidade nominal (${fx(P.S.U,1)} kWh úteis), ligado ao inversor híbrido.`:""}`);
   TB(["Característica","Valor"],[["Potência de pico do gerador",`${fx(e.kWp,2)} kWp`],["Potência instalada (inversores)",`${fx(Pinst,2)} kW`],["Potência de ligação",`${fx(Pl,2)} kW${inj?"":" (sem injeção na RESP)"}`],
-    ["Módulos",`${e.n} × ${m.pmax} W`],["Inversores",`${N} × ${invName(inv)}`],["Rácio DC/AC",fx(e.ratio,2)],["Ligação",ph==1?"Monofásica, 230 V":"Trifásica, 3 × 400 V + N"],["Tipo de ligação",topoName(R)],
+    ["Módulos",`${e.n} × ${m.pmax} W`],["Inversores",`${N} × ${invName(inv)}`],["Rácio DC/AC",fx(e.ratio,2)],["Ligação",ph==1?"Monofásica, 230 V":"Trifásica, 3 × 400 V + N"],["Tipo de ligação",topoName(R).replace(/^S\d+b? · /,"")],
     ...(D.bat?[["Armazenamento",`${fx(P.cap,1)} kWh nominais, ${fx(P.S.U,1)} kWh úteis${+pr.bpow>0?", "+fx(+pr.bpow,1)+" kW":""}${inv.battery?" · "+inv.battery:""}`]]:[]),...(S?[["Produção anual estimada",`${fk(S.T.pv)} kWh`]]:[]),["Regime",regime.t]],[45,55]);
   H1("5. Gerador fotovoltaico");
   TB(["Módulo","Valor"],[["Fabricante e modelo",modName(m)],["Tecnologia",nn(m.cell,"—")],["Potência máxima (STC)",`${m.pmax} W`],["Voc / Isc",`${fx(m.voc,2)} V / ${fx(m.isc,2)} A`],["Vmpp / Impp",`${fx(m.vmpp,2)} V / ${fx(m.impp,2)} A`],
@@ -2819,7 +2827,7 @@ function mdBlocks(D){
   H1(`${k++}. Compatibilidade entre o gerador e o inversor`);
   TB(["Verificação","Cálculo","Resultado"],e.checks.map(c=>[c.t,c.d,c.ok?"Cumpre":c.soft?"Aviso":"Não cumpre"]),[40,44,16]);
   H1(`${k++}. Canalizações e proteções do lado DC`);
-  Pp(`Cabos solares H1Z2Z2-K (EN 50618), unipolares, com dupla isolação, de ${fx(sy.Ldc,0)} m de percurso entre o gerador e o inversor, instalados ${DCINST[sy.dcInst]} a ${fx(sy.tdc,0)} °C. A corrente de cálculo é 1,25 × Isc (IEC 60364-7-712); a queda de tensão máxima admitida é ${fx(sy.dcDu,1)} %.`);
+  Pp(`Cabos solares H1Z2Z2-K (EN 50618), unipolares, com dupla isolação, de ${fx(sy.Ldc,0)} m de percurso entre o gerador e o inversor, instalados ${DCINST[sy.dcInst]} a ${fx(sy.tdc,0)} °C. A corrente de cálculo é 1,25 × Isc por string (IEC 60364-7-712)${dc.some(d=>d.hasF)?"; nas entradas com fusíveis de string, o calibre do fusível":""}${dc.some(d=>!d.hasF&&d.Np>1)?"; com várias strings em paralelo sem fusível, 1,25 × Isc × (n.º de strings − 1), a corrente inversa que as outras podem injetar (IEC 62548)":""}; a queda de tensão máxima admitida é ${fx(sy.dcDu,1)} %.`);
   TB(["Entrada","Cabo","I de cálculo","Iz corrigida","ΔU"],dc.map(d=>[`MPPT ${d.j+1}`,`${d.c.s} × 2 × 1 × ${fS(d.S)} mm²`,`${fx(d.Ireq,1)} A`,`${fx(d.Iz,1)} A`,`${fx(d.dUp,2)} %`]),[16,30,18,18,18]);
   UL([...SD.dcUl,
     "Afixação junto ao quadro DC e ao inversor do aviso: «Atenção: partes ativas DC podem continuar sob tensão depois de seccionadas»."]);
@@ -3172,7 +3180,7 @@ document.addEventListener("keydown",e=>{ if(e.target.id==="mp-co"&&e.key==="Ente
   const mq=matchMedia("(max-width:640px)"), LS=k=>"m-"+k;
   const get=(k,d)=>{try{return localStorage.getItem(LS(k))??d}catch(e){return d}}, put=(k,v)=>{try{localStorage.setItem(LS(k),v)}catch(e){}};
   // separadores: nomes curtos com número
-  const SH={pv:["1","Fotovoltaico"],sys:["2","Unifilar"],prod:["3","Produção"],doc:["4","DGEG"],calc:["⌁","Cabos"],ref:["≡","Tabelas"]};
+  const SH={pv:["1","Painéis"],sys:["2","Unifilar"],prod:["3","Produção"],doc:["4","DGEG"],calc:["⌁","Cabos"],ref:["≡","Tabelas"]};
   const tabs=[...document.querySelectorAll(".tabs button")]; tabs.forEach(b=>b.dataset.full=b.textContent);
   function labels(){ tabs.forEach(b=>{ const s=SH[b.id.slice(4)]; b.innerHTML=mq.matches&&s?`<small>${s[0]}</small><span>${s[1]}</span>`:b.dataset.full; b.title=b.dataset.full; }); }
   // Dados / Resultados em cada separador com entradas à esquerda e resultados à direita
