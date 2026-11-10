@@ -105,7 +105,7 @@ function mpTile(url){ let t=TC.get(url); if(t){ TC.delete(url); TC.set(url,t); r
 const mpOnline=()=>MP.lay!=="rel"&&MP.net!==false;
 function mpNetUI(){ const L=TILES[MP.lay], on=mpOnline();
   $("#mp-lay").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===MP.lay)));
-  $("#mp-hint").textContent=MP.lay!=="rel"&&MP.net===false?"Sem internet: mostro só o relevo (zoom até ~1 km). Clique no local da instalação.":
+  $("#mp-hint").textContent=MP.lay!=="rel"&&MP.net===false?"O satélite não carregou (sem internet, ou dentro do claude.ai, que bloqueia mapas externos). Mostro o relevo; clique no local da instalação.":
     on?"Aproxime até ver o telhado e clique no local da instalação. Arraste para mover; roda do rato, dois dedos ou + / −.":
     "Clique no local da instalação. Arraste para mover; roda do rato, dois dedos ou + / − para aproximar.";
   $("#mp-src").textContent=(on?L.src+" ":"")+"Relevo: Terrarium (Mapzen/AWS, SRTM), grelha de ~1 km. Limites de concelho: CAOP. Localidades: GeoNames. Produção: PVGIS (Comissão Europeia, JRC)."+(on?"":" O relevo funciona sem internet.");

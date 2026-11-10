@@ -720,7 +720,7 @@ label.btn{display:inline-flex;align-items:center}
         <div class="src" id="pr-src"></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn pri" id="pr-pvgis-net" hidden title="Pede ao PVGIS a produção mensal para o local, a inclinação, o azimute e as perdas acima">Obter do PVGIS (em linha)</button><label class="btn" for="pr-pvgis">Importar ficheiro PVGIS…</label><input id="pr-pvgis" type="file" accept=".csv,.json,.txt" hidden><button type="button" class="btn ghost" id="pr-pvgis-clr" hidden>× Usar o modelo da app</button></div>
         <details class="adv"><summary>Como obter o ficheiro do PVGIS</summary>
-          <p class="note">No <a href="https://re.jrc.ec.europa.eu/pvg_tools/pt/" target="_blank" rel="noopener">PVGIS</a>, marque o local no mapa, escolha “Sistema FV ligado à rede”, ponha a potência de pico, a inclinação e o azimute, e descarregue em CSV ou JSON. Serve o separador mensal ou os “Dados horários” (dá também a forma do dia). A app usa a produção por kWp do ficheiro com a potência deste projecto.</p></details>
+          <p class="note">No <a href="https://re.jrc.ec.europa.eu/pvg_tools/en/" target="_blank" rel="noopener">PVGIS</a>, marque o local no mapa, escolha “Sistema FV ligado à rede”, ponha a potência de pico, a inclinação e o azimute, e descarregue em CSV ou JSON. Serve o separador mensal ou os “Dados horários” (dá também a forma do dia). A app usa a produção por kWp do ficheiro com a potência deste projecto.</p></details>
       </fieldset>
       <fieldset><h3>2 · Consumo</h3>
         <label class="f"><span>Tipo de consumo</span><select id="pr-prof">
@@ -1461,7 +1461,7 @@ function pvInit(){
 }
 function locNote(){ $("#pv-map-clr").hidden=pv.lat==null;
   $("#pv-loc-n").innerHTML=pv.lat!=null?`Local escolhido no mapa: <strong>${esc(pv.place||pv.loc)}</strong> · ${fco(pv.lat)}, ${fco(pv.lon)}${pv.alt!=null?` · cerca de ${Math.round(pv.alt)} m de altitude`:""}. Temperaturas e produção calculadas para este ponto.`:"Valores de referência da capital de distrito. Para um ponto exacto, escolha no mapa.";
-  const pvl=`<a href="https://re.jrc.ec.europa.eu/pvg_tools/pt/" target="_blank" rel="noopener">PVGIS</a>`;
+  const pvl=`<a href="https://re.jrc.ec.europa.eu/pvg_tools/en/" target="_blank" rel="noopener">PVGIS</a>`;
   $("#pv-yield-n").innerHTML=pv.ysrc==="user"?`Valor seu. Escolher outra vez no mapa repõe o do ${pvl}.`:
     pv.lat!=null&&pv.ysrc==="live"?`Do ${pvl} para este ponto exacto (inclinação óptima, 14 % de perdas).`:
     pv.lat!=null&&pv.ysrc==="grid"?`Do ${pvl} para este ponto (grelha de ~5 km, inclinação óptima, 14 % de perdas).`:
@@ -3107,7 +3107,7 @@ function mpTile(url){ let t=TC.get(url); if(t){ TC.delete(url); TC.set(url,t); r
 const mpOnline=()=>MP.lay!=="rel"&&MP.net!==false;
 function mpNetUI(){ const L=TILES[MP.lay], on=mpOnline();
   $("#mp-lay").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===MP.lay)));
-  $("#mp-hint").textContent=MP.lay!=="rel"&&MP.net===false?"Sem internet: mostro só o relevo (zoom até ~1 km). Clique no local da instalação.":
+  $("#mp-hint").textContent=MP.lay!=="rel"&&MP.net===false?"O satélite não carregou (sem internet, ou dentro do claude.ai, que bloqueia mapas externos). Mostro o relevo; clique no local da instalação.":
     on?"Aproxime até ver o telhado e clique no local da instalação. Arraste para mover; roda do rato, dois dedos ou + / −.":
     "Clique no local da instalação. Arraste para mover; roda do rato, dois dedos ou + / − para aproximar.";
   $("#mp-src").textContent=(on?L.src+" ":"")+"Relevo: Terrarium (Mapzen/AWS, SRTM), grelha de ~1 km. Limites de concelho: CAOP. Localidades: GeoNames. Produção: PVGIS (Comissão Europeia, JRC)."+(on?"":" O relevo funciona sem internet.");
