@@ -76,7 +76,7 @@
   const mq=matchMedia("(max-width:640px)"), LS=k=>"m-"+k;
   const get=(k,d)=>{try{return localStorage.getItem(LS(k))??d}catch(e){return d}}, put=(k,v)=>{try{localStorage.setItem(LS(k),v)}catch(e){}};
   // separadores: nomes curtos com número
-  const SH={pv:["1","Fotovoltaico"],sys:["2","Unifilar"],prod:["3","Produção"],doc:["4","DGEG"],calc:["⌁","Cabos"],ref:["≡","Tabelas"]};
+  const SH={pv:["1","Painéis"],sys:["2","Unifilar"],prod:["3","Produção"],doc:["4","DGEG"],calc:["⌁","Cabos"],ref:["≡","Tabelas"]};
   const tabs=[...document.querySelectorAll(".tabs button")]; tabs.forEach(b=>b.dataset.full=b.textContent);
   function labels(){ tabs.forEach(b=>{ const s=SH[b.id.slice(4)]; b.innerHTML=mq.matches&&s?`<small>${s[0]}</small><span>${s[1]}</span>`:b.dataset.full; b.title=b.dataset.full; }); }
   // Dados / Resultados em cada separador com entradas à esquerda e resultados à direita

@@ -620,7 +620,7 @@ function mdBlocks(D){
   const SD=syDoc(R);
   Pp(`${SD.desc}${D.bat?` O sistema inclui armazenamento em bateria com ${fx(P.cap,1)} kWh de capacidade nominal (${fx(P.S.U,1)} kWh úteis), ligado ao inversor híbrido.`:""}`);
   TB(["Característica","Valor"],[["Potência de pico do gerador",`${fx(e.kWp,2)} kWp`],["Potência instalada (inversores)",`${fx(Pinst,2)} kW`],["Potência de ligação",`${fx(Pl,2)} kW${inj?"":" (sem injeção na RESP)"}`],
-    ["Módulos",`${e.n} × ${m.pmax} W`],["Inversores",`${N} × ${invName(inv)}`],["Rácio DC/AC",fx(e.ratio,2)],["Ligação",ph==1?"Monofásica, 230 V":"Trifásica, 3 × 400 V + N"],["Tipo de ligação",topoName(R)],
+    ["Módulos",`${e.n} × ${m.pmax} W`],["Inversores",`${N} × ${invName(inv)}`],["Rácio DC/AC",fx(e.ratio,2)],["Ligação",ph==1?"Monofásica, 230 V":"Trifásica, 3 × 400 V + N"],["Tipo de ligação",topoName(R).replace(/^S\d+b? · /,"")],
     ...(D.bat?[["Armazenamento",`${fx(P.cap,1)} kWh nominais, ${fx(P.S.U,1)} kWh úteis${+pr.bpow>0?", "+fx(+pr.bpow,1)+" kW":""}${inv.battery?" · "+inv.battery:""}`]]:[]),...(S?[["Produção anual estimada",`${fk(S.T.pv)} kWh`]]:[]),["Regime",regime.t]],[45,55]);
   H1("5. Gerador fotovoltaico");
   TB(["Módulo","Valor"],[["Fabricante e modelo",modName(m)],["Tecnologia",nn(m.cell,"—")],["Potência máxima (STC)",`${m.pmax} W`],["Voc / Isc",`${fx(m.voc,2)} V / ${fx(m.isc,2)} A`],["Vmpp / Impp",`${fx(m.vmpp,2)} V / ${fx(m.impp,2)} A`],
@@ -639,7 +639,7 @@ function mdBlocks(D){
   H1(`${k++}. Compatibilidade entre o gerador e o inversor`);
   TB(["Verificação","Cálculo","Resultado"],e.checks.map(c=>[c.t,c.d,c.ok?"Cumpre":c.soft?"Aviso":"Não cumpre"]),[40,44,16]);
   H1(`${k++}. Canalizações e proteções do lado DC`);
-  Pp(`Cabos solares H1Z2Z2-K (EN 50618), unipolares, com dupla isolação, de ${fx(sy.Ldc,0)} m de percurso entre o gerador e o inversor, instalados ${DCINST[sy.dcInst]} a ${fx(sy.tdc,0)} °C. A corrente de cálculo é 1,25 × Isc (IEC 60364-7-712); a queda de tensão máxima admitida é ${fx(sy.dcDu,1)} %.`);
+  Pp(`Cabos solares H1Z2Z2-K (EN 50618), unipolares, com dupla isolação, de ${fx(sy.Ldc,0)} m de percurso entre o gerador e o inversor, instalados ${DCINST[sy.dcInst]} a ${fx(sy.tdc,0)} °C. A corrente de cálculo é 1,25 × Isc por string (IEC 60364-7-712)${dc.some(d=>d.hasF)?"; nas entradas com fusíveis de string, o calibre do fusível":""}${dc.some(d=>!d.hasF&&d.Np>1)?"; com várias strings em paralelo sem fusível, 1,25 × Isc × (n.º de strings − 1), a corrente inversa que as outras podem injetar (IEC 62548)":""}; a queda de tensão máxima admitida é ${fx(sy.dcDu,1)} %.`);
   TB(["Entrada","Cabo","I de cálculo","Iz corrigida","ΔU"],dc.map(d=>[`MPPT ${d.j+1}`,`${d.c.s} × 2 × 1 × ${fS(d.S)} mm²`,`${fx(d.Ireq,1)} A`,`${fx(d.Iz,1)} A`,`${fx(d.dUp,2)} %`]),[16,30,18,18,18]);
   UL([...SD.dcUl,
     "Afixação junto ao quadro DC e ao inversor do aviso: «Atenção: partes ativas DC podem continuar sob tensão depois de seccionadas»."]);

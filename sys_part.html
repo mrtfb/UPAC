@@ -304,7 +304,7 @@ function acCircuit(Ib,L,ph,du=sy.acDu){
   const ins=[...MCB.map(v=>["D (M)",v]),...MCBO.map(v=>["D (O)",v])].filter(([,v])=>v>=Ib);
   let last=null;
   for(const [prot,In] of ins.slice(0,3)) for(const S of SECTIONS.filter(s=>s>=(sy.mat==="Al"?16:2.5))){
-    const c={P,cos:1,U:Un,prot,In,mat:sy.mat,ins:sy.ins,cond:ph==1?3:5,n:1,S,met:sy.met,fc:sy.fc,L,des};
+    const c={P,cos:1,U:Un,prot,In,mat:sy.mat,ins:sy.ins,cond:ph==1?3:5,lc:ph==1?2:3,n:1,S,met:sy.met,fc:sy.fc,L,des}; // monofásico 3G (L+N+PE): 2 condutores carregados
     const r=calc(c,{mode:"rtiebt",du}); if(r.Izc==null) continue; last={c,r,ok:false};
     if(r.c1&&r.c2&&r.c3) return {c,r,ok:true};
   }
@@ -340,8 +340,11 @@ function sysCalc(){
   let pc=0; try{ pc=+docS.i.pc||0 }catch(e){}
   const Ipc=pc>0?pc*1000/(ph*230):0, ibkG=Ipc>0&&!crit?Math.min(N*ibk,Ipc)/N:ibk; // com cargas prioritárias o resto da casa não passa pelo inversor
   const Ig=bk?Math.max(iac,ibkG):iac;
-  const ac=acCircuit(Ig,sy.Lac,ph);
-  const fd=N>1?acCircuit(N*Ig,sy.Lf,ph,Math.max(0.2,sy.acDu-(ac.r.dUp||0))):null; // a ΔU limite é a do conjunto inversor → Q.G.E.
+  let ac=acCircuit(Ig,sy.Lac,ph);
+  let fd=N>1?acCircuit(N*Ig,sy.Lf,ph,Math.max(0.2,sy.acDu-(ac.r.dUp||0))):null; // a ΔU limite é a do conjunto inversor → Q.G.E.
+  if(fd&&(ac.r.dUp||0)+(fd.r.dUp||0)>sy.acDu+1e-9){ // o cabo do inversor gastou quase toda a ΔU: reparte-a pelos dois troços, proporcional aos comprimentos
+    const du1=sy.acDu*sy.Lac/((+sy.Lac||0)+(+sy.Lf||0)||1), ac2=acCircuit(Ig,sy.Lac,ph,du1), fd2=acCircuit(N*Ig,sy.Lf,ph,Math.max(0.2,sy.acDu-(ac2.r.dUp||0)));
+    if(ac2.ok&&fd2.ok){ ac=ac2; fd=fd2; } }
   const bkC=bk?acCircuit(N*ibkG,syLbk(),ph):null;
   let inj=true; try{ inj=pr.inj!=="zero" }catch(e){}
   const mo=syO("meter"), meter=mo==="on"||(mo==="auto"&&(!!inv.hybrid||!inj));
