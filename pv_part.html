@@ -93,6 +93,7 @@
       </fieldset>
       <fieldset><h3>4 · Equipamento</h3>
         <label class="f"><span>Painel</span><select id="pv-mod"></select></label>
+        <div id="pv-mod-conf"></div>
         <details class="adv" id="pv-mcust"><summary>Painel personalizado (dados da ficha)</summary>
           <p class="note">Para um painel que não está na lista. Fica guardado neste navegador, aparece na lista de painéis e vai dentro do ficheiro do projecto.</p>
           <div class="grid" style="grid-template-columns:1fr 1fr">
@@ -308,7 +309,25 @@ document.addEventListener("close",e=>{ if(e.target.id==="fx-dlg"&&FX.url){ URL.r
 const MCUST_KEY="pv-mod-custom"; let MCUSTOM=[];
 try{MCUSTOM=JSON.parse(localStorage.getItem(MCUST_KEY))||[]}catch(e){}
 MCUSTOM.forEach(c=>MODULES.push(c));
-const findMod=n=>n&&n!=="*"?MODULES.find(m=>modName(m)===n):null;
+const findMod=n=>{ if(!n||n==="*") return null;
+  // nome exacto; senão, pela referência do fabricante (projectos guardados antes de um nome de série ser corrigido)
+  return MODULES.find(m=>modName(m)===n)||MODULES.find(m=>!m.custom&&n.startsWith(m.brand+" ")&&n.endsWith(" "+m.model.split(" ").pop())); };
+// painéis: conferidos com a ficha oficial (campo ficha = PDF em fichas/) ou com valores por confirmar (campo gaps)
+const MOD_GAP0="valores tirados de fontes da internet, sem a ficha oficial do fabricante";
+function modConf(m){
+  if(!m) return {lvl:"none"};
+  if(m.custom) return {lvl:"user"};
+  if(m.ficha) return {lvl:"ok"};
+  return {lvl:"warn",gaps:m.gaps&&m.gaps.length?m.gaps:[MOD_GAP0]};
+}
+function modConfBox(m){ const c=modConf(m);
+  if(c.lvl==="ok") return `<p class="note"><span class="pill ok">✓ Ficha conferida</span> Valores do painel conferidos com a ficha técnica oficial do fabricante em PDF (${esc(m.ficha)}).</p>`;
+  if(c.lvl==="warn") return `<div class="ic-box warn"><strong>Não confirmei os valores deste painel com a ficha oficial.</strong>
+    <span>Falta confirmar:</span><ul>${c.gaps.map(g=>`<li>${esc(g)}</li>`).join("")}</ul>
+    <span>Os cálculos usam estes valores. Se tiver a ficha, copie o painel para um painel personalizado e corrija o que for diferente.</span>
+    <div class="ic-act"><button type="button" class="btn" data-mcc="${esc(modName(m))}">Copiar para painel personalizado</button></div></div>`;
+  return "";
+}
 // texto do local: o ponto escolhido no mapa ou o distrito
 const fco=v=>Number(v).toFixed(5);
 const pvLocShort=()=>pv.lat!=null?(pv.place||pv.loc):pv.loc;
@@ -458,7 +477,7 @@ function search(g=pv){
 let PVRES=[];
 function pvInit(){
   $("#pv-loc").innerHTML=Object.keys(LOCS).map(k=>`<option>${k}</option>`).join("");
-  if(pv.mod!=="*"&&!findMod(pv.mod)) pv.mod="*"; modUI();
+  if(pv.mod!=="*"){ const f=findMod(pv.mod); pv.mod=f?modName(f):"*"; } modUI();
   $("#pv-brand").innerHTML=`<option value="*">Todas</option>`+[...new Set(INVERTERS.map(i=>i.brand))].sort().map(b=>`<option>${b}</option>`).join("");
   const set=(id,v)=>$(id).value=v;
   set("#pv-P",pv.P);set("#pv-rmin",pv.rmin);set("#pv-rmax",pv.rmax);set("#pv-loc",pv.loc);set("#pv-tmin",pv.tmin);set("#pv-tmax",pv.tmax);set("#pv-yield",pv.yld);set("#pv-area",pv.area);set("#pv-mount",pv.mount);set("#pv-brand",pv.brand);
@@ -503,7 +522,7 @@ function renderOpts(){
     <span class="m">${r.e.n} × ${esc(modName(r.m))}</span>
     <span class="m">${r.inv.mppt} MPPT · ${r.cfg.map(c=>c.s?`${c.s}×${c.ns}`:"–").join(" | ")} <span title="strings × módulos por MPPT; entradas disponíveis entre parênteses">(${r.inv.strings_per_mppt.join("+")} entradas)</span></span>
     <span class="nums"><span>${fmt(r.e.kWp,2)} kWp</span><span>${fmt(r.e.kWac,1)} kW AC</span><span>DC/AC ${fmt(r.e.ratio,2)}</span></span>
-    <span class="chips">${r.e.hard?`<span class="pill bad">✕ ${r.e.hard} falha${r.e.hard>1?"s":""}</span>`:""}${r.e.hard?"":r.e.soft?`<span class="pill warn">${r.e.soft} aviso${r.e.soft>1?"s":""}</span>`:`<span class="pill ok">✓ Tudo cumpre</span>`}${r.inv.hybrid?`<span class="pill na">Híbrido</span>`:""}${cprodInfo(r.inv,r.N).need?`<span class="pill na" title="Potência instalada superior a 4 kW (${CPROD_LEI})">Contador de produção</span>`:""}${dgegPill(r.inv)}${invConf(r.inv).lvl==="warn"?`<span class="pill warn" title="Não tenho a ficha completa deste inversor">Ficha a confirmar</span>`:""}</span>
+    <span class="chips">${r.e.hard?`<span class="pill bad">✕ ${r.e.hard} falha${r.e.hard>1?"s":""}</span>`:""}${r.e.hard?"":r.e.soft?`<span class="pill warn">${r.e.soft} aviso${r.e.soft>1?"s":""}</span>`:`<span class="pill ok">✓ Tudo cumpre</span>`}${r.inv.hybrid?`<span class="pill na">Híbrido</span>`:""}${cprodInfo(r.inv,r.N).need?`<span class="pill na" title="Potência instalada superior a 4 kW (${CPROD_LEI})">Contador de produção</span>`:""}${dgegPill(r.inv)}${invConf(r.inv).lvl==="warn"?`<span class="pill warn" title="Não tenho a ficha completa deste inversor">Ficha a confirmar</span>`:""}${modConf(r.m).lvl==="warn"?`<span class="pill warn" title="Valores do painel não confirmados com a ficha oficial">Painel a confirmar</span>`:""}</span>
   </button>`).join("") || `<div class="msg">${pv.dgegOnly&&!INVERTERS.some(inDGEG)?"Nenhum inversor do catálogo da app, para esta ligação, consta da lista DGEG. Desligue o filtro DGEG para ver combinações.":"Nenhuma combinação cumpre todos os requisitos. Experimente alargar o rácio DC/AC, mudar a ligação à rede, retirar o filtro de marca ou aumentar a área."}</div>`;
 }
 // contador de produção (totalizador): DL 15/2022, art. 95.º, n.º 1 — contagem obrigatória da energia total produzida pela UPAC ligada à RESP
@@ -539,7 +558,7 @@ function renderPvDetail(){
       :c.P>=3.5||e.kWp>4?`<p class="note"><span class="pill ok">Sem contador de produção</span> Potência instalada ${fmt(c.P,2)} kW, não superior a 4 kW: não é obrigatório (${CPROD_LEI}). Conta a potência do inversor, não os ${fmt(e.kWp,2)} kWp dos painéis.</p>`:""; })()}
     ${inv.hybrid&&pv.bat?`<p class="note">Bateria: inversor híbrido, bateria ${esc(inv.battery||"conforme ficha técnica")}. Confirme a compatibilidade da marca da bateria.</p>`:""}
     ${!m.noct?`<p class="note">A ficha do painel não indica NOCT/NMOT; usei 45 °C.</p>`:""}${m.note?`<p class="note">Nota sobre o painel: ${esc(m.note)}</p>`:""}${inv.note?`<p class="note">Nota sobre o inversor: ${esc(inv.note)}</p>`:""}
-    ${pv.inv===invName(inv)?"":invConfBox(inv)}
+    ${pv.mod===modName(m)?"":modConfBox(m)}${pv.inv===invName(inv)?"":invConfBox(inv)}
     ${(()=>{const d=dgegMatch(inv),r=dgRow(d.ix); return `<p class="note">${dgegPill(inv)} ${d.lvl===2?(r?`Consta da bolsa de equipamentos do SERUP como ${esc(r[0])} ${esc(r[1])}, ${fkw(r[2])} kW, regime ${esc(r[3]).toLowerCase()}.`:"Consta do ficheiro importado."):d.lvl===1?`A lista DGEG tem ${r?esc(r[1]):"a série anterior"}, mas não este modelo. Confirme a declaração de conformidade do fabricante.`:`Este modelo não consta da lista DGEG. Peça ao fabricante a declaração de conformidade (Regulamento UE 2016/631 / EN 50549-1).`}</p>`})()}
     <p class="src">Fichas técnicas: ${m.source?`<a href="${esc(m.source)}" target="_blank" rel="noopener">painel</a>`:"painel personalizado (dados introduzidos)"} · ${inv.source?`<a href="${esc(inv.source)}" target="_blank" rel="noopener">inversor</a>`:inv.ficha?`inversor: ${esc(inv.ficha)}`:"inversor personalizado (dados introduzidos)"}</p>
     <div style="display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap"><span class="note">Passo seguinte: cabos, protecções e esquemas desta configuração.</span><button class="btn pri" id="pv-next">Unifilar e protecções →</button></div>`;
@@ -577,7 +596,7 @@ document.addEventListener("change",e=>{
   if(pvNum[id]){pv[pvNum[id]]=+e.target.value||0; pvRun(); return}
   if(id==="pv-loc"){pv.loc=e.target.value; [pv.tmin,pv.tmax,pv.yld]=LOCS[pv.loc]; pv.lat=pv.lon=pv.alt=null; pv.place=""; locNote(); if(typeof pr!=="undefined"){pr.lat=pr.lon=null; prSave();} $("#pv-tmin").value=pv.tmin;$("#pv-tmax").value=pv.tmax;$("#pv-yield").value=pv.yld; pvRun(); return}
   if(id==="pv-mount"){pv.mount=e.target.value;pvRun();return}
-  if(id==="pv-mod"){pv.mod=e.target.value;pvRun();return}
+  if(id==="pv-mod"){pv.mod=e.target.value;modConfUI();pvRun();return}
   if(id==="pv-brand"){pv.brand=e.target.value;pvRun();return}
   if(id==="pv-inv"){const v=e.target.value.trim(); if(v&&!findInv(v)){toast("Escolha um inversor da lista (ou crie-o em Inversor personalizado).");return} pv.inv=v; invUI(); pvRun(); return}
   if(id==="pv-dgeg"){pv.dgegOnly=e.target.checked;pvRun();return}
@@ -626,9 +645,10 @@ document.addEventListener("click",e=>{
   const d=e.target.closest("[data-cdel]"); if(d){const k=d.dataset.cdel; CUSTOM=CUSTOM.filter(x=>invName(x)!==k); const ix=INVERTERS.findIndex(i=>i.custom&&invName(i)===k); if(ix>=0) INVERTERS.splice(ix,1);
     try{localStorage.setItem(CUST_KEY,JSON.stringify(CUSTOM))}catch(_){} if(pv.inv===k) pv.inv=""; invUI(); pvRun(); toast(`${k} apagado.`);}
 });
+function modConfUI(){ const pm=findMod(pv.mod), h=pm?modConfBox(pm):""; if($("#pv-mod-conf").innerHTML!==h) $("#pv-mod-conf").innerHTML=h; }
 function modUI(){
   $("#pv-mod").innerHTML=`<option value="*">Qualquer (escolher o melhor)</option>`+MODULES.map(m=>`<option value="${esc(modName(m))}">${esc(modName(m))} · ${m.pmax} W${m.custom?" · personalizado":""}</option>`).join("");
-  $("#pv-mod").value=pv.mod;
+  $("#pv-mod").value=pv.mod; modConfUI();
   $("#mc-list").innerHTML=MCUSTOM.map(c=>`<span class="pill na">${esc(modName(c))} <button type="button" class="btn ghost" data-mdel="${esc(modName(c))}" aria-label="Apagar ${esc(modName(c))}" style="padding:0 4px">×</button></span>`).join(""); }
 function mcFill(m){ const set=(id,v)=>$("#"+id).value=v??"";
   set("mc-brand",m.brand);set("mc-model",m.model+(m.custom?"":" (cópia)"));set("mc-pmax",m.pmax);set("mc-cell",m.cell);set("mc-voc",m.voc);set("mc-isc",m.isc);set("mc-vmpp",m.vmpp);set("mc-impp",m.impp);
@@ -653,6 +673,7 @@ function mcSave(){ const v=id=>$("#"+id).value.trim(), n=id=>{const x=$("#"+id).
   pv.mod=k; modUI(); pvRun(); toast(`${k} guardado e escolhido.`); }
 document.addEventListener("click",e=>{
   if(e.target.id==="mc-save"){mcSave();return}
+  { const b=e.target.closest("[data-mcc]"); if(b){ const m=findMod(b.dataset.mcc); if(m){ mcFill(m); const d=$("#pv-mcust"); d.open=true; d.scrollIntoView({block:"nearest",behavior:"smooth"}); } return } }
   if(e.target.id==="mc-copy"){const m=findMod(pv.mod)||pv.edit?.m; if(m) mcFill(m); else toast("Escolha primeiro um painel."); return}
   if(e.target.id==="pv-map-clr"){pv.lat=pv.lon=pv.alt=null; pv.place=""; [pv.tmin,pv.tmax,pv.yld]=LOCS[pv.loc]; $("#pv-tmin").value=pv.tmin;$("#pv-tmax").value=pv.tmax;$("#pv-yield").value=pv.yld;
     if(typeof pr!=="undefined"){pr.lat=pr.lon=null; prSave();} locNote(); pvRun(); toast(`Valores de ${pv.loc} repostos.`); return}
