@@ -199,7 +199,7 @@ const PRJ_APP="fv-dimensionamento";
 let PRDL=null; fvDownloads().then(d=>{ PRDL=d; prjDlUI(); });
 const slug=s=>(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^\w]+/g,"-").replace(/^-|-$/g,"").toLowerCase();
 const editRef=E=>E?{mod:modName(E.m),inv:invName(E.inv),N:E.N,cfg:E.cfg.map(c=>({s:c.s,ns:c.ns}))}:null;
-function editRestore(ref){ if(!ref) return false; const m=MODULES.find(x=>modName(x)===ref.mod), inv=findInv(ref.inv);
+function editRestore(ref){ if(!ref) return false; const m=findMod(ref.mod), inv=findInv(ref.inv);
   if(!m||!inv||!Array.isArray(ref.cfg)||ref.cfg.length!==inv.strings_per_mppt.length) return false;
   pv.edit={m,inv,N:+ref.N||1,cfg:ref.cfg.map(c=>({s:+c.s||0,ns:+c.ns||1}))};
   const same=r=>r.m===m&&r.inv===inv&&r.N===pv.edit.N&&r.cfg.every((c,j)=>c.s===pv.edit.cfg[j].s&&(c.s?c.ns===pv.edit.cfg[j].ns:true));

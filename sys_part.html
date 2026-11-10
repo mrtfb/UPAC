@@ -487,6 +487,7 @@ function sysRender(){
     `.${opt.isoDc==="int"?" Seccionador DC: o integrado no inversor.":""}${opt.spdDc==="int"?" Descarregador DC: o integrado no inversor.":""}`;
   const warn=[];
   { const c=typeof invConf==="function"?invConf(inv):{}; if(c.lvl==="warn") warn.push(`Não tenho a ficha técnica completa do ${esc(invName(inv))}: falta confirmar ${c.gaps.map(esc).join("; ")}. Carregue a ficha no separador 1 (botão «Carregar ficha / corrigir valores») para confirmar os valores usados nestes cálculos.`); }
+  { const c=typeof modConf==="function"?modConf(m):{}; if(c.lvl==="warn") warn.push(`Não confirmei os valores do painel ${esc(modName(m))} com a ficha oficial do fabricante (${c.gaps.map(esc).join("; ")}). Confira Voc, Isc, Vmpp, Impp e β(Voc) com a ficha antes de submeter o processo.`); }
   dc.filter(d=>!d.ok).forEach(d=>warn.push(`MPPT ${d.j+1}: nenhuma secção até 35 mm² cumpre a corrente e a queda de tensão. Encurte o cabo ou aumente a ΔU DC.`));
   dc.filter(d=>d.hasF&&!d.fuse).forEach(d=>warn.push(`MPPT ${d.j+1}: não há fusível gPV normalizado entre ${fmt(d.fLo,1)} A e ${fmt(d.fHi,1)} A. Reduza as strings em paralelo.`));
   dc.filter(d=>d.ok&&d.S>6).forEach(d=>warn.push(`MPPT ${d.j+1}: a queda de tensão pede cabo DC de ${fS(d.S)} mm², mas os conectores MC4 habituais só aceitam 4–6 mm². Encurte o percurso, aumente a ΔU DC (até 1,5–2 % é aceitável) ou use conectores próprios para essa secção.`));

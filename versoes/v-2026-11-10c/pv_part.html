@@ -1,0 +1,684 @@
+<style>
+[hidden]{display:none!important}
+.pv{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:18px;align-items:start}
+@media (min-width:1400px){.pv{grid-template-columns:minmax(0,clamp(340px,22vw,460px)) minmax(0,1fr)}}
+@media (max-width:900px){.pv{grid-template-columns:1fr}}
+.pv-in{padding:16px;display:flex;flex-direction:column;gap:18px}
+.pv-out{display:flex;flex-direction:column;gap:18px;min-width:0}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.opt{text-align:left;font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-width:0}
+.opt:hover{border-color:var(--muted)}
+.opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-soft)}
+.opt .rk{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}
+.opt .h{font-family:var(--f-display);font-size:17px;font-weight:600;line-height:1.2}
+.opt .m{font-size:12.5px;color:var(--muted)}
+.opt .nums{display:flex;flex-wrap:wrap;gap:4px 12px;font-family:var(--f-mono);font-size:12.5px}
+.sec{padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.steps{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none;counter-reset:st}
+.steps>li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;counter-increment:st}
+.steps>li::before{content:counter(st);width:26px;height:26px;border-radius:50%;background:var(--soft);color:var(--ink);display:grid;place-items:center;font-weight:600;font-size:13px}
+.steps h4{margin:2px 0 4px;font-size:14px}
+.eq{font-family:var(--f-mono);font-size:12.5px;line-height:1.7;color:var(--ink);background:var(--soft);border-radius:6px;padding:6px 10px;overflow-x:auto;white-space:nowrap}
+.eq .r{color:var(--accent);font-weight:500}
+.mp{display:flex;flex-direction:column;gap:10px}
+.mprow{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;background:var(--panel)}
+.mprow .top{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.step{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step button{border:0;background:var(--soft);color:var(--ink);width:28px;height:28px;font:inherit;font-weight:600;cursor:pointer}
+.step span{min-width:34px;text-align:center;font-family:var(--f-mono)}
+.mods{display:flex;flex-wrap:wrap;gap:3px}
+.mods .st{display:flex;gap:2px;padding:3px;border-radius:4px;background:var(--soft)}
+.mods i{display:block;width:9px;height:14px;border-radius:2px;background:#2f4f6b;border:1px solid #6d8eab}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.inv-list td{white-space:nowrap}
+.src{font-size:12px;color:var(--muted)}
+.src a{color:inherit}
+.dg-tbl{max-height:420px;overflow:auto}
+.dg-tbl td{font-size:12.5px;vertical-align:top;white-space:normal}
+.dg-tbl td:nth-child(4){min-width:180px;word-break:break-word}
+.dg-tbl td.w{white-space:normal;min-width:160px}
+.pv-chk summary{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+
+/* estado dos dados do inversor e correcção pela ficha (v36) */
+.ic-box{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.ic-box.warn{background:var(--warn-soft);border-color:transparent;color:var(--ink)}
+.ic-box.warn strong{color:var(--warn)}
+.ic-box ul{margin:0;padding-left:18px}
+.ic-box .ic-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fx-dlg{width:min(760px,calc(100vw - 16px));max-width:none;max-height:calc(100dvh - 16px);padding:0;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink)}
+.fx-dlg[open]{display:flex;flex-direction:column}
+.fx-dlg::backdrop{background:rgba(10,16,20,.55)}
+.fx-head,.fx-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;flex-wrap:wrap}
+.fx-head{border-bottom:1px solid var(--line)} .fx-foot{border-top:1px solid var(--line)}
+.fx-body{padding:12px 14px;overflow:auto;display:flex;flex-direction:column;gap:10px;min-height:0}
+.fx-tbl td,.fx-tbl th{padding:5px 6px;vertical-align:middle;white-space:normal}
+.fx-tbl input{width:100%;min-width:0}
+.fx-tbl tr.chg td{background:var(--warn-soft)}
+.fx-txt{max-height:220px;overflow:auto;white-space:pre-wrap;font:12px/1.4 var(--f-mono,monospace);background:var(--soft);padding:8px;border-radius:6px}
+</style>
+
+<section id="view-pv" hidden>
+  <div class="pv">
+    <div class="panel pv-in">
+      <fieldset><h3>1 · Objectivo</h3>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>Potência a instalar</span><input id="pv-P" type="number" min="1" step="0.5"></label>
+          <div class="f"><span>Unidade</span><div class="seg" id="pv-unit"><button type="button" data-v="kWp">kWp</button><button type="button" data-v="kWac">kW AC</button></div></div>
+        </div>
+        <div class="src" id="pv-P-n"></div>
+        <div class="f"><span>Ligação à rede</span><div class="seg" id="pv-ph"><button type="button" data-v="1">Monofásica</button><button type="button" data-v="3">Trifásica</button></div></div>
+        <div class="f"><span>Bateria</span><div class="seg" id="pv-bat"><button type="button" data-v="0">Sem bateria</button><button type="button" data-v="1">Com bateria (híbrido)</button></div></div>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>Rácio DC/AC mín.</span><input id="pv-rmin" type="number" step="0.05" min="0.5"></label>
+          <label class="f"><span>Rácio DC/AC máx.</span><input id="pv-rmax" type="number" step="0.05" min="0.5"></label>
+        </div>
+      </fieldset>
+      <fieldset><h3>2 · Localização</h3>
+        <label class="f"><span>Distrito / região</span><select id="pv-loc"></select></label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button type="button" class="btn" id="pv-map-open">📍 Escolher no mapa…</button><button type="button" class="btn ghost" id="pv-map-clr" hidden>× Usar só o distrito</button></div>
+        <div class="src" id="pv-loc-n"></div>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label class="f"><span>T. mínima (°C)</span><input id="pv-tmin" type="number" step="1"></label>
+          <label class="f"><span>T. máxima (°C)</span><input id="pv-tmax" type="number" step="1"></label>
+        </div>
+        <label class="f"><span>Produção específica (kWh/kWp·ano)</span><input id="pv-yield" type="number" step="10"><small>Valor aproximado. Para um local exacto use o <a href="https://re.jrc.ec.europa.eu/pvg_tools/pt/" target="_blank" rel="noopener">PVGIS</a>.</small></label>
+      </fieldset>
+      <fieldset><h3>3 · Espaço e montagem</h3>
+        <label class="f"><span>Área disponível (m²)</span><input id="pv-area" type="number" min="0" step="5"><small>0 = sem limite</small></label>
+        <label class="f"><span>Montagem</span><select id="pv-mount">
+          <option value="roof">Telhado inclinado, coplanar</option>
+          <option value="flat">Cobertura plana, estrutura inclinada</option>
+          <option value="ground">Solo, estrutura aberta</option></select></label>
+      </fieldset>
+      <fieldset><h3>4 · Equipamento</h3>
+        <label class="f"><span>Painel</span><select id="pv-mod"></select></label>
+        <div id="pv-mod-conf"></div>
+        <details class="adv" id="pv-mcust"><summary>Painel personalizado (dados da ficha)</summary>
+          <p class="note">Para um painel que não está na lista. Fica guardado neste navegador, aparece na lista de painéis e vai dentro do ficheiro do projecto.</p>
+          <div class="grid" style="grid-template-columns:1fr 1fr">
+            <label class="f"><span>Marca</span><input id="mc-brand" placeholder="ex.: Trina Solar"></label>
+            <label class="f"><span>Modelo</span><input id="mc-model" placeholder="ex.: Vertex S+ TSM-445NEG9R.28"></label>
+            <label class="f"><span>P máx. STC (W)</span><input id="mc-pmax" type="number" step="1" min="1"></label>
+            <label class="f"><span>Tecnologia</span><input id="mc-cell" placeholder="ex.: N-type TOPCon, 108 meias células"></label>
+            <label class="f"><span>Voc (V)</span><input id="mc-voc" type="number" step="0.01" min="0"></label>
+            <label class="f"><span>Isc (A)</span><input id="mc-isc" type="number" step="0.01" min="0"></label>
+            <label class="f"><span>Vmpp (V)</span><input id="mc-vmpp" type="number" step="0.01" min="0"></label>
+            <label class="f"><span>Impp (A)</span><input id="mc-impp" type="number" step="0.01" min="0"></label>
+            <label class="f"><span>Coef. Voc β (%/°C)</span><input id="mc-beta" type="number" step="0.001" placeholder="ex.: -0,25"></label>
+            <label class="f"><span>Coef. Isc α (%/°C)</span><input id="mc-alpha" type="number" step="0.001" placeholder="ex.: 0,045"></label>
+            <label class="f"><span>Coef. Pmax γ (%/°C)</span><input id="mc-gamma" type="number" step="0.001" placeholder="ex.: -0,29"></label>
+            <label class="f"><span>NOCT (°C)</span><input id="mc-noct" type="number" step="1" placeholder="vazio = 45"></label>
+            <label class="f"><span>Comprimento (mm)</span><input id="mc-len" type="number" step="1" min="1"></label>
+            <label class="f"><span>Largura (mm)</span><input id="mc-wid" type="number" step="1" min="1"></label>
+            <label class="f"><span>Peso (kg)</span><input id="mc-kg" type="number" step="0.1" min="0"></label>
+            <label class="f"><span>V máx. do sistema (V)</span><select id="mc-vsys"><option>1500</option><option>1000</option></select></label>
+            <label class="f"><span>Fusível máx. série (A)</span><input id="mc-fuse" type="number" step="1" min="1"></label>
+            <label class="f" style="flex-direction:row;align-items:center;gap:8px;align-self:end"><input id="mc-bif" type="checkbox" style="width:auto"><span>Bifacial</span></label>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn pri" id="mc-save">Guardar e usar</button><button type="button" class="btn" id="mc-copy">Copiar do painel escolhido</button></div>
+          <div id="mc-list" class="chips"></div>
+        </details>
+        <label class="f"><span>Marca do inversor</span><select id="pv-brand"></select></label>
+        <label class="f"><span>Inversor</span><input id="pv-inv" list="pv-inv-list" placeholder="Automático: melhores combinações" autocomplete="off"><datalist id="pv-inv-list"></datalist>
+          <small id="pv-inv-n">Escreva a marca ou o modelo para dimensionar as strings para um inversor à escolha.</small></label>
+        <button type="button" class="btn ghost" id="pv-inv-clr" hidden>× Voltar ao automático</button>
+        <div id="pv-inv-conf"></div>
+        <details class="adv" id="pv-cust"><summary>Inversor personalizado (dados da ficha)</summary>
+          <p class="note">Para um modelo que não está na lista. Fica guardado neste navegador e aparece na lista de inversores.</p>
+          <div class="grid" style="grid-template-columns:1fr 1fr">
+            <label class="f"><span>Marca</span><input id="cu-brand" placeholder="ex.: Fox ESS"></label>
+            <label class="f"><span>Modelo</span><input id="cu-model" placeholder="ex.: KH8"></label>
+            <label class="f"><span>Ligação</span><select id="cu-ph"><option value="1">Monofásica</option><option value="3">Trifásica</option></select></label>
+            <label class="f" style="flex-direction:row;align-items:center;gap:8px;align-self:end"><input id="cu-hyb" type="checkbox" style="width:auto"><span>Híbrido (bateria)</span></label>
+            <label class="f"><span>P AC nominal (kW)</span><input id="cu-pac" type="number" step="0.1" min="0.1"></label>
+            <label class="f"><span>P DC máx. (kWp)</span><input id="cu-pdc" type="number" step="0.1" min="0"><small>vazio = sem limite</small></label>
+            <label class="f"><span>V DC máx. (V)</span><input id="cu-vdc" type="number" step="1" min="1"></label>
+            <label class="f"><span>V arranque (V)</span><input id="cu-vst" type="number" step="1" min="0"></label>
+            <label class="f"><span>MPPT mín. (V)</span><input id="cu-mn" type="number" step="1" min="0"></label>
+            <label class="f"><span>MPPT máx. (V)</span><input id="cu-mx" type="number" step="1" min="1"></label>
+            <label class="f"><span>V nominal (V)</span><input id="cu-vn" type="number" step="1" min="0"></label>
+            <label class="f"><span>N.º de MPPT</span><input id="cu-n" type="number" step="1" min="1" max="20"></label>
+            <label class="f"><span>I AC máx. (A)</span><input id="cu-iac" type="number" step="0.1" min="0"><small>por fase; vazio = estimada</small></label>
+          </div>
+          <label class="f"><span>Entradas (strings) por MPPT</span><input id="cu-spm" placeholder="ex.: 1,1,1 ou só 1 para todos"></label>
+          <div class="grid" style="grid-template-columns:1fr 1fr">
+            <label class="f"><span>I máx. por MPPT (A)</span><input id="cu-im" placeholder="ex.: 16 ou 26,13"></label>
+            <label class="f"><span>Isc máx. por MPPT (A)</span><input id="cu-isc" placeholder="ex.: 20"></label>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn pri" id="cu-save">Guardar e usar</button><button type="button" class="btn" id="cu-copy">Copiar do inversor escolhido</button></div>
+          <div id="cu-list" class="chips"></div>
+        </details>
+        <label class="f" style="flex-direction:row;align-items:center;gap:8px"><input id="pv-dgeg" type="checkbox" style="width:auto"><span>Só inversores que constam da lista DGEG</span></label>
+        <div class="src" id="pv-dgeg-st"></div>
+        <label class="btn ghost" style="text-align:center">Substituir por outro ficheiro DGEG (.xlsx/.csv)<input id="pv-dgeg-file" type="file" accept=".xlsx,.xls,.csv" hidden></label>
+      </fieldset>
+    </div>
+
+    <div class="pv-out">
+      <div class="panel sec"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Melhores combinações</h2><span class="note" id="pv-count"></span></div>
+        <div class="msg" id="pv-why" hidden style="margin-bottom:10px"></div><div class="opts" id="pv-opts"></div></div>
+      <div class="panel sec" id="pv-detail"></div>
+      <div class="panel sec" id="pv-how"></div>
+      <details class="panel sec" id="pv-dg"><summary><strong>Lista DGEG de inversores</strong> <span class="note" id="pv-dg-sum"></span></summary>
+        <input id="pv-dg-q" type="search" placeholder="Procurar marca ou modelo (ex.: Huawei, SUN2000, Symo)">
+        <div class="tbl dg-tbl"><table><thead><tr><th>Fabricante</th><th>Modelo</th><th>Potência (kW)</th><th>Regime</th><th>Bateria (kWh)</th></tr></thead><tbody id="pv-dg-body"></tbody></table></div>
+        <p class="src" id="pv-dg-src"></p>
+      </details>
+    </div>
+  </div>
+<dialog id="fx-dlg" class="fx-dlg" aria-labelledby="fx-h">
+  <div class="fx-head"><strong id="fx-h">Dados da ficha do inversor</strong><button type="button" class="btn ghost" id="fx-x" aria-label="Fechar">×</button></div>
+  <div class="fx-body">
+    <p class="note" id="fx-intro"></p>
+    <div class="ic-act" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <label class="btn pri" style="cursor:pointer">Carregar ficha (PDF)<input type="file" id="fx-file" accept="application/pdf,.pdf" hidden></label>
+      <a class="btn ghost" id="fx-open" target="_blank" rel="noopener" hidden>Abrir a ficha guardada</a>
+      <span class="note" id="fx-st"></span>
+    </div>
+    <div class="tbl"><table class="fx-tbl"><thead><tr><th>Valor</th><th>Catálogo da app</th><th>Valor a usar</th></tr></thead><tbody id="fx-body"></tbody></table></div>
+    <p class="note">Valores por MPPT separados por vírgula (ex.: 16,16). Um só valor aplica-se a todos os MPPT. Fica guardado neste navegador e no ficheiro do projecto.</p>
+    <details id="fx-td" hidden><summary class="note">Texto lido do PDF</summary><div class="fx-txt" id="fx-txt"></div></details>
+  </div>
+  <div class="fx-foot"><button type="button" class="btn ghost" id="fx-reset">Repor valores do catálogo</button>
+    <span style="display:flex;gap:8px"><button type="button" class="btn" id="fx-cancel">Cancelar</button><button type="button" class="btn pri" id="fx-save">Guardar e usar</button></span></div>
+</dialog>
+</section>
+
+<script>
+/*PVDATA*/
+const MOUNT={roof:{f:1.05,dt:5,label:"coplanar (pouca ventilação, +5 °C)"},flat:{f:2.2,dt:0,label:"estrutura ventilada"},ground:{f:2.4,dt:0,label:"estrutura aberta"}};
+const PV0={P:3,unit:"kWp",ph:1,bat:0,rmin:0.9,rmax:1.3,loc:"Lisboa",tmin:LOCS.Lisboa[0],tmax:LOCS.Lisboa[1],yld:LOCS.Lisboa[2],area:0,mount:"roof",mod:"*",brand:"*",dgegOnly:false,inv:"",sel:0,edit:null,lat:null,lon:null,alt:null,place:""}; // valores de um projecto novo
+let pv={...PV0};
+const normM=s=>String(s).toUpperCase().replace(/[^A-Z0-9]/g,"");
+// chaves da lista DGEG incluída: modelo completo e, quando há variantes ("PVI-3.0-TL-OUTD; -S; -W"), a parte antes do ";"
+const dgKeys=m=>[...new Set([normM(m),normM(String(m).split(/[;\/]/)[0])])].filter(k=>k.length>=3&&/\d/.test(k));
+const DGEG_BUILTIN=DGEG_LIST.flatMap((r,ix)=>dgKeys(r[1]).map(k=>({k,ix})));
+let DGEG_IMP=null; // chaves de um ficheiro importado pelo utilizador (substitui a lista incluída)
+try{const s=JSON.parse(localStorage.getItem("pv-v1")); if(s) pv={...pv,...s,edit:null}; const d=JSON.parse(localStorage.getItem("pv-dgeg2")); if(d) DGEG_IMP=d}catch(e){}
+const dgSrc=()=>DGEG_IMP?DGEG_IMP.keys.map(k=>({k,ix:-1})):DGEG_BUILTIN;
+const pvSave=()=>{try{const {edit,...s}=pv; localStorage.setItem("pv-v1",JSON.stringify(s))}catch(e){}};
+const modName=m=>`${m.brand} ${m.model}`;
+const invName=i=>`${i.brand} ${i.model}`;
+// inversores personalizados (dados da ficha introduzidos pelo utilizador), guardados no navegador
+const CUST_KEY="pv-inv-custom"; let CUSTOM=[];
+try{CUSTOM=JSON.parse(localStorage.getItem(CUST_KEY))||[]}catch(e){}
+CUSTOM.forEach(c=>INVERTERS.push(c));
+const findInv=n=>n?INVERTERS.find(i=>invName(i)===n):null;
+
+// ---- estado dos dados do inversor (v36): ficha PDF conferida, dados a confirmar, correcções do utilizador ----
+// FIX = valores que o utilizador tirou da ficha (por inversor do catálogo), guardados no navegador e no projecto
+const FIX_KEY="pv-inv-fix"; let FIX={};
+try{FIX=JSON.parse(localStorage.getItem(FIX_KEY))||{}}catch(e){}
+const FIXF=[["pac_kw","P AC nominal","kW"],["pdc_max_kw","P DC máx.","kW"],["vdc_max","V DC máx.","V"],["v_start","V arranque","V"],["mppt_min","MPPT mín.","V"],["mppt_max","MPPT máx.","V"],
+  ["v_nom","V nominal","V"],["mppt","N.º de MPPT",""],["strings_per_mppt","Entradas por MPPT","",1],["imax_mppt","I máx. por MPPT","A",1],["isc_mppt","Isc máx. por MPPT","A",1],
+  ["iac_max","I AC máx. (por fase)","A"],["ibk_max","I backup / passagem","A"]];
+const INV_ORIG={};
+function fixApply(){ INVERTERS.forEach(i=>{ if(i.custom) return; const k=invName(i);
+  if(!INV_ORIG[k]) INV_ORIG[k]=JSON.parse(JSON.stringify(i));
+  Object.keys(i).forEach(x=>delete i[x]); Object.assign(i,JSON.parse(JSON.stringify(INV_ORIG[k]))); // o mesmo objecto: pv.edit continua a apontar para ele
+  const f=FIX[k]; if(f&&f.v){ Object.assign(i,JSON.parse(JSON.stringify(f.v))); i.userfix={at:f.at,file:f.file||""}; } }); }
+const fixSave=()=>{try{localStorage.setItem(FIX_KEY,JSON.stringify(FIX))}catch(e){}};
+fixApply();
+const BKGAP="corrente da saída backup";
+function invConf(i){
+  if(!i) return {lvl:"none"};
+  if(i.custom) return {lvl:"user",t:"inversor personalizado"};
+  if(i.userfix) return {lvl:"user"};
+  if(i.ficha) return {lvl:"ok"};
+  const g=(i.gaps||[]).filter(x=>!x.startsWith(BKGAP)||(i.hybrid&&+pv.bat));
+  return g.length?{lvl:"warn",gaps:g}:{lvl:"web"};
+}
+function invConfBox(inv){ const c=invConf(inv), k=esc(invName(inv));
+  const bt=(t,cls)=>`<button type="button" class="btn ${cls||""}" data-fx="${k}">${t}</button>`;
+  if(c.lvl==="ok") return `<p class="note"><span class="pill ok">✓ Ficha conferida</span> Valores conferidos com a ficha técnica oficial em PDF (${esc(inv.ficha)}). <a href="#" data-fx="${k}">Ver ou alterar</a></p>`;
+  if(c.lvl==="user") return inv.custom?"":`<p class="note"><span class="pill ok">✓ Dados seus</span> Está a usar os valores que introduziu a partir da ficha${inv.userfix.file?` (${esc(inv.userfix.file)})`:""}${inv.userfix.at?`, em ${esc(inv.userfix.at)}`:""}. <a href="#" data-fx="${k}">Ver ou alterar</a></p>`;
+  if(c.lvl==="warn") return `<div class="ic-box warn"><strong>Não tenho acesso à ficha técnica completa deste inversor.</strong>
+    <span>Falta confirmar:</span><ul>${c.gaps.map(g=>`<li>${esc(g)}</li>`).join("")}</ul>
+    <span>Os cálculos usam os valores do catálogo da app. Carregue a ficha (PDF) para eu ler os valores, ou introduza-os à mão.</span>
+    <div class="ic-act">${bt("Carregar ficha / corrigir valores","pri")}</div></div>`;
+  return `<p class="note"><span class="pill na">Ficha não conferida</span> Dados retirados de fichas do fabricante consultadas online, sem o PDF à mão. Se tiver a ficha, <a href="#" data-fx="${k}">carregue-a para confirmar</a>.</p>`;
+}
+// ficha guardada no navegador (IndexedDB), para a voltar a abrir
+const fxDB=()=>new Promise((ok,ko)=>{ try{ const r=indexedDB.open("pv-fichas",1); r.onupgradeneeded=()=>r.result.createObjectStore("f"); r.onsuccess=()=>ok(r.result); r.onerror=()=>ko(r.error);}catch(e){ko(e)} });
+async function fxPut(k,v){ try{ const db=await fxDB(); await new Promise((ok,ko)=>{const t=db.transaction("f","readwrite"); t.objectStore("f").put(v,k); t.oncomplete=ok; t.onerror=()=>ko(t.error);}); }catch(e){} }
+async function fxGet(k){ try{ const db=await fxDB(); return await new Promise((ok,ko)=>{const r=db.transaction("f").objectStore("f").get(k); r.onsuccess=()=>ok(r.result); r.onerror=()=>ko(r.error);}); }catch(e){ return null } }
+let FX={k:null,file:"",text:"",url:null};
+let PVSAMPLE=null; window.claude?.use?.("sample").then(s=>{PVSAMPLE=s}).catch(()=>{});
+const fxVal=(v,arr)=>v==null||v===""?"":arr?(Array.isArray(v)?v.join(","):String(v)):String(v);
+function fxRow([f,lab,u,arr],orig,cur,read){ const o=fxVal(orig[f],arr), c=fxVal(cur[f],arr), r=read&&read[f]!=null?fxVal(read[f],arr):null, v=r!=null?r:c;
+  return `<tr class="${v!==o?"chg":""}"><td>${lab}${u?` (${u})`:""}</td><td class="mono">${esc(o||"–")}</td><td><input data-ff="${f}" value="${esc(v)}" inputmode="decimal"${r!=null&&r!==c?' title="lido da ficha"':""}></td></tr>`; }
+function fxRender(read){ const i=findInv(FX.k), o=INV_ORIG[FX.k]||i; $("#fx-body").innerHTML=FIXF.map(d=>fxRow(d,o,i,read)).join("");
+  $("#fx-body").querySelectorAll("input").forEach(x=>x.addEventListener("input",()=>{ const d=FIXF.find(z=>z[0]===x.dataset.ff); x.closest("tr").classList.toggle("chg",x.value.trim()!==fxVal(o[d[0]],d[3])); })); }
+async function fxOpen(k){ const i=findInv(k); if(!i) return; FX={k,file:i.userfix?.file||"",text:"",url:null};
+  const c=invConf(i);
+  $("#fx-h").textContent=invName(i);
+  $("#fx-intro").innerHTML=c.lvl==="ok"?`Valores conferidos com a ficha ${esc(i.ficha)}. Pode corrigi-los se o seu equipamento tiver outra revisão da ficha.`
+    :c.lvl==="warn"?`Não tenho a ficha completa deste modelo. Carregue o PDF da ficha técnica: ${PVSAMPLE?"leio o texto e preencho os valores deste modelo para confirmar":"o texto aparece em baixo para copiar os valores"}. Também pode escrever os valores à mão.`
+    :`Carregue o PDF da ficha técnica para conferir os valores${PVSAMPLE?" (leio o texto e preencho os valores deste modelo)":""}, ou escreva-os à mão.`;
+  $("#fx-st").textContent=""; $("#fx-td").hidden=true; $("#fx-open").hidden=true; $("#fx-file").value=""; $("#fx-reset").hidden=!FIX[k];
+  fxRender(null); $("#fx-dlg").showModal();
+  const g=await fxGet(k); if(g&&g.blob&&FX.k===k){ FX.url=URL.createObjectURL(g.blob); const a=$("#fx-open"); a.href=FX.url; a.download=g.name||"ficha.pdf"; a.textContent=`Abrir ${g.name||"a ficha guardada"}`; a.hidden=false; } }
+let PDFJS=null;
+function pdfjsLoad(){ if(PDFJS) return PDFJS; PDFJS=new Promise((ok,ko)=>{ const s=document.createElement("script"); s.src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+  s.onload=()=>{ try{ window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; ok(window.pdfjsLib);}catch(e){ko(e)} }; s.onerror=()=>{PDFJS=null;ko(new Error("pdf.js"))}; document.head.appendChild(s); }); return PDFJS; }
+async function pdfText(buf){ const lib=await pdfjsLoad(); const doc=await lib.getDocument({data:buf,isEvalSupported:false,cMapUrl:"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/",cMapPacked:true}).promise; let out="";
+  for(let p=1;p<=Math.min(doc.numPages,8);p++){ const pg=await doc.getPage(p), tc=await pg.getTextContent(); let y=null, line=[];
+    tc.items.forEach(it=>{ const yy=Math.round(it.transform[5]); if(y!==null&&Math.abs(yy-y)>2){ out+=line.join("  ")+"\n"; line=[]; } y=yy; if(it.str.trim()) line.push(it.str.trim()); });
+    out+=line.join("  ")+"\n\n"; } return out; }
+async function fxFile(f){ const k=FX.k, i=findInv(k); FX.file=f.name; $("#fx-st").textContent="A ler o PDF…";
+  const buf=await f.arrayBuffer(); fxPut(k,{name:f.name,blob:new Blob([buf],{type:"application/pdf"})});
+  let txt=""; try{ txt=await pdfText(buf.slice(0)); }catch(e){ $("#fx-st").textContent=e?.message==="pdf.js"?"Para ler o texto da ficha é preciso internet (a ficha ficou guardada). Escreva os valores à mão ou tente de novo com ligação.":"Não consegui ler o texto deste PDF (pode ser uma imagem digitalizada). Escreva os valores à mão; a ficha ficou guardada."; return }
+  FX.text=txt; $("#fx-txt").textContent=txt; $("#fx-td").hidden=false;
+  if(!txt.trim()){ $("#fx-st").textContent="O PDF não tem texto (é uma imagem). Escreva os valores à mão; a ficha ficou guardada."; return }
+  if(!PVSAMPLE){ $("#fx-st").textContent="PDF lido. Copie os valores do texto em baixo para a coluna «Valor a usar» (o preenchimento automático só funciona no claude.ai)."; $("#fx-td").open=true; return }
+  $("#fx-st").textContent="A procurar os valores do "+i.model+" na ficha… (pode demorar até um minuto)";
+  const prompt=`És um técnico de energia solar. Abaixo está o texto extraído de uma ficha técnica de inversor (as tabelas perderam o alinhamento; cada coluna corresponde a um modelo da série).
+Extrai os valores para o modelo EXACTO "${i.model}" da marca ${i.brand} (${i.phases==3?"trifásico":"monofásico"}, ${i.pac_kw} kW). Se a ficha não tiver este modelo, devolve {"model_found":false}.
+Responde só com JSON, números com ponto decimal, null quando a ficha não indica o valor:
+{"model_found":true,"model_in_sheet":"nome do modelo como aparece na ficha","pac_kw":potência AC nominal em kW,"pdc_max_kw":potência FV máxima de entrada/utilizável em kW (não o campo FV recomendado),"vdc_max":tensão DC máxima V,"v_start":tensão de arranque V,"mppt_min":mínimo da gama MPPT V,"mppt_max":máximo da gama MPPT V,"v_nom":tensão DC nominal V,"mppt":número de MPPT,"strings_per_mppt":[entradas por MPPT],"imax_mppt":[corrente máx. de entrada por MPPT A],"isc_mppt":[corrente máx. de curto-circuito por MPPT A],"iac_max":corrente AC máxima de saída por fase em A (o maior valor se houver vários por tensão),"ibk_max":corrente máx. da saída backup/EPS ou corrente de passagem AC (bypass) em A, a maior das duas,"notes":"uma frase curta em português de Portugal sobre ambiguidades"}
+Valores actuais na app (podem estar errados): ${JSON.stringify(Object.fromEntries(FIXF.map(d=>[d[0],INV_ORIG[k]?.[d[0]]??null])))}
+
+TEXTO DA FICHA:
+${txt.slice(0,60000)}`;
+  try{ const r=await PVSAMPLE.json(prompt); if(FX.k!==k) return;
+    if(!r||r.model_found===false){ $("#fx-st").textContent=`A ficha não parece incluir o ${i.model}. Confirme o PDF ou escreva os valores à mão.`; $("#fx-td").open=true; return }
+    const rd={}; FIXF.forEach(([f,,,arr])=>{ let v=r[f]; if(v==null) return; if(arr){ v=(Array.isArray(v)?v:[v]).map(Number).filter(x=>isFinite(x)); if(!v.length) return; } else { v=+v; if(!isFinite(v)) return; } rd[f]=v; });
+    fxRender(rd); const nch=$("#fx-body").querySelectorAll("tr.chg").length;
+    $("#fx-st").textContent=`Li a ficha${r.model_in_sheet?` (${r.model_in_sheet})`:""}: ${nch?`${nch} valor${nch>1?"es diferentes":" diferente"} do catálogo, a amarelo`:"os valores coincidem com o catálogo"}. Confira e guarde.${r.notes?" "+r.notes:""}`;
+  }catch(e){ $("#fx-st").textContent=e&&e.code==="not_granted"?"Sem autorização para pedir ao Claude: copie os valores do texto em baixo.":"Não consegui obter os valores automaticamente: copie-os do texto em baixo."; $("#fx-td").open=true; } }
+function fxSaveDlg(){ const k=FX.k, o=INV_ORIG[k]; if(!o) return; const v={}, err=[];
+  const n0=+$('#fx-body [data-ff="mppt"]').value||o.mppt;
+  FIXF.forEach(([f,lab,,arr])=>{ const raw=$(`#fx-body [data-ff="${f}"]`).value.trim().replace(/;/g,",");
+    let x; if(arr){ x=raw?raw.split(/[,\s]+/).filter(Boolean).map(z=>+z.replace(",",".")):[]; if(x.length===1) x=Array(n0).fill(x[0]); if(raw&&(x.length!==n0||x.some(z=>!(z>0)))) err.push(lab); if(!raw) x=f==="isc_mppt"?null:o[f]; }
+    else { x=raw===""?null:+raw.replace(",","."); if(x!=null&&!isFinite(x)) err.push(lab); }
+    if(JSON.stringify(x)!==JSON.stringify(o[f]??null)) v[f]=x; });
+  if(!((v.mppt_max??o.mppt_max)>(v.mppt_min??o.mppt_min))) err.push("gama MPPT");
+  if(err.length){ toast("Verifique: "+err.join(", ")+"."); return }
+  if(!Object.keys(v).length&&!FX.file){ delete FIX[k]; } else FIX[k]={v,at:new Date().toLocaleDateString("pt-PT"),file:FX.file||FIX[k]?.file||""};
+  fixSave(); fixApply(); DGM.clear(); $("#fx-dlg").close(); invUI(); pvRun(); toast(Object.keys(v).length?`${k}: valores da ficha guardados.`:`${k}: ficha confirmada, valores iguais ao catálogo.`); }
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-fx]"); if(b){ e.preventDefault(); fxOpen(b.dataset.fx); return }
+  if(e.target.id==="fx-x"||e.target.id==="fx-cancel"){ $("#fx-dlg").close(); return }
+  if(e.target.id==="fx-save"){ fxSaveDlg(); return }
+  if(e.target.id==="fx-reset"){ const k=FX.k; delete FIX[k]; fixSave(); fixApply(); DGM.clear(); $("#fx-dlg").close(); invUI(); pvRun(); toast(`${k}: repostos os valores do catálogo.`); return }
+});
+document.addEventListener("change",e=>{ if(e.target.id==="fx-file"&&e.target.files[0]) fxFile(e.target.files[0]); });
+document.addEventListener("close",e=>{ if(e.target.id==="fx-dlg"&&FX.url){ URL.revokeObjectURL(FX.url); FX.url=null; } },true);
+// painéis personalizados (dados da ficha introduzidos pelo utilizador), guardados no navegador
+const MCUST_KEY="pv-mod-custom"; let MCUSTOM=[];
+try{MCUSTOM=JSON.parse(localStorage.getItem(MCUST_KEY))||[]}catch(e){}
+MCUSTOM.forEach(c=>MODULES.push(c));
+const findMod=n=>{ if(!n||n==="*") return null;
+  // nome exacto; senão, pela referência do fabricante (projectos guardados antes de um nome de série ser corrigido)
+  return MODULES.find(m=>modName(m)===n)||MODULES.find(m=>!m.custom&&n.startsWith(m.brand+" ")&&n.endsWith(" "+m.model.split(" ").pop())); };
+// painéis: conferidos com a ficha oficial (campo ficha = PDF em fichas/) ou com valores por confirmar (campo gaps)
+const MOD_GAP0="valores tirados de fontes da internet, sem a ficha oficial do fabricante";
+function modConf(m){
+  if(!m) return {lvl:"none"};
+  if(m.custom) return {lvl:"user"};
+  if(m.ficha) return {lvl:"ok"};
+  return {lvl:"warn",gaps:m.gaps&&m.gaps.length?m.gaps:[MOD_GAP0]};
+}
+function modConfBox(m){ const c=modConf(m);
+  if(c.lvl==="ok") return `<p class="note"><span class="pill ok">✓ Ficha conferida</span> Valores do painel conferidos com a ficha técnica oficial do fabricante em PDF (${esc(m.ficha)}).</p>`;
+  if(c.lvl==="warn") return `<div class="ic-box warn"><strong>Não confirmei os valores deste painel com a ficha oficial.</strong>
+    <span>Falta confirmar:</span><ul>${c.gaps.map(g=>`<li>${esc(g)}</li>`).join("")}</ul>
+    <span>Os cálculos usam estes valores. Se tiver a ficha, copie o painel para um painel personalizado e corrija o que for diferente.</span>
+    <div class="ic-act"><button type="button" class="btn" data-mcc="${esc(modName(m))}">Copiar para painel personalizado</button></div></div>`;
+  return "";
+}
+// texto do local: o ponto escolhido no mapa ou o distrito
+const fco=v=>Number(v).toFixed(5);
+const pvLocShort=()=>pv.lat!=null?(pv.place||pv.loc):pv.loc;
+const pvLocTxt=()=>pv.lat!=null?`${pv.place||pv.loc} (${fco(pv.lat)}, ${fco(pv.lon)}${pv.alt!=null?", "+Math.round(pv.alt)+" m":""})`:pv.loc;
+// códigos do inversor na app: nome completo e código entre parênteses, ex. "Sunny Boy 3.0 (SB3.0-1AV-41)"
+const invKeys=i=>[i.model,...(i.model.match(/\(([^)]*)\)/g)||[]).map(x=>x.slice(1,-1)),...(i.dgeg?[i.dgeg]:[])].map(normM); // dgeg: nome como aparece na lista, quando difere
+const DGM=new Map();
+// 2 = modelo igual ao da lista; 1 = só a série/geração anterior consta (ex. SUN2000-8KTL vs SUN2000-8KTL-M1); 0 = não consta
+function dgegMatch(i){ const key=invName(i); if(DGM.has(key)) return DGM.get(key);
+  const ks=invKeys(i), src=dgSrc(); let r={lvl:0,ix:-1};
+  const ex=src.find(x=>ks.includes(x.k)); if(ex) r={lvl:2,ix:ex.ix};
+  else { const pr=src.find(x=>x.k.length>=8&&ks.some(k=>k.startsWith(x.k))); if(pr) r={lvl:1,ix:pr.ix}; }
+  DGM.set(key,r); return r; }
+const inDGEG=i=>dgegMatch(i).lvl===2;
+const dgRow=ix=>ix>=0?DGEG_LIST[ix]:null;
+const fkw=v=>Number(v).toLocaleString("pt-PT",{maximumFractionDigits:3});
+function dgegPill(i){ const d=dgegMatch(i), r=dgRow(d.ix);
+  return d.lvl===2?`<span class="pill ok" title="${r?esc(r[0]+" "+r[1]+" · "+fkw(r[2])+" kW · "+r[3]):""}">Lista DGEG</span>`:d.lvl===1?`<span class="pill warn" title="Consta ${r?esc(r[1]):"a série"}, não este modelo">Só série anterior na DGEG</span>`:`<span class="pill na">Fora da lista DGEG</span>`; }
+
+/* ---------- física do módulo ---------- */
+// painéis bifaciais em estrutura elevada: Isc com o ganho da face traseira (≈ BNPI, IEC 62548-1:2023): +10 %
+const bifK=(m,g=pv)=>m&&m.bifacial&&g.mount!=="roof"?1.1:1;
+// coeficiente do Vmpp: as fichas não o dão; o de Pmax (γ) é a aproximação habitual e é mais severo que o do Voc
+const bVmpp=m=>Math.min(m.beta_voc,m.gamma_pmax??m.beta_voc);
+function modT(m,g=pv){
+  const tcMax=g.tmax+((m.noct||45)-20)/800*1000+MOUNT[g.mount].dt;
+  const k=t=>1+m.beta_voc/100*(t-25), kv=t=>1+bVmpp(m)/100*(t-25);
+  return {tcMin:g.tmin,tcMax,
+    vocCold:m.voc*k(g.tmin), vmppCold:m.vmpp*kv(g.tmin), vmppHot:m.vmpp*kv(tcMax), vocHot:m.voc*k(tcMax),
+    iscHot:m.isc*bifK(m,g)*(1+m.alpha_isc/100*(tcMax-25)), imppHot:m.impp*(1+m.alpha_isc/100*(tcMax-25))};
+}
+function limits(m,inv,t){
+  const vlim=Math.min(inv.vdc_max,m.vsys_max||Infinity);
+  const nsVoc=Math.floor(vlim/t.vocCold);
+  const nsMpptHi=Math.floor(inv.mppt_max/t.vmppCold);
+  const nsMin=Math.ceil(Math.max(inv.mppt_min,inv.v_start||0)/t.vmppHot);
+  const nsMax=Math.min(nsVoc,nsMpptHi);
+  const perM=inv.strings_per_mppt.map((s,j)=>{
+    const isc=inv.isc_mppt?.[j]; const byI=isc?Math.floor(isc/t.iscHot):Math.floor((inv.imax_mppt[j]*1.25)/t.iscHot);
+    return Math.max(0,Math.min(s,byI));
+  });
+  return {vlim,nsVoc,nsMpptHi,nsMin,nsMax,perM};
+}
+/* melhor configuração de um inversor para um nº de módulos alvo (programação dinâmica nos MPPT) */
+// distribui S strings pelos MPPT de forma equilibrada, sem exceder o máximo de cada um (entradas e Isc)
+function spread(S,caps){
+  if(caps.reduce((a,c)=>a+c,0)<S) return null;
+  const k=caps.map(()=>0);
+  for(let i=0;i<S;i++){ let j=-1; caps.forEach((c,x)=>{ if(k[x]<c&&(j<0||k[x]<k[j]||(k[x]===k[j]&&c>caps[j]))) j=x; }); k[j]++; }
+  return k;
+}
+// n.º de MPPT com strings curtas: Vmpp (STC) abaixo de metade da tensão nominal DC do inversor (ex. 3 × 37 V = 111 V num inversor de 360 V)
+const vShort=inv=>0.5*(inv.v_nom||(inv.mppt_min+inv.mppt_max)/2);
+const shortN=(cfg,m,inv)=>cfg.filter(c=>c.s&&c.ns*m.vmpp<vShort(inv)).length;
+/* melhor configuração de um inversor para um n.º de módulos alvo.
+   Preferência: strings todas iguais e todos os MPPT usados; se necessário, um MPPT com comprimento diferente. */
+function bestConfig(m,inv,target,L){
+  if(L.nsMin>L.nsMax||target<1) return null;
+  let best=null;
+  const consider=(cfg,alt)=>{ const tot=cfg.reduce((a,c)=>a+c.s*c.ns,0); if(!tot) return;
+    const S=cfg.reduce((a,c)=>a+c.s,0), unused=cfg.filter(c=>!c.s).length;
+    // strings curtas (tensão baixa): mais corrente e mais cabo para a mesma potência; é preferível juntar os módulos numa string e deixar um MPPT livre
+    const cost=Math.abs(tot-target)+Math.max(0,Math.min(S,cfg.length)-(cfg.length-unused))*1.5+unused*0.6+shortN(cfg,m,inv)+(alt?1:0)+S*0.01;
+    if(!best||cost<best.cost) best={tot,cfg,cost}; };
+  for(let ns=L.nsMin;ns<=L.nsMax;ns++){
+    for(const S of new Set([Math.max(1,Math.floor(target/ns)),Math.max(1,Math.ceil(target/ns))])){
+      const k=spread(S,L.perM); if(!k) continue;
+      const cfg=k.map(s=>({s,ns:s?ns:0})); consider(cfg,false);
+      // afinar: um MPPT com uma só string pode ter outro comprimento
+      cfg.forEach((c,j)=>{ if(c.s!==1) return; for(let n2=L.nsMin;n2<=L.nsMax;n2++) if(n2!==ns) consider(cfg.map((x,i)=>i===j?{s:1,ns:n2}:x),true); });
+    }
+  }
+  return best&&{tot:best.tot,cfg:best.cfg};
+}
+const range=(a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push(i);return r};
+
+function evaluate(m,inv,N,cfg,g=pv){
+  const t=modT(m,g), L=limits(m,inv,t);
+  const per=cfg.reduce((a,c)=>a+c.s*c.ns,0), n=per*N;
+  const kWp=n*m.pmax/1000, kWac=N*inv.pac_kw, ratio=kWp/kWac;
+  const area=n*(m.length_mm*m.width_mm/1e6)*MOUNT[g.mount].f;
+  const checks=[]; const add=(ok,t,d,soft)=>checks.push({ok,t,d,soft});
+  cfg.forEach((c,j)=>{ if(!c.s) return; const lab=`MPPT ${j+1}`;
+    add(c.ns*t.vocCold<=L.vlim,`${lab}: Voc a ${fmt(g.tmin,0)} °C ≤ Vmáx`,`${c.ns} × ${fmt(t.vocCold,2)} = ${fmt(c.ns*t.vocCold,0)} V ≤ ${fmt(L.vlim,0)} V`);
+    add(c.ns*t.vmppHot>=inv.mppt_min,`${lab}: Vmpp a quente ≥ mín. MPPT`,`${c.ns} × ${fmt(t.vmppHot,2)} = ${fmt(c.ns*t.vmppHot,0)} V ≥ ${inv.mppt_min} V`);
+    add(c.ns*t.vmppCold<=inv.mppt_max,`${lab}: Vmpp a frio ≤ máx. MPPT`,`${c.ns} × ${fmt(t.vmppCold,2)} = ${fmt(c.ns*t.vmppCold,0)} V ≤ ${inv.mppt_max} V`);
+    add(c.s<=inv.strings_per_mppt[j],`${lab}: n.º de strings ≤ entradas`,`${c.s} ≤ ${inv.strings_per_mppt[j]}`);
+    if(!inv.isc_mppt) add(c.s*t.iscHot<=inv.imax_mppt[j]*1.25,`${lab}: Isc ≤ 1,25 × I máx. MPPT (ficha sem Isc máx.)`,`${c.s} × ${fmt(t.iscHot,2)} = ${fmt(c.s*t.iscHot,1)} A ≤ ${fmt(inv.imax_mppt[j]*1.25,1)} A`,true);
+    if(inv.isc_mppt) add(c.s*t.iscHot<=inv.isc_mppt[j],`${lab}: Isc ≤ Isc máx. MPPT`,`${c.s} × ${fmt(t.iscHot,2)} = ${fmt(c.s*t.iscHot,1)} A ≤ ${inv.isc_mppt[j]} A`);
+    add(c.s*m.impp<=inv.imax_mppt[j],`${lab}: Impp ≤ I máx. MPPT`,`${c.s} × ${fmt(m.impp,2)} = ${fmt(c.s*m.impp,1)} A ≤ ${inv.imax_mppt[j]} A`,true);
+  });
+  add(ratio>=g.rmin&&ratio<=g.rmax,`Rácio DC/AC entre ${fmt(g.rmin,2)} e ${fmt(g.rmax,2)}`,`${fmt(kWp,2)} kWp / ${fmt(kWac,1)} kW = ${fmt(ratio,2)}`,true);
+  if(inv.pdc_max_kw) add(per*m.pmax/1000<=inv.pdc_max_kw,`Potência DC ≤ máx. recomendada do inversor`,`${fmt(per*m.pmax/1000,2)} kWp ≤ ${inv.pdc_max_kw} kWp (por inversor)`,true);
+  if(g.area>0) add(area<=g.area,`Área necessária ≤ disponível`,`${fmt(area,0)} m² ≤ ${fmt(g.area,0)} m²`);
+  const hard=checks.filter(c=>!c.ok&&!c.soft).length, soft=checks.filter(c=>!c.ok&&c.soft).length;
+  return {t,L,per,n,kWp,kWac,ratio,area,checks,hard,soft,prod:kWp*g.yld};
+}
+
+// painéis de grande formato (> 2 m, ~30 kg, 72/78 células) são pouco práticos em telhados de moradia: ficam atrás, salvo se escolhidos
+const bigPen=(m,g,kWp)=>g.mod!=="*"||m.length_mm<=2000?0:g.mount==="roof"?25:kWp<15?10:0;
+function search(g=pv){
+  const mods=g.mod==="*"?MODULES:MODULES.filter(m=>modName(m)===g.mod);
+  // inversor escolhido: só esse, sem filtros, e mostra também as configurações que falham (com as falhas assinaladas)
+  const pick=findInv(g.inv);
+  const invs=pick?[pick]:INVERTERS.filter(i=>i.phases==g.ph&&(!g.bat||i.hybrid)&&(g.brand==="*"||i.brand===g.brand)&&(!g.dgegOnly||inDGEG(i)));
+  const res=[];
+  for(const m of mods){ const t=modT(m,g);
+    for(const inv of invs){ const L=limits(m,inv,t); if(L.nsMin>L.nsMax) continue;
+      for(let N=1;N<=4;N++){
+        const kWac=N*inv.pac_kw;
+        let tKWp;
+        if(g.unit==="kWp"){ tKWp=g.P; const r=tKWp/kWac; if(pick?(r<0.5||r>2):(r<g.rmin-0.2||r>g.rmax+0.05)) continue; } // abaixo do rácio mínimo (até -0,2) fica só como aviso
+        else { if(pick?(kWac<g.P*0.5||kWac>g.P*2):(kWac<g.P*0.98||kWac>g.P*1.2)) continue; tKWp=Math.min(kWac*1.15,kWac*g.rmax); }
+        let target=tKWp*1000/m.pmax/N;
+        if(g.area>0){ const maxN=Math.floor(g.area/((m.length_mm*m.width_mm/1e6)*MOUNT[g.mount].f)/N); target=Math.min(target,maxN); }
+        const b=bestConfig(m,inv,Math.round(target),L); if(!b) continue;
+        const e=evaluate(m,inv,N,b.cfg,g); if(e.hard&&!pick) continue;
+        const goal=g.unit==="kWp"?g.P:tKWp;
+        const unused=b.cfg.filter(c=>!c.s).length; // MPPT sem strings
+        const score=Math.abs(e.kWp-goal)/goal*100*3 + Math.abs(e.ratio-1.15)*15 + e.soft*6 + unused*2 + shortN(b.cfg,m,inv)*2 + (g.unit==="kWp"?0:Math.abs(e.kWac-g.P)/g.P*100) + e.hard*100 + bigPen(m,g,goal);
+        const fit=Math.abs(e.kWp-goal)/goal<=0.1; // só conta como "possível" se ficar a ±10 % da potência pedida
+        res.push({m,inv,N,cfg:b.cfg,e,score,rank:fit?N:N+10});
+      }
+    }
+  }
+  // um só inversor sempre que possível: primeiro o n.º de inversores, depois a pontuação
+  res.sort((a,b)=>a.rank-b.rank||a.score-b.score);
+  // porque é que não há solução com um só inversor (mostrado por cima das opções)
+  const one=res.some(r=>r.N===1&&r.rank===1);
+  const big=invs.reduce((x,i)=>!x||i.pac_kw>x.pac_kw?i:x,null);
+  search.why=pick?pickWhy(pick,g,res):one||!res.length?"":!big?"":
+    (g.unit==="kWp"?g.P/big.pac_kw>g.rmax+0.05:big.pac_kw<g.P*0.98)
+      ?`Nenhum inversor ${g.ph==1?"monofásico":"trifásico"}${g.bat?" híbrido":""} do catálogo${g.brand!=="*"?" desta marca":""}${g.dgegOnly?" da lista DGEG":""} chega sozinho a ${fmt(g.P,1)} ${g.unit}: o maior é o ${invName(big)} (${fmt(big.pac_kw,1)} kW AC${g.unit==="kWp"?`, até ${fmt(big.pac_kw*g.rmax,1)} kWp com rácio DC/AC ${fmt(g.rmax,2)}`:""}). Por isso a app propõe mais de um inversor.`
+      :`Há inversores com potência suficiente, mas nenhum cumpre sozinho as verificações (tensões, correntes, entradas por MPPT ou área) com estes painéis. Por isso a app propõe mais de um inversor.`;
+  // diversidade: primeiro um resultado por inversor; só depois uma 2.ª variante (outro painel) do mesmo inversor
+  const out=[],seen=new Set(),MAXR=8;
+  for(const pass of [1,2]) for(const r of res){ if(out.length>=MAXR) break;
+    const ki=invName(r.inv), k=modName(r.m)+"|"+ki;
+    if(seen.has(k)||(!pick&&out.filter(o=>invName(o.inv)===ki).length>=pass)) continue;
+    if(pass===2&&r.rank>(out[0]?.rank??0)) continue; // a 2.ª passagem não traz soluções com mais inversores
+    seen.add(k); out.push(r); }
+  out.sort((a,b)=>a.rank-b.rank||a.score-b.score);
+  return out;
+}
+
+/* ---------- interface ---------- */
+let PVRES=[];
+function pvInit(){
+  $("#pv-loc").innerHTML=Object.keys(LOCS).map(k=>`<option>${k}</option>`).join("");
+  if(pv.mod!=="*"){ const f=findMod(pv.mod); pv.mod=f?modName(f):"*"; } modUI();
+  $("#pv-brand").innerHTML=`<option value="*">Todas</option>`+[...new Set(INVERTERS.map(i=>i.brand))].sort().map(b=>`<option>${b}</option>`).join("");
+  const set=(id,v)=>$(id).value=v;
+  set("#pv-P",pv.P);set("#pv-rmin",pv.rmin);set("#pv-rmax",pv.rmax);set("#pv-loc",pv.loc);set("#pv-tmin",pv.tmin);set("#pv-tmax",pv.tmax);set("#pv-yield",pv.yld);set("#pv-area",pv.area);set("#pv-mount",pv.mount);set("#pv-brand",pv.brand);
+  $("#pv-dgeg").checked=pv.dgegOnly;
+  if(pv.inv&&!findInv(pv.inv)) pv.inv=""; invUI();
+  const segs={"#pv-unit":"unit","#pv-ph":"ph","#pv-bat":"bat"};
+  for(const [id,k] of Object.entries(segs)) $(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(pv[k])===b.dataset.v));
+  locNote(); dgegStatus(); pvRun();
+}
+function locNote(){ $("#pv-map-clr").hidden=pv.lat==null;
+  $("#pv-loc-n").innerHTML=pv.lat!=null?`Local escolhido no mapa: <strong>${esc(pv.place||pv.loc)}</strong> · ${fco(pv.lat)}, ${fco(pv.lon)}${pv.alt!=null?` · cerca de ${Math.round(pv.alt)} m de altitude`:""}. Temperaturas e produção calculadas para este ponto.`:"Valores de referência da capital de distrito. Para um ponto exacto, escolha no mapa."; }
+function dgegStatus(){ DGM.clear();
+  const n2=INVERTERS.filter(i=>dgegMatch(i).lvl===2).length, n1=INVERTERS.filter(i=>dgegMatch(i).lvl===1).length;
+  const head=DGEG_IMP?`Lista DGEG importada de “${esc(DGEG_IMP.name)}” (${DGEG_IMP.keys.length} códigos). <a href="#" id="pv-dgeg-reset">Repor a lista incluída</a>.`:`Lista DGEG incluída: ${DGEG_LIST.length} inversores da <a href="${DGEG_INFO.url}" target="_blank" rel="noopener">bolsa de equipamentos certificados do SERUP</a>, descarregada em ${DGEG_INFO.fetched}.`;
+  $("#pv-dgeg-st").innerHTML=`${head} ${n2} de ${INVERTERS.length} inversores da app constam da lista${n1?`; ${n1} só pela série anterior`:""}.`;
+  $("#pv-dg-sum").textContent=DGEG_IMP?"(lista incluída; o filtro usa o ficheiro importado)":`${DGEG_LIST.length} modelos · SERUP ${DGEG_INFO.fetched}`;
+  $("#pv-dg-src").innerHTML=`Fonte: <a href="${DGEG_INFO.url}" target="_blank" rel="noopener">DGEG, SERUP, bolsa de equipamentos certificados (inversores)</a>, descarregada em ${DGEG_INFO.fetched}. Os valores são os publicados pela DGEG, incluindo eventuais gralhas.`; }
+function renderDG(){ const q=normM($("#pv-dg-q").value||""); const raw=($("#pv-dg-q").value||"").toLowerCase().trim();
+  const rows=DGEG_LIST.filter(r=>!raw||normM(r[0]+r[1]).includes(q)||r[0].toLowerCase().includes(raw));
+  const shown=rows.slice(0,400);
+  $("#pv-dg-body").innerHTML=shown.map(r=>`<tr style="cursor:default"><td>${esc(r[0])}</td><td class="mono">${esc(r[1])}</td><td>${fkw(r[2])}</td><td>${esc(r[3])}</td><td>${r[5]>0?fkw(r[5]):"—"}</td></tr>`).join("")+(rows.length>shown.length?`<tr><td colspan="5" class="note">Mais ${rows.length-shown.length} modelos. Refine a pesquisa.</td></tr>`:"")||`<tr><td colspan="5" class="note">Nenhum modelo encontrado.</td></tr>`; }
+// sugestão de potência a partir do consumo anual (separador 3): sem bateria produzir ~80 % do consumo (o excedente vale pouco), com bateria ~100 %
+function pvHint(){ const el=$("#pv-P-n"); if(!el) return; let E=0, src="";
+  try{ const LD=prLoad(); E=LD.h.reduce((s,r,mm)=>s+r.reduce((a,b)=>a+b,0)*MDAYS[mm],0); src=LD.src==="eredes"?" (diagrama E-REDES)":LD.src==="mon"?" (facturas)":""; }catch(_){ el.innerHTML=""; return; }
+  if(!(E>0)||!(pv.yld>0)){ el.innerHTML=""; return; }
+  const f=+pv.bat?1:0.8, kwp=Math.max(1,Math.round(E*f/pv.yld*2)/2);
+  el.innerHTML=`Sugestão pelo consumo do separador 3, ${fmt(E,0)} kWh/ano${src}: ${+pv.bat?"com bateria, produzir cerca de 100 %":"sem bateria, produzir cerca de 80 %"} do consumo → <strong>${fmt(kwp,1)} kWp</strong>${pv.unit==="kWp"&&Math.abs(kwp-pv.P)<0.01?" (é o valor indicado)":` · <a href="#" id="pv-P-use" data-v="${kwp}">usar este valor</a>`}`; }
+function pvRun(){ PVRES=search(); pvHint(); pv.sel=0; pv.edit=PVRES[0]?{m:PVRES[0].m,inv:PVRES[0].inv,N:PVRES[0].N,cfg:PVRES[0].cfg.map(c=>({...c}))}:null; renderOpts(); renderPvDetail(); pvSave(); }
+function pickWhy(inv,g,res){ const w=[];
+  if(inv.phases!=g.ph) w.push(`o ${esc(invName(inv))} é ${inv.phases==1?"monofásico":"trifásico"} e a ligação escolhida é ${g.ph==1?"monofásica":"trifásica"}`);
+  if(g.bat&&!inv.hybrid) w.push("não é híbrido (não liga bateria)");
+  if(res.length&&res.every(r=>r.e.hard)) w.push("nenhuma configuração cumpre todas as verificações com estes painéis; as falhas estão assinaladas em cada opção");
+  if(!res.length) w.push("não encontrei configuração razoável para esta potência (o inversor é demasiado pequeno ou demasiado grande, ou a gama de tensões não serve estes painéis)");
+  return w.length?`Atenção: ${w.join("; ")}.`:""; }
+function renderOpts(){
+  $("#pv-why").hidden=!search.why; $("#pv-why").textContent=search.why||"";
+  const pick=findInv(pv.inv);
+  $("#pv-count").textContent=pick?`${PVRES.length} configuraç${PVRES.length===1?"ão":"ões"} com o inversor escolhido`:PVRES.length?`${PVRES.length} melhores de ${MODULES.length} painéis × ${INVERTERS.length} inversores`:"";
+  $("#pv-opts").innerHTML=PVRES.map((r,i)=>`<button class="opt" data-i="${i}" aria-pressed="${i===pv.sel}">
+    <span class="rk">${i===0?"Recomendada":"Opção "+(i+1)}</span>
+    <span class="h">${r.N>1?r.N+" × ":""}${esc(invName(r.inv))}</span>
+    <span class="m">${r.e.n} × ${esc(modName(r.m))}</span>
+    <span class="m">${r.inv.mppt} MPPT · ${r.cfg.map(c=>c.s?`${c.s}×${c.ns}`:"–").join(" | ")} <span title="strings × módulos por MPPT; entradas disponíveis entre parênteses">(${r.inv.strings_per_mppt.join("+")} entradas)</span></span>
+    <span class="nums"><span>${fmt(r.e.kWp,2)} kWp</span><span>${fmt(r.e.kWac,1)} kW AC</span><span>DC/AC ${fmt(r.e.ratio,2)}</span></span>
+    <span class="chips">${r.e.hard?`<span class="pill bad">✕ ${r.e.hard} falha${r.e.hard>1?"s":""}</span>`:""}${r.e.hard?"":r.e.soft?`<span class="pill warn">${r.e.soft} aviso${r.e.soft>1?"s":""}</span>`:`<span class="pill ok">✓ Tudo cumpre</span>`}${r.inv.hybrid?`<span class="pill na">Híbrido</span>`:""}${cprodInfo(r.inv,r.N).need?`<span class="pill na" title="Potência instalada superior a 4 kW (${CPROD_LEI})">Contador de produção</span>`:""}${dgegPill(r.inv)}${invConf(r.inv).lvl==="warn"?`<span class="pill warn" title="Não tenho a ficha completa deste inversor">Ficha a confirmar</span>`:""}${modConf(r.m).lvl==="warn"?`<span class="pill warn" title="Valores do painel não confirmados com a ficha oficial">Painel a confirmar</span>`:""}</span>
+  </button>`).join("") || `<div class="msg">${pv.dgegOnly&&!INVERTERS.some(inDGEG)?"Nenhum inversor do catálogo da app, para esta ligação, consta da lista DGEG. Desligue o filtro DGEG para ver combinações.":"Nenhuma combinação cumpre todos os requisitos. Experimente alargar o rácio DC/AC, mudar a ligação à rede, retirar o filtro de marca ou aumentar a área."}</div>`;
+}
+// contador de produção (totalizador): DL 15/2022, art. 95.º, n.º 1 — contagem obrigatória da energia total produzida pela UPAC ligada à RESP
+// com potência instalada SUPERIOR a 4 kW (4,00 kW não obriga). Potência instalada = potência nominal de saída dos inversores (art. 3.º, al. fff))
+var CPROD_KW=4;
+var cprodInfo=(inv,N)=>{ var P=(+N||1)*(+(inv&&inv.pac_kw)||0); return {P,need:P>CPROD_KW+1e-9}; };
+var CPROD_LEI="art. 95.º, n.º 1, do DL 15/2022";
+function renderPvDetail(){
+  const E=pv.edit; if(!E){$("#pv-detail").innerHTML="";$("#pv-how").innerHTML="";return}
+  const {m,inv,N}=E, e=evaluate(m,inv,N,E.cfg), t=e.t, L=e.L;
+  const fails=e.checks.filter(c=>!c.ok);
+  $("#pv-detail").innerHTML=`<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><h2>Configuração das strings</h2>
+    <span class="note">Ajuste à mão: as verificações actualizam-se.</span></div>
+    <div class="kpis">
+      <div class="kv"><div class="k">Potência de pico</div><div class="v">${fmt(e.kWp,2)}<small>kWp</small></div><div class="s">${e.n} módulos × ${m.pmax} W</div></div>
+      <div class="kv"><div class="k">Potência AC</div><div class="v">${fmt(e.kWac,1)}<small>kW</small></div><div class="s">${N} × ${esc(inv.model)}</div></div>
+      <div class="kv"><div class="k">Rácio DC/AC</div><div class="v">${fmt(e.ratio,2)}</div><div class="s">alvo ${fmt(pv.rmin,2)}–${fmt(pv.rmax,2)}</div></div>
+      <div class="kv"><div class="k">Área necessária</div><div class="v">${fmt(e.area,0)}<small>m²</small></div><div class="s">${pv.area>0?"disponível "+fmt(pv.area,0)+" m²":"sem limite definido"}</div></div>
+      <div class="kv"><div class="k">Produção estimada</div><div class="v">${fmt(e.prod/1000,1)}<small>MWh/ano</small></div><div class="s">${fmt(pv.yld,0)} kWh/kWp · ${esc(pvLocShort())}</div></div>
+    </div>
+    ${N>1?`<p class="note">Os ${N} inversores têm configuração igual. A tabela mostra um inversor.</p>`:""}
+    <div class="mp">${E.cfg.map((c,j)=>`<div class="mprow"><div class="top"><strong>MPPT ${j+1}</strong><span class="note">${inv.strings_per_mppt[j]} entrada${inv.strings_per_mppt[j]>1?"s":""} · máx. ${L.perM[j]} string${L.perM[j]!==1?"s":""} com este painel</span>
+      <span class="note">Strings</span><span class="step"><button data-a="s-" data-j="${j}" aria-label="Menos strings">−</button><span>${c.s}</span><button data-a="s+" data-j="${j}" aria-label="Mais strings">+</button></span>
+      <span class="note">Módulos/string</span><span class="step"><button data-a="n-" data-j="${j}" aria-label="Menos módulos">−</button><span>${c.ns}</span><button data-a="n+" data-j="${j}" aria-label="Mais módulos">+</button></span>
+      <span class="note mono">${c.s?`Voc ${fmt(c.ns*t.vocCold,0)} V · Vmpp ${fmt(c.ns*t.vmppHot,0)}–${fmt(c.ns*t.vmppCold,0)} V · Isc ${fmt(c.s*t.iscHot,1)} A`:"sem strings"}</span></div>
+      <div class="mods">${Array.from({length:c.s},()=>`<span class="st">${"<i></i>".repeat(c.ns)}</span>`).join("")}</div></div>`).join("")}</div>
+    ${(()=>{ const row=c=>`<tr style="cursor:default"><td>${c.ok?`<span class="pill ok">✓</span>`:c.soft?`<span class="pill warn">!</span>`:`<span class="pill bad">✕</span>`}</td><td>${c.t}</td><td class="mono">${c.d}</td></tr>`;
+      // só as verificações que falham ficam à vista; as restantes ficam no detalhe
+      return (fails.length?`<div class="tbl"><table><tbody>${fails.map(row).join("")}</tbody></table></div>`:"")+
+        `<details class="pv-chk"><summary>${fails.length?`Ver as ${e.checks.length} verificações`:`<span class="pill ok">✓ Cumpre as ${e.checks.length} verificações</span> Ver detalhe`}</summary><div class="tbl"><table><tbody>${e.checks.map(row).join("")}</tbody></table></div></details>`; })()}
+    ${fails.some(c=>c.t.includes("Impp"))?`<p class="note">Impp acima do máximo do MPPT não é perigoso: o inversor limita a corrente e perde-se alguma produção (clipping).</p>`:""}
+    ${(()=>{ const c=cprodInfo(inv,N); return c.need?`<p class="note"><span class="pill warn">Contador de produção obrigatório</span> Potência instalada ${fmt(c.P,2)} kW (potência AC ${N>1?"dos inversores":"do inversor"}), superior a 4 kW: a UPAC tem de ter contador da produção total, com telecontagem (${CPROD_LEI}). Entra automaticamente no unifilar, na lista de material e na memória descritiva.</p>`
+      :c.P>=3.5||e.kWp>4?`<p class="note"><span class="pill ok">Sem contador de produção</span> Potência instalada ${fmt(c.P,2)} kW, não superior a 4 kW: não é obrigatório (${CPROD_LEI}). Conta a potência do inversor, não os ${fmt(e.kWp,2)} kWp dos painéis.</p>`:""; })()}
+    ${inv.hybrid&&pv.bat?`<p class="note">Bateria: inversor híbrido, bateria ${esc(inv.battery||"conforme ficha técnica")}. Confirme a compatibilidade da marca da bateria.</p>`:""}
+    ${!m.noct?`<p class="note">A ficha do painel não indica NOCT/NMOT; usei 45 °C.</p>`:""}${m.note?`<p class="note">Nota sobre o painel: ${esc(m.note)}</p>`:""}${inv.note?`<p class="note">Nota sobre o inversor: ${esc(inv.note)}</p>`:""}
+    ${pv.mod===modName(m)?"":modConfBox(m)}${pv.inv===invName(inv)?"":invConfBox(inv)}
+    ${(()=>{const d=dgegMatch(inv),r=dgRow(d.ix); return `<p class="note">${dgegPill(inv)} ${d.lvl===2?(r?`Consta da bolsa de equipamentos do SERUP como ${esc(r[0])} ${esc(r[1])}, ${fkw(r[2])} kW, regime ${esc(r[3]).toLowerCase()}.`:"Consta do ficheiro importado."):d.lvl===1?`A lista DGEG tem ${r?esc(r[1]):"a série anterior"}, mas não este modelo. Confirme a declaração de conformidade do fabricante.`:`Este modelo não consta da lista DGEG. Peça ao fabricante a declaração de conformidade (Regulamento UE 2016/631 / EN 50549-1).`}</p>`})()}
+    <p class="src">Fichas técnicas: ${m.source?`<a href="${esc(m.source)}" target="_blank" rel="noopener">painel</a>`:"painel personalizado (dados introduzidos)"} · ${inv.source?`<a href="${esc(inv.source)}" target="_blank" rel="noopener">inversor</a>`:inv.ficha?`inversor: ${esc(inv.ficha)}`:"inversor personalizado (dados introduzidos)"}</p>
+    <div style="display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap"><span class="note">Passo seguinte: cabos, protecções e esquemas desta configuração.</span><button class="btn pri" id="pv-next">Unifilar e protecções →</button></div>`;
+  $("#pv-how").innerHTML=`<h2>Como cheguei aqui</h2><ol class="steps">
+    <li><div><h4>Temperaturas de cálculo</h4><p class="note">Ao nascer do sol, num dia frio, a célula está à temperatura do ar e a tensão é máxima. Ao meio-dia de verão a célula aquece muito acima do ar.</p>
+      <div class="eq">T<sub>mín</sub> célula = ${fmt(pv.tmin,0)} °C <span class="note" style="font-family:var(--f-body)">(${esc(pvLocTxt())})</span><br>T<sub>máx</sub> célula = T<sub>ar</sub> + (NOCT − 20)/800 × 1000 ${MOUNT[pv.mount].dt?"+ "+MOUNT[pv.mount].dt:""} = ${fmt(pv.tmax,0)} + (${m.noct||45} − 20) × 1,25 ${MOUNT[pv.mount].dt?"+ "+MOUNT[pv.mount].dt:""} = <span class="r">${fmt(t.tcMax,1)} °C</span></div></div></li>
+    <li><div><h4>Valores do módulo corrigidos</h4><p class="note">${esc(modName(m))}: Voc ${m.voc} V, Vmpp ${m.vmpp} V, Isc ${m.isc} A, Impp ${m.impp} A, β(Voc) ${fmt(m.beta_voc,2)} %/°C, γ(Pmax) ${fmt(m.gamma_pmax??m.beta_voc,2)} %/°C, α(Isc) ${fmt(m.alpha_isc,3)} %/°C. A ficha não dá o coeficiente do Vmpp: usa-se o de Pmax (γ), que é o mais severo para o mínimo do MPPT a quente.</p>
+      <div class="eq">Voc(${fmt(pv.tmin,0)} °C) = ${m.voc} × [1 + (${fmt(m.beta_voc,2)}/100) × (${fmt(pv.tmin,0)} − 25)] = <span class="r">${fmt(t.vocCold,2)} V</span><br>
+      Vmpp(${fmt(pv.tmin,0)} °C) = ${m.vmpp} × [1 + (${fmt(bVmpp(m),2)}/100) × (${fmt(pv.tmin,0)} − 25)] = <span class="r">${fmt(t.vmppCold,2)} V</span><br>
+      Vmpp(${fmt(t.tcMax,1)} °C) = ${m.vmpp} × [1 + (${fmt(bVmpp(m),2)}/100) × (${fmt(t.tcMax,1)} − 25)] = <span class="r">${fmt(t.vmppHot,2)} V</span><br>
+      Isc(${fmt(t.tcMax,1)} °C) = ${m.isc}${bifK(m)>1?" × 1,10 (bifacial)":""} × [1 + (${fmt(m.alpha_isc,3)}/100) × (${fmt(t.tcMax,1)} − 25)] = <span class="r">${fmt(t.iscHot,2)} A</span></div></div></li>
+    <li><div><h4>Módulos por string</h4><p class="note">${esc(invName(inv))}: Vmáx ${inv.vdc_max} V, MPPT ${inv.mppt_min}–${inv.mppt_max} V${inv.v_start?`, arranque ${inv.v_start} V`:""}. Tensão máx. do sistema do módulo: ${m.vsys_max||"–"} V.</p>
+      <div class="eq">Máx. pela tensão: ⌊${fmt(L.vlim,0)} / ${fmt(t.vocCold,2)}⌋ = <span class="r">${L.nsVoc}</span><br>
+      Máx. pela gama MPPT: ⌊${inv.mppt_max} / ${fmt(t.vmppCold,2)}⌋ = <span class="r">${L.nsMpptHi}</span><br>
+      Mín. pela gama MPPT: ⌈${Math.max(inv.mppt_min,inv.v_start||0)} / ${fmt(t.vmppHot,2)}⌉ = <span class="r">${L.nsMin}</span><br>
+      Portanto: <span class="r">${L.nsMin} a ${L.nsMax} módulos por string</span></div></div></li>
+    <li><div><h4>Strings por MPPT</h4><p class="note">Limitado pelas entradas físicas e pela corrente de curto-circuito máxima de cada MPPT.</p>
+      <div class="eq">${inv.strings_per_mppt.map((s,j)=>`MPPT ${j+1}: ${s} entrada${s>1?"s":""}${inv.isc_mppt?`, ⌊${inv.isc_mppt[j]} / ${fmt(t.iscHot,2)}⌋ = ${Math.floor(inv.isc_mppt[j]/t.iscHot)}`:""} → <span class="r">máx. ${L.perM[j]} string${L.perM[j]!==1?"s":""}</span>`).join("<br>")}</div></div></li>
+    <li><div><h4>Escolha da combinação</h4><p class="note">Para cada painel e inversor (1 a ${4} unidades iguais), procurei a distribuição de strings que mais se aproxima de ${pv.unit==="kWp"?fmt(pv.P,1)+" kWp":fmt(pv.P,1)+" kW AC × 1,15"} sem violar nenhum limite. Um só inversor tem sempre prioridade; só aparecem soluções com 2 ou mais quando não há alternativa melhor. Depois, a ordenação dá preferência a: potência mais próxima do pedido, rácio DC/AC perto de 1,15, menos avisos e todos os MPPT usados. Cada MPPT recebe no máximo as strings que as suas entradas e a corrente Isc permitem.</p>
+      <div class="eq">${e.n} × ${m.pmax} W = <span class="r">${fmt(e.kWp,2)} kWp</span> · ${fmt(e.kWp,2)} / ${fmt(e.kWac,1)} = <span class="r">DC/AC ${fmt(e.ratio,2)}</span><br>
+      Área: ${e.n} × ${fmt(m.length_mm/1000,3)} × ${fmt(m.width_mm/1000,3)} m × ${fmt(MOUNT[pv.mount].f,2)} (${MOUNT[pv.mount].label}) = <span class="r">${fmt(e.area,0)} m²</span><br>
+      Produção: ${fmt(e.kWp,2)} kWp × ${fmt(pv.yld,0)} kWh/kWp = <span class="r">${fmt(e.prod,0)} kWh/ano</span></div></div></li>
+  </ol>`;
+}
+document.addEventListener("click",e=>{
+  const sb=e.target.closest("#view-pv .seg button");
+  if(sb){const key={"pv-unit":"unit","pv-ph":"ph","pv-bat":"bat"}[sb.parentElement.id]; pv[key]=key==="unit"?sb.dataset.v:+sb.dataset.v; sb.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===sb)); pvRun(); return}
+  const o=e.target.closest(".opt"); if(o){const r=PVRES[+o.dataset.i]; pv.sel=+o.dataset.i; pv.edit={m:r.m,inv:r.inv,N:r.N,cfg:r.cfg.map(c=>({...c}))}; renderOpts(); renderPvDetail(); return}
+  const st=e.target.closest(".step button"); if(st&&pv.edit){const c=pv.edit.cfg[+st.dataset.j]; const a=st.dataset.a;
+    if(a==="s+")c.s++; if(a==="s-")c.s=Math.max(0,c.s-1); if(a==="n+")c.ns++; if(a==="n-")c.ns=Math.max(1,c.ns-1); if(c.s&&!c.ns)c.ns=1; renderPvDetail(); return}
+});
+const pvNum={"pv-P":"P","pv-rmin":"rmin","pv-rmax":"rmax","pv-tmin":"tmin","pv-tmax":"tmax","pv-yield":"yld","pv-area":"area"};
+document.addEventListener("change",e=>{
+  const id=e.target.id;
+  if(pvNum[id]){pv[pvNum[id]]=+e.target.value||0; pvRun(); return}
+  if(id==="pv-loc"){pv.loc=e.target.value; [pv.tmin,pv.tmax,pv.yld]=LOCS[pv.loc]; pv.lat=pv.lon=pv.alt=null; pv.place=""; locNote(); if(typeof pr!=="undefined"){pr.lat=pr.lon=null; prSave();} $("#pv-tmin").value=pv.tmin;$("#pv-tmax").value=pv.tmax;$("#pv-yield").value=pv.yld; pvRun(); return}
+  if(id==="pv-mount"){pv.mount=e.target.value;pvRun();return}
+  if(id==="pv-mod"){pv.mod=e.target.value;modConfUI();pvRun();return}
+  if(id==="pv-brand"){pv.brand=e.target.value;pvRun();return}
+  if(id==="pv-inv"){const v=e.target.value.trim(); if(v&&!findInv(v)){toast("Escolha um inversor da lista (ou crie-o em Inversor personalizado).");return} pv.inv=v; invUI(); pvRun(); return}
+  if(id==="pv-dgeg"){pv.dgegOnly=e.target.checked;pvRun();return}
+  if(id==="pv-dg-q") return;
+  if(id==="pv-dgeg-file"){const f=e.target.files[0]; if(!f) return; const rd=new FileReader(); rd.onload=async()=>{try{
+      const sh=await readSheets(f,rd.result,false); const set=new Set();
+      sh.forEach(rows=>rows.forEach(row=>row.forEach(v=>{const s=normM(v); if(s.length>=6&&/\d/.test(s)) set.add(s)})));
+      DGEG_IMP={name:f.name,keys:[...set]}; try{localStorage.setItem("pv-dgeg2",JSON.stringify(DGEG_IMP))}catch(_){}
+      dgegStatus(); pvRun(); toast(`Lista DGEG importada (${DGEG_IMP.keys.length} códigos).`);
+    }catch(err){ if(err?.message==="sem-xlsx") xlsxOffMsg(); else toast("Não consegui ler o ficheiro. Use o .xlsx original da DGEG.")}}; rd.readAsArrayBuffer(f);}
+});
+document.addEventListener("input",e=>{ if(e.target.id==="pv-dg-q") renderDG(); });
+document.addEventListener("click",e=>{ if(e.target.id==="pv-dgeg-reset"){ e.preventDefault(); DGEG_IMP=null; try{localStorage.removeItem("pv-dgeg2")}catch(_){} dgegStatus(); pvRun(); toast("Lista DGEG incluída reposta."); } });
+function invUI(){
+  const opts=[...INVERTERS].sort((a,b)=>invName(a).localeCompare(invName(b),"pt"));
+  $("#pv-inv-list").innerHTML=opts.map(i=>`<option value="${esc(invName(i))}" label="${i.phases==1?"mono":"tri"} · ${fmt(i.pac_kw,i.pac_kw%1?2:0)} kW${i.hybrid?" · híbrido":""}${i.custom?" · personalizado":""}"></option>`).join("");
+  $("#pv-brand").innerHTML=`<option value="*">Todas</option>`+[...new Set(INVERTERS.map(i=>i.brand))].sort().map(b=>`<option>${esc(b)}</option>`).join(""); $("#pv-brand").value=pv.brand;
+  $("#pv-inv").value=pv.inv||""; $("#pv-inv-clr").hidden=!pv.inv;
+  { const pi=findInv(pv.inv), h=pi&&!pi.custom?invConfBox(pi):""; if($("#pv-inv-conf").innerHTML!==h) $("#pv-inv-conf").innerHTML=h; }
+  $("#pv-inv-n").textContent=pv.inv?"A ligação, a bateria, a marca e o filtro DGEG não se aplicam ao inversor escolhido; as incompatibilidades aparecem como avisos.":"Escreva a marca ou o modelo para dimensionar as strings para um inversor à escolha.";
+  $("#cu-list").innerHTML=CUSTOM.map(c=>`<span class="pill na">${esc(invName(c))} <button type="button" class="btn ghost" data-cdel="${esc(invName(c))}" aria-label="Apagar ${esc(invName(c))}" style="padding:0 4px">×</button></span>`).join(""); }
+const nums=s=>String(s||"").split(/[;,\s]+/).filter(Boolean).map(Number);
+function custFill(i){ const set=(id,v)=>$("#"+id).value=v??"";
+  set("cu-brand",i.brand);set("cu-model",i.model+(i.custom?"":" (cópia)"));set("cu-ph",i.phases);$("#cu-hyb").checked=!!i.hybrid;set("cu-pac",i.pac_kw);set("cu-pdc",i.pdc_max_kw);
+  set("cu-vdc",i.vdc_max);set("cu-vst",i.v_start);set("cu-mn",i.mppt_min);set("cu-mx",i.mppt_max);set("cu-vn",i.v_nom);set("cu-n",i.mppt);set("cu-iac",i.iac_max);
+  set("cu-spm",i.strings_per_mppt.join(","));set("cu-im",i.imax_mppt.join(","));set("cu-isc",(i.isc_mppt||[]).join(",")); }
+function custSave(){ const v=id=>$("#"+id).value.trim(), n=id=>+$("#"+id).value;
+  const N=Math.round(n("cu-n")); const per=(a,d)=>{a=nums(a); if(!a.length&&d!=null) a=[d]; return a.length===1?Array(N).fill(a[0]):a};
+  const spm=per(v("cu-spm"),1), im=per(v("cu-im")), isc=per(v("cu-isc"));
+  const err=[!v("cu-model")&&"modelo",!(n("cu-pac")>0)&&"P AC",!(n("cu-vdc")>0)&&"V DC máx.",!(n("cu-mx")>n("cu-mn"))&&"gama MPPT",!(N>=1)&&"n.º de MPPT",
+    spm.length!==N&&"entradas por MPPT",(im.length!==N||im.some(x=>!(x>0)))&&"I máx. por MPPT",(isc.length&&isc.length!==N)&&"Isc por MPPT"].filter(Boolean);
+  if(err.length){toast("Verifique: "+err.join(", ")+".");return}
+  const c={brand:v("cu-brand")||"Personalizado",model:v("cu-model"),phases:+v("cu-ph"),hybrid:$("#cu-hyb").checked,pac_kw:n("cu-pac"),pdc_max_kw:n("cu-pdc")||null,
+    vdc_max:n("cu-vdc"),v_start:n("cu-vst")||0,mppt_min:n("cu-mn"),mppt_max:n("cu-mx"),v_nom:n("cu-vn")||null,mppt:N,strings_per_mppt:spm,imax_mppt:im,isc_mppt:isc.length?isc:null,
+    iac_max:n("cu-iac")||null,battery:null,source:"",note:"inversor personalizado: dados introduzidos a partir da ficha técnica.",custom:true};
+  const k=invName(c), old=INVERTERS.findIndex(i=>invName(i)===k);
+  if(old>=0&&!INVERTERS[old].custom){toast("Já existe um inversor da lista com esse nome. Mude o modelo.");return}
+  if(old>=0) INVERTERS.splice(old,1); INVERTERS.push(c);
+  CUSTOM=CUSTOM.filter(x=>invName(x)!==k).concat([c]); try{localStorage.setItem(CUST_KEY,JSON.stringify(CUSTOM))}catch(_){}
+  DGM.clear(); pv.inv=k; invUI(); pvRun(); toast(`${k} guardado e escolhido.`); }
+document.addEventListener("click",e=>{
+  if(e.target.id==="pv-inv-clr"){pv.inv="";invUI();pvRun();return}
+  if(e.target.id==="pv-P-use"){e.preventDefault(); const v=+e.target.dataset.v; if(v>0){ pv.P=v; pv.unit="kWp"; $("#pv-P").value=v; $("#pv-unit").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v==="kWp"))); pvRun(); toast(`Potência alterada para ${fmt(v,1)} kWp.`); } return}
+  if(e.target.id==="cu-save"){custSave();return}
+  if(e.target.id==="cu-copy"){const i=findInv(pv.inv)||pv.edit?.inv; if(i) custFill(i); else toast("Escolha primeiro um inversor."); return}
+  const d=e.target.closest("[data-cdel]"); if(d){const k=d.dataset.cdel; CUSTOM=CUSTOM.filter(x=>invName(x)!==k); const ix=INVERTERS.findIndex(i=>i.custom&&invName(i)===k); if(ix>=0) INVERTERS.splice(ix,1);
+    try{localStorage.setItem(CUST_KEY,JSON.stringify(CUSTOM))}catch(_){} if(pv.inv===k) pv.inv=""; invUI(); pvRun(); toast(`${k} apagado.`);}
+});
+function modConfUI(){ const pm=findMod(pv.mod), h=pm?modConfBox(pm):""; if($("#pv-mod-conf").innerHTML!==h) $("#pv-mod-conf").innerHTML=h; }
+function modUI(){
+  $("#pv-mod").innerHTML=`<option value="*">Qualquer (escolher o melhor)</option>`+MODULES.map(m=>`<option value="${esc(modName(m))}">${esc(modName(m))} · ${m.pmax} W${m.custom?" · personalizado":""}</option>`).join("");
+  $("#pv-mod").value=pv.mod; modConfUI();
+  $("#mc-list").innerHTML=MCUSTOM.map(c=>`<span class="pill na">${esc(modName(c))} <button type="button" class="btn ghost" data-mdel="${esc(modName(c))}" aria-label="Apagar ${esc(modName(c))}" style="padding:0 4px">×</button></span>`).join(""); }
+function mcFill(m){ const set=(id,v)=>$("#"+id).value=v??"";
+  set("mc-brand",m.brand);set("mc-model",m.model+(m.custom?"":" (cópia)"));set("mc-pmax",m.pmax);set("mc-cell",m.cell);set("mc-voc",m.voc);set("mc-isc",m.isc);set("mc-vmpp",m.vmpp);set("mc-impp",m.impp);
+  set("mc-beta",m.beta_voc);set("mc-alpha",m.alpha_isc);set("mc-gamma",m.gamma_pmax);set("mc-noct",m.noct);set("mc-len",m.length_mm);set("mc-wid",m.width_mm);set("mc-kg",m.weight_kg);
+  set("mc-vsys",m.vsys_max>=1500?1500:1000);set("mc-fuse",m.fuse_max);$("#mc-bif").checked=!!m.bifacial; }
+function mcSave(){ const v=id=>$("#"+id).value.trim(), n=id=>{const x=$("#"+id).value.trim().replace(",","."); return x===""?NaN:+x};
+  // coeficientes: Voc e Pmax descem com a temperatura (negativos); aceita o valor sem sinal
+  const beta=-Math.abs(n("mc-beta")), gamma=-Math.abs(n("mc-gamma")), alpha=Math.abs(n("mc-alpha"));
+  const P=n("mc-pmax"), voc=n("mc-voc"), isc=n("mc-isc"), vmp=n("mc-vmpp"), imp=n("mc-impp");
+  const err=[!v("mc-model")&&"modelo",!(P>0)&&"P máx.",!(voc>0)&&"Voc",!(isc>0)&&"Isc",!(vmp>0&&vmp<voc)&&"Vmpp (tem de ser menor que Voc)",!(imp>0&&imp<=isc)&&"Impp (não pode passar Isc)",
+    !(beta<0&&beta>-1)&&"coef. Voc β",!(alpha>=0&&alpha<0.5)&&"coef. Isc α",!(gamma<0&&gamma>-1)&&"coef. Pmax γ",!(n("mc-len")>0)&&"comprimento",!(n("mc-wid")>0)&&"largura",!(n("mc-fuse")>0)&&"fusível máx."].filter(Boolean);
+  if(err.length){toast("Verifique: "+err.join(", ")+".");return}
+  if(Math.abs(vmp*imp-P)/P>0.06){toast(`Vmpp × Impp = ${fmt(vmp*imp,0)} W não bate com P máx. ${fmt(P,0)} W. Verifique a ficha.`);return}
+  const noct=n("mc-noct");
+  const c={brand:v("mc-brand")||"Personalizado",model:v("mc-model"),pmax:P,voc,isc,vmpp:vmp,impp:imp,beta_voc:beta,alpha_isc:alpha,gamma_pmax:gamma,
+    noct:noct>0?noct:null,noct_type:noct>0?"ficha técnica":"não indicado (45 °C)",length_mm:n("mc-len"),width_mm:n("mc-wid"),weight_kg:n("mc-kg")>0?n("mc-kg"):null,
+    vsys_max:+v("mc-vsys"),fuse_max:n("mc-fuse"),cell:v("mc-cell")||"—",bifacial:$("#mc-bif").checked,source:"",note:"painel personalizado: dados introduzidos a partir da ficha técnica.",custom:true};
+  const k=modName(c), old=MODULES.findIndex(m=>modName(m)===k);
+  if(old>=0&&!MODULES[old].custom){toast("Já existe um painel da lista com esse nome. Mude o modelo.");return}
+  if(old>=0) MODULES.splice(old,1,c); else MODULES.push(c);
+  MCUSTOM=MCUSTOM.filter(x=>modName(x)!==k).concat([c]); try{localStorage.setItem(MCUST_KEY,JSON.stringify(MCUSTOM))}catch(_){}
+  pv.mod=k; modUI(); pvRun(); toast(`${k} guardado e escolhido.`); }
+document.addEventListener("click",e=>{
+  if(e.target.id==="mc-save"){mcSave();return}
+  { const b=e.target.closest("[data-mcc]"); if(b){ const m=findMod(b.dataset.mcc); if(m){ mcFill(m); const d=$("#pv-mcust"); d.open=true; d.scrollIntoView({block:"nearest",behavior:"smooth"}); } return } }
+  if(e.target.id==="mc-copy"){const m=findMod(pv.mod)||pv.edit?.m; if(m) mcFill(m); else toast("Escolha primeiro um painel."); return}
+  if(e.target.id==="pv-map-clr"){pv.lat=pv.lon=pv.alt=null; pv.place=""; [pv.tmin,pv.tmax,pv.yld]=LOCS[pv.loc]; $("#pv-tmin").value=pv.tmin;$("#pv-tmax").value=pv.tmax;$("#pv-yield").value=pv.yld;
+    if(typeof pr!=="undefined"){pr.lat=pr.lon=null; prSave();} locNote(); pvRun(); toast(`Valores de ${pv.loc} repostos.`); return}
+  const d=e.target.closest("[data-mdel]"); if(d){const k=d.dataset.mdel; MCUSTOM=MCUSTOM.filter(x=>modName(x)!==k); const ix=MODULES.findIndex(m=>m.custom&&modName(m)===k); if(ix>=0) MODULES.splice(ix,1);
+    try{localStorage.setItem(MCUST_KEY,JSON.stringify(MCUSTOM))}catch(_){} if(pv.mod===k) pv.mod="*"; modUI(); pvRun(); toast(`${k} apagado.`);}
+});
+pvInit(); renderDG();
+</script>
